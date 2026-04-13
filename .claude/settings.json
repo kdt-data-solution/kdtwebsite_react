@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p c:/Users/baraj/OneDrive/Desktop/kdt/frontend/public/assets/images)",
+      "Bash(cp c:/Users/baraj/OneDrive/Desktop/kdt/frontend/src/assets/images/jpf.png c:/Users/baraj/OneDrive/Desktop/kdt/frontend/src/assets/images/mav.png c:/Users/baraj/OneDrive/Desktop/kdt/frontend/public/assets/images/)",
+      "Bash(npm install:*)",
+      "Bash(node -e \"import\\('dotenv/config'\\).then\\(\\(\\) => import\\('./src/db/index.js'\\)\\).then\\(db => { const row = db.default.prepare\\('SELECT id, email, role FROM users'\\).get\\(\\); console.log\\(row || 'No users found'\\); }\\)\")",
+      "Bash(curl -s http://localhost:3000/api/health)",
+      "Bash(curl -s -X POST http://localhost:3000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"kdt@example.com\",\"password\":\"kdtwebsite\"}')"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\baraj\\OneDrive\\Desktop\\kdt\\frontend\\src\\assets\\images"
+    ]
+  }
+}

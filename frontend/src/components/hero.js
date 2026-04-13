@@ -13,14 +13,14 @@ document.querySelector("#hero").innerHTML = `
           We are dedicated to providing efficient and cost-effective data analytics, software development, and engineering professional design services.
         </p>
         <div>
-          <a href="#" class="inline-block bg-black text-white px-5 sm:px-4 md:px- py-2 sm:py-2.5 text-sm md:text-sm rounded-sm font-medium hover:bg-gray-800 transition-colors duration-300">
+          <a href="#contact" class="inline-block bg-black text-white px-5 sm:px-4 md:px-5 py-2 sm:py-2.5 text-sm md:text-sm rounded-sm font-medium hover:bg-gray-800 transition-colors duration-300">
             Connect with us
           </a>
         </div>
       </div>
 
       <div class="order-1 md:order-2 bg-gray-50 rounded-lg p-4 sm:p-2 md:p-8 flex justify-center items-center w-full max-w-[280px] sm:max-w-sm md:max-w-full mx-auto">
-        <img src="../assets/images/here-illustration.png" alt="Engineering Illustration" class="w-full h-auto object-contain max-h-44 sm:max-h-56 md:max-h-none"/>
+        <img src="${import.meta.env.BASE_URL}assets/images/here-illustration.png" alt="Engineering Illustration" class="w-full h-auto object-contain max-h-44 sm:max-h-56 md:max-h-none"/>
       </div>
 
     </div>
@@ -34,14 +34,11 @@ document.querySelector("#hero").innerHTML = `
 
       <div class="marquee-wrapper relative overflow-hidden flex-grow w-full">
         <div class="marquee-track flex items-center gap-20 sm:gap-20 md:gap-64">
-          <a href="#" class="marquee-item flex-shrink-0 hover:opacity-100 transition-opacity">
-            <img src="../assets/images/partner-1.png" alt="Partner 1" class="h-10 sm:h-12 md:h-14 w-auto object-contain" onerror="this.src='../assets/images/jpf.png'"/>
+          <a href="https://www.facebook.com/profile.php?id=61554106087570" target="_blank" rel="noopener noreferrer" class="marquee-item flex-shrink-0 hover:opacity-100 transition-opacity">
+            <img src="${import.meta.env.BASE_URL}assets/images/jpf.png" alt="Partner 1" class="h-10 sm:h-12 md:h-14 w-auto object-contain"/>
           </a>
-          <a href="#" class="marquee-item flex-shrink-0 hover:opacity-100 transition-opacity">
-            <img src="../assets/images/partner-2.png" alt="Partner 2" class="h-10 sm:h-12 md:h-14 w-auto object-contain" onerror="this.src='../assets/images/mav.png'"/>
-          </a>
-          </a>
-
+          <a href="https://www.facebook.com/maverick.solutions2022" target="_blank" rel="noopener noreferrer" class="marquee-item flex-shrink-0 hover:opacity-100 transition-opacity">
+            <img src="${import.meta.env.BASE_URL}assets/images/mav.png" alt="Partner 2" class="h-10 sm:h-12 md:h-14 w-auto object-contain"/>
           </a>
         </div>
       </div>
@@ -52,6 +49,12 @@ document.querySelector("#hero").innerHTML = `
   .marquee-track {
     width: max-content;
     animation: marquee-scroll 20s linear infinite;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+  .marquee-item {
+    cursor: pointer;
   }
   @keyframes marquee-scroll {
     from { transform: translateX(0); }

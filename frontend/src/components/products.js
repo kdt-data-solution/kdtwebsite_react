@@ -22,64 +22,64 @@ document.querySelector("#products").innerHTML = `
 
           <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
             <div class="bg-white h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
-              <img src="../assets/images/kdt-products.png" alt="Engineering" class="h-full w-full object-cover" />
-            </div>
-            <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
-              <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Engineering Solutions</h3>
-              <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
-                Professional engineering tools and solutions tailored to your project requirements.
-              </p>
-              <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
-                <a href="#" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
-                <a href="#" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
-            <div class="bg-white h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
-              <img src="../assets/images/kdt-products.png" alt="Data Science" class="h-full w-full object-cover" />
-            </div>
-            <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
-              <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Data Science Platform</h3>
-              <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
-                Advanced analytics platform to transform your data into actionable insights.
-              </p>
-              <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
-                <a href="#" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
-                <a href="#" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
-            <div class="h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
-              <img src="../assets/images/kdt-products.png" alt="Software" class="h-full w-full object-cover" />
-            </div>
-            <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
-              <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Software Suite</h3>
-              <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
-                Comprehensive software solutions to optimize your business workflows.
-              </p>
-              <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
-                <a href="#" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
-                <a href="#" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
-            <div class="bg-white h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
-              <img src="../assets/images/kdt-products.png" alt="Membership Portal" class="h-full w-full object-cover" />
+              <img src="${import.meta.env.BASE_URL}assets/images/kdt-products.png" alt="Membership Portal" class="h-full w-full object-cover" />
             </div>
             <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
               <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Membership Portal</h3>
               <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
+                Professional engineering tools and solutions tailored to your project requirements.
+              </p>
+              <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
+                <a href="${import.meta.env.BASE_URL}product-membership.html" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
+                <a href="#contact" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
+            <div class="bg-white h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
+              <img src="${import.meta.env.BASE_URL}assets/images/kdt-products.png" alt="Construct Pro" class="h-full w-full object-cover" />
+            </div>
+            <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
+              <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Construct Pro</h3>
+              <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
+                Advanced analytics platform to transform your data into actionable insights.
+              </p>
+              <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
+                <a href="${import.meta.env.BASE_URL}product-construct.html" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
+                <a href="#contact" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
+            <div class="bg-white h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
+              <img src="${import.meta.env.BASE_URL}assets/images/kdt-products.png" alt="Structural Chatbot" class="h-full w-full object-cover" />
+            </div>
+            <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
+              <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Structural Chatbot</h3>
+              <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
+                Comprehensive software solutions to optimize your business workflows.
+              </p>
+              <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
+                <a href="${import.meta.env.BASE_URL}product-chatbot.html" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
+                <a href="#contact" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="snap-start flex-shrink-0 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4rem)/3)] flex flex-col rounded-lg overflow-hidden shadow-lg bg-white">
+            <div class="bg-white h-32 sm:h-40 md:h-48 lg:h-56 flex items-center justify-center">
+              <img src="${import.meta.env.BASE_URL}assets/images/kdt-products.png" alt="Tabs" class="h-full w-full object-cover" />
+            </div>
+            <div class="bg-white p-3 sm:p-4 md:p-6 lg:p-8 flex-grow flex flex-col">
+              <h3 class="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">Tabs <span class="text-xs text-gray-400 font-medium">(Soon)</span></h3>
+              <p class="text-gray-600 text-[11px] sm:text-xs md:text-sm lg:text-base mb-3 sm:mb-4 md:mb-6 flex-grow">
                 A membership website portal for membership dues collection, events registrations, missions, and rewards.
               </p>
               <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
-                <a href="#" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
-                <a href="#" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
+                <a href="${import.meta.env.BASE_URL}product-tabs.html" class="flex-1 bg-white text-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">More Info</a>
+                <a href="#contact" class="flex-1 text-white bg-black py-2 md:py-3 text-xs sm:text-sm md:text-base rounded-md font-semibold hover:bg-gray-800 transition-colors text-center">Get a Quote</a>
               </div>
             </div>
           </div>
@@ -114,7 +114,6 @@ document.querySelector("#products").innerHTML = `
   prev.addEventListener('click', () => scrollByCard(-1));
   next.addEventListener('click', () => scrollByCard(1));
 
-  // Build dot indicators (mobile only)
   if (dotsContainer) {
     cards.forEach((_, i) => {
       const dot = document.createElement('button');

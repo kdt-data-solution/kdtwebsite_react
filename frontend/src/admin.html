@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/assets/images/k-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/styles/style.css" rel="stylesheet">
+    <title>Admin Dashboard — KDT</title>
+  </head>
+  <body class="bg-gray-100 h-screen overflow-hidden">
+
+    <div class="flex h-screen overflow-hidden">
+
+      <!-- Sidebar -->
+      <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-black text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
+        <div class="px-5 py-5 border-b border-white/10 flex items-center gap-3">
+          <img class="h-3 w-auto" src="/assets/images/kdt-black.png" alt="KDT" />
+          <div>
+            <p class="text-sm font-semibold leading-tight">KDT Admin</p>
+            <p class="text-[10px] uppercase tracking-wide text-gray-400">Dashboard</p>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-1 text-sm overflow-y-auto">
+          <a href="#dashboard" data-view="dashboard" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+            <img src="/assets/images/dashboard.svg" alt="" class="w-5 h-5" />
+            Dashboard
+          </a>
+          <a href="#messages" data-view="messages" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+            <img src="/assets/images/message.svg" alt="" class="w-5 h-5" />
+            Messages
+            <span id="nav-msg-count" class="ml-auto text-[10px] bg-white/20 px-2 py-0.5 rounded-full hidden"></span>
+          </a>
+          <a href="#portfolio" data-view="portfolio" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+            <img src="/assets/images/folder.svg" alt="" class="w-5 h-5" />
+            Portfolio
+          </a>
+          <a href="#media" data-view="media" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+            <img src="/assets/images/news.svg" alt="" class="w-5 h-5" />
+            Media
+          </a>
+          <a href="#settings" data-view="settings" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+            <img src="/assets/images/settings.svg" alt="" class="w-5 h-5" />
+            Settings
+          </a>
+        </nav>
+
+        <div class="border-t border-white/10 p-4">
+          <button id="logout-btn" class="w-full text-sm bg-white text-black px-3 py-2 rounded-md font-medium hover:bg-gray-200 transition">Sign out</button>
+        </div>
+      </aside>
+
+      <!-- Backdrop for mobile -->
+      <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+
+      <!-- Main column -->
+      <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-20">
+          <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <button id="sidebar-toggle" class="lg:hidden text-gray-700 hover:text-black" aria-label="Toggle sidebar">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              <h1 id="page-title" class="text-base sm:text-lg font-semibold text-gray-900">Dashboard</h1>
+            </div>
+            <button id="refresh-btn" class="text-xs sm:text-sm text-gray-600 hover:text-black">Refresh</button>
+          </div>
+        </header>
+
+        <main class="flex-1 px-4 sm:px-6 py-6 space-y-6 overflow-y-auto">
+
+          <!-- Dashboard view -->
+          <section id="view-dashboard" class="view space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <p class="text-xs text-gray-500 uppercase tracking-wide">Total messages</p>
+                <p id="stat-total" class="text-2xl font-bold text-gray-900 mt-1">—</p>
+              </div>
+              <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <p class="text-xs text-gray-500 uppercase tracking-wide">Latest message</p>
+                <p id="stat-latest" class="text-sm text-gray-900 mt-1">—</p>
+              </div>
+              <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <p class="text-xs text-gray-500 uppercase tracking-wide">Total portfolio</p>
+                <p id="stat-portfolio" class="text-2xl font-bold text-gray-900 mt-1">—</p>
+              </div>
+              <div class="bg-white border border-gray-200 rounded-lg p-5">
+                <p class="text-xs text-gray-500 uppercase tracking-wide">Total media</p>
+                <p id="stat-media" class="text-2xl font-bold text-gray-900 mt-1">—</p>
+              </div>
+            </div>
+
+            <!-- Recent messages preview -->
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                <h2 class="text-base font-semibold text-gray-900">Recent Messages</h2>
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
+                    <button id="msg-view-list" class="msg-view-btn p-2 rounded bg-black text-white" title="List view">
+                      <img src="/assets/images/layout-list.svg" alt="List" class="w-5 h-5" />
+                    </button>
+                    <button id="msg-view-grid" class="msg-view-btn p-2 rounded text-gray-500 hover:text-black" title="Grid view">
+                      <img src="/assets/images/layout-grid.svg" alt="Grid" class="w-5 h-5 invert" />
+                    </button>
+                  </div>
+                  <a href="#messages" class="text-xs text-gray-500 hover:text-black view-all-messages">View all</a>
+                </div>
+              </div>
+              <div id="dashboard-messages" class="max-h-96 overflow-y-auto p-4">
+                <p class="text-sm text-gray-500">Loading...</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Messages view -->
+          <section id="view-messages" class="view hidden">
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                <h2 class="text-base font-semibold text-gray-900">Contact messages</h2>
+              </div>
+              <div id="messages-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
+              <div class="overflow-x-auto">
+                <table id="messages-table" class="w-full text-sm hidden">
+                  <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">
+                    <tr>
+                      <th class="px-5 py-3">ID</th>
+                      <th class="px-5 py-3">Name</th>
+                      <th class="px-5 py-3">Email</th>
+                      <th class="px-5 py-3">Message</th>
+                      <th class="px-5 py-3">Received</th>
+                      <th class="px-5 py-3"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="messages-body" class="divide-y divide-gray-100"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Portfolio view -->
+          <section id="view-portfolio" class="view hidden">
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                <div>
+                  <h2 class="text-base font-semibold text-gray-900">Portfolio</h2>
+                  <p class="text-xs text-gray-500 mt-1">Manage projects shown on the public Portfolio page.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
+                    <button id="portfolio-view-list" class="portfolio-view-btn p-2 rounded bg-black text-white" title="List view">
+                      <img src="/assets/images/layout-list.svg" alt="List" class="w-5 h-5" />
+                    </button>
+                    <button id="portfolio-view-grid" class="portfolio-view-btn p-2 rounded text-gray-500 hover:text-black" title="Grid view">
+                      <img src="/assets/images/layout-grid.svg" alt="Grid" class="w-5 h-5 invert" />
+                    </button>
+                  </div>
+                  <button id="portfolio-add-btn" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">+ Add project</button>
+                </div>
+              </div>
+              <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-2">
+                <span class="text-xs text-gray-500">Filter:</span>
+                <div class="inline-flex gap-1.5">
+                  <button data-filter="all" class="portfolio-filter-btn bg-black text-white text-xs px-3 py-1.5 rounded-md font-medium transition">All</button>
+                  <button data-filter="architecture" class="portfolio-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Architecture & Engineering</button>
+                  <button data-filter="data" class="portfolio-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Data Science & Analytics</button>
+                  <button data-filter="software" class="portfolio-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Software Development</button>
+                </div>
+              </div>
+              <div id="portfolio-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
+              <div id="portfolio-list" class="divide-y divide-gray-100 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
+            </div>
+          </section>
+
+          <!-- Media view -->
+          <section id="view-media" class="view hidden">
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                <div>
+                  <h2 class="text-base font-semibold text-gray-900">Media / Editorial</h2>
+                  <p class="text-xs text-gray-500 mt-1">Manage editorial articles shown on the public Media page.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
+                    <button id="article-view-list" class="article-view-btn p-2 rounded bg-black text-white" title="List view">
+                      <img src="/assets/images/layout-list.svg" alt="List" class="w-5 h-5" />
+                    </button>
+                    <button id="article-view-grid" class="article-view-btn p-2 rounded text-gray-500 hover:text-black" title="Grid view">
+                      <img src="/assets/images/layout-grid.svg" alt="Grid" class="w-5 h-5 invert" />
+                    </button>
+                  </div>
+                  <button id="article-add-btn" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">+ Add article</button>
+                </div>
+              </div>
+              <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-2">
+                <span class="text-xs text-gray-500">Filter:</span>
+                <div class="inline-flex gap-1.5">
+                  <button data-filter="all" class="article-filter-btn bg-black text-white text-xs px-3 py-1.5 rounded-md font-medium transition">All</button>
+                  <button data-filter="architecture" class="article-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Architecture & Engineering</button>
+                  <button data-filter="data" class="article-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Data Science & Analytics</button>
+                  <button data-filter="software" class="article-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Software Development</button>
+                </div>
+              </div>
+              <div id="article-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
+              <div id="article-list" class="divide-y divide-gray-100 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
+            </div>
+          </section>
+
+          <!-- Settings view -->
+          <section id="view-settings" class="view hidden space-y-6">
+
+            <!-- Account -->
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="px-5 py-4 border-b border-gray-200">
+                <h2 class="text-base font-semibold text-gray-900">Account</h2>
+                <p class="text-xs text-gray-500 mt-1">Update your admin profile and password.</p>
+              </div>
+              <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Profile -->
+                <form id="settings-profile-form" class="space-y-3">
+                  <h3 class="text-sm font-semibold text-gray-900">Profile</h3>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Name</label>
+                    <input name="name" id="settings-name" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Email</label>
+                    <input name="email" type="email" id="settings-email" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                  <p class="text-xs hidden" id="profile-status"></p>
+                  <button type="submit" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Save Profile</button>
+                </form>
+
+                <!-- Change Password -->
+                <form id="settings-password-form" class="space-y-3">
+                  <h3 class="text-sm font-semibold text-gray-900">Change Password</h3>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Current Password</label>
+                    <div class="relative">
+                      <input name="current_password" type="password" required minlength="8" class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                      <button type="button" class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                        <svg class="w-4 h-4 eye-open" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="w-4 h-4 eye-closed hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 01-4.24-4.24M1 1l22 22"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">New Password</label>
+                    <div class="relative">
+                      <input name="new_password" type="password" required minlength="8" class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                      <button type="button" class="toggle-password absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700">
+                        <svg class="w-4 h-4 eye-open" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <svg class="w-4 h-4 eye-closed hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 01-4.24-4.24M1 1l22 22"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <p class="text-xs hidden" id="password-status"></p>
+                  <button type="submit" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Update Password</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Site Settings -->
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="px-5 py-4 border-b border-gray-200">
+                <h2 class="text-base font-semibold text-gray-900">Site Information</h2>
+                <p class="text-xs text-gray-500 mt-1">Company details shown on the website (footer, about, contact).</p>
+              </div>
+              <form id="settings-site-form" class="p-5 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Company Name</label>
+                    <input name="company_name" id="set-company_name" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Contact Phone</label>
+                    <input name="contact_phone" id="set-contact_phone" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Address</label>
+                  <input name="address" id="set-address" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Business Hours</label>
+                    <input name="business_hours" id="set-business_hours" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Contact Email</label>
+                    <input name="contact_email" type="email" id="set-contact_email" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                </div>
+                <h3 class="text-sm font-semibold text-gray-900 pt-2">Social Media Links</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Facebook</label>
+                    <input name="facebook_url" id="set-facebook_url" placeholder="https://facebook.com/..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">LinkedIn</label>
+                    <input name="linkedin_url" id="set-linkedin_url" placeholder="https://linkedin.com/..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">YouTube</label>
+                    <input name="youtube_url" id="set-youtube_url" placeholder="https://youtube.com/..." class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+                  </div>
+                </div>
+                <p class="text-xs hidden" id="site-status"></p>
+                <button type="submit" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Save Site Info</button>
+              </form>
+            </div>
+
+            <!-- Email Test -->
+            <div class="bg-white border border-gray-200 rounded-lg">
+              <div class="px-5 py-4 border-b border-gray-200">
+                <h2 class="text-base font-semibold text-gray-900">Email</h2>
+                <p class="text-xs text-gray-500 mt-1">Verify your email notification setup.</p>
+              </div>
+              <div class="p-5">
+                <p class="text-xs text-gray-600 mb-3">Send a test email to confirm the SMTP connection is working.</p>
+                <div class="flex items-center gap-3">
+                  <input id="test-email-input" type="email" placeholder="recipient@email.com" class="px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black w-64" />
+                  <button id="test-email-btn" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Send Test</button>
+                </div>
+                <p class="text-xs hidden mt-2" id="test-email-status"></p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script type="module" src="./pages/adminPage.js"></script>
+  </body>
+</html>

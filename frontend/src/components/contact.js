@@ -1,4 +1,17 @@
 import "../styles/style.css";
+import { getSiteSettings } from '../utils/siteSettings.js';
+import { toastSuccess, toastError } from '../utils/toast.js';
+
+const BASE = import.meta.env.BASE_URL;
+
+function renderContactInfo(s) {
+  const address = s.address || '81 Detroit St., Brgy Pinagkaisahan Cubao, Quezon City';
+  const hours = s.business_hours || 'Monday - Friday (8:00 am - 5:00 pm)';
+  const el = document.getElementById('contact-address');
+  const el2 = document.getElementById('contact-hours');
+  if (el) el.textContent = address;
+  if (el2) el2.textContent = hours;
+}
 
 document.querySelector("#contact").innerHTML = `
 <section class="pt-0 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-white">
@@ -22,19 +35,19 @@ document.querySelector("#contact").innerHTML = `
         </p>
 
         <div class="mt-4 space-y-2 w-full text-left">
-          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-100  px-4 py-4">
-            <img src="../assets/images/loc.svg" alt="Address" class="w-4 h-4 flex-shrink-0" />
+          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-100 px-4 py-4">
+            <img src="${BASE}assets/images/loc.svg" alt="Address" class="w-4 h-4 flex-shrink-0" />
             <div class="leading-tight">
               <p class="font-semibold text-gray-900 text-xs">Address</p>
-              <p class="text-gray-600 text-xs">71 Detroit St., Brgy Pinagkaisahan, Cubao, Quezon City</p>
+              <p class="text-gray-600 text-xs" id="contact-address">Loading...</p>
             </div>
           </div>
 
           <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-100 px-4 py-4">
-            <img src="../assets/images/clock-01-stroke-rounded.svg" alt="Business Hours" class="w-4 h-4 flex-shrink-0" />
+            <img src="${BASE}assets/images/clock-01-stroke-rounded.svg" alt="Business Hours" class="w-4 h-4 flex-shrink-0" />
             <div class="leading-tight">
               <p class="font-semibold text-gray-900 text-xs">Business Hours</p>
-              <p class="text-gray-600 text-xs">Monday - Friday: 9:00 am – 5:00 pm</p>
+              <p class="text-gray-600 text-xs" id="contact-hours">Loading...</p>
             </div>
           </div>
         </div>
@@ -56,21 +69,22 @@ document.querySelector("#contact").innerHTML = `
         <h3 class="text-lg sm:text-lg md:text-xl font-bold text-gray-900">Send us a message</h3>
         <p class="text-gray-500 text-xs sm:text-sm md:text-base mt-1">Kindly provide the following info below.</p>
 
-        <form class="mt-5 md:mt-6 space-y-4 md:space-y-5 flex flex-col flex-grow">
+        <form id="contact-form" class="mt-5 md:mt-6 space-y-4 md:space-y-5 flex flex-col flex-grow">
           <div>
             <label class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Name</label>
-            <input type="text" class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" />
+            <input name="name" type="text" required class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" />
           </div>
           <div>
             <label class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" />
+            <input name="email" type="email" required class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" />
           </div>
           <div class="flex flex-col flex-grow">
             <label class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Message</label>
-            <textarea id="contact-message" rows="6" class="w-full flex-grow px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none overflow-y-auto" style="min-height: 140px; max-height: 360px;"></textarea>
+            <textarea id="contact-message" name="message" rows="6" required class="w-full flex-grow px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none overflow-y-auto" style="min-height: 140px; max-height: 360px;"></textarea>
           </div>
+          <p id="contact-status" class="text-xs sm:text-sm hidden"></p>
           <div class="flex justify-end mt-auto">
-            <button type="submit" class="bg-black text-white px-5 sm:px-6 md:px-8 py-2 md:py-2.5 text-sm md:text-base rounded-md font-medium hover:bg-gray-800 transition-colors">
+            <button id="contact-submit" type="submit" class="bg-black text-white px-5 sm:px-6 md:px-8 py-2 md:py-2.5 text-sm md:text-base rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-60">
               Submit
             </button>
           </div>
@@ -82,3 +96,36 @@ document.querySelector("#contact").innerHTML = `
 </section>
 `;
 
+getSiteSettings().then(renderContactInfo);
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.currentTarget;
+  const status = document.getElementById('contact-status');
+  const submit = document.getElementById('contact-submit');
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  submit.disabled = true;
+  status.classList.remove('hidden', 'text-red-600', 'text-green-600');
+  status.textContent = 'Sending...';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(body.error || 'Failed to send message');
+    status.classList.add('hidden');
+    toastSuccess('Message sent. Thank you!');
+    form.reset();
+  } catch (err) {
+    status.classList.add('hidden');
+    toastError(err.message);
+  } finally {
+    submit.disabled = false;
+  }
+});

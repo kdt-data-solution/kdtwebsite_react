@@ -1,156 +1,138 @@
 import '../styles/style.css';
+import { services } from '../data/services.js';
+import { API_BASE } from '../utils/auth.js';
 
-const servicesData = [
-  {
-    id: 1,
-    category: "Architecture & Engineering",
-    title: "Professional Design & Engineering Solutions",
-    description: "Our architecture and engineering services combine technical expertise with creative innovation to deliver exceptional results for projects of all scales.",
-    icon: `<svg class="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-    </svg>`,
-    features: [
-      {
-        title: "Structural Engineering",
-        description: "Comprehensive structural analysis, design, and inspection services ensuring safety and compliance."
-      },
-      {
-        title: "Civil Engineering",
-        description: "Infrastructure planning, site development, and project management from concept to completion."
-      },
-      {
-        title: "Architectural Design",
-        description: "Innovative architectural solutions that balance aesthetics, functionality, and sustainability."
-      }
-    ],
-    imagePosition: "right"
-  },
-  {
-    id: 2,
-    category: "Data Science & Analytics",
-    title: "Transform Data Into Strategic Insights",
-    description: "Leverage the power of data with our advanced analytics and machine learning solutions to drive informed decision-making and business growth.",
-    icon: `<svg class="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-    </svg>`,
-    features: [
-      {
-        title: "Predictive Analytics",
-        description: "Machine learning models that forecast trends and identify opportunities before they emerge."
-      },
-      {
-        title: "Business Intelligence",
-        description: "Interactive dashboards and reports that provide real-time visibility into your operations."
-      },
-      {
-        title: "Data Engineering",
-        description: "Robust data pipelines and infrastructure to collect, process, and store your data efficiently."
-      }
-    ],
-    imagePosition: "left"
-  },
-  {
-    id: 3,
-    category: "Software Development",
-    title: "Custom Software Solutions That Scale",
-    description: "From enterprise applications to consumer-facing platforms, we build secure, scalable, and user-friendly software tailored to your unique requirements.",
-    icon: `<svg class="w-48 h-48 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-    </svg>`,
-    features: [
-      {
-        title: "Web Applications",
-        description: "Modern, responsive web apps built with React, Vue, Angular, and other cutting-edge frameworks."
-      },
-      {
-        title: "Mobile Development",
-        description: "Native and cross-platform mobile apps for iOS and Android that deliver exceptional user experiences."
-      },
-      {
-        title: "API Development",
-        description: "RESTful and GraphQL APIs that enable seamless integration and data exchange between systems."
-      }
-    ],
-    imagePosition: "right"
+const key = window.SERVICE_KEY || 'architecture';
+const data = services[key];
+const root = document.querySelector('#services-page');
+
+const SERVICE_IMAGES = {
+  architecture: 'engineering.png',
+  data: 'datascience.png',
+  software: 'softwaredev.png',
+};
+
+if (!data) {
+  root.innerHTML = `<section class="pt-32 pb-20 text-center"><h1 class="text-2xl font-bold text-gray-900">Service not found</h1></section>`;
+} else {
+  if (data.pageTitle) document.title = `${data.pageTitle} — KDT`;
+
+  const BASE = import.meta.env.BASE_URL;
+  const projectImg = `${BASE}assets/images/kdt-products.png`;
+  const editorialImg = `${BASE}assets/images/here-illustration.png`;
+
+  function escapeAttr(s) {
+    return String(s ?? '').replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
   }
-];
 
-function renderServiceSection(service, index) {
-  const bgColor = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-  const contentOrder = service.imagePosition === 'right' ? '' : 'order-1 lg:order-2';
-  const imageOrder = service.imagePosition === 'right' ? '' : 'order-2 lg:order-1';
-  
-  const featuresHTML = service.features.map(feature => `
-    <div class="flex items-start">
-      <svg class="w-6 h-6 text-green-500 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-      </svg>
-      <div>
-        <h3 class="font-semibold text-gray-900 mb-1">${feature.title}</h3>
-        <p class="text-gray-600">${feature.description}</p>
-      </div>
-    </div>
-  `).join('');
+  function imageUrl(url, fallback) {
+    if (!url) return fallback;
+    return url.startsWith('http') ? url : `${API_BASE}${url}`;
+  }
 
-  return `
-    <section class="py-16 md:py-20 ${bgColor}">
-      <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div class="${contentOrder}">
-            <div class="inline-block bg-black text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              ${service.category}
+  async function loadDynamic() {
+    let projects = [], articles = [];
+    try { projects = await fetch(`${API_BASE}/api/portfolio`).then(r => r.json()); } catch {}
+    try { articles = await fetch(`${API_BASE}/api/articles`).then(r => r.json()); } catch {}
+    return { projects: projects.slice(0, 3), articles: articles.slice(0, 3) };
+  }
+
+  (async function render() {
+    const { projects, articles } = await loadDynamic();
+
+    root.innerHTML = `
+      <!-- Hero -->
+      <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div class="text-center md:text-left flex flex-col items-center md:items-start">
+              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
+                ${data.title}
+              </h1>
+              <p class="text-gray-600 text-sm md:text-base max-w-md mb-6 leading-relaxed">
+                ${escapeAttr(data.description || '')}
+              </p>
+              <a href="#contact" class="inline-block bg-black text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition">
+                Connect with us
+              </a>
             </div>
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              ${service.title}
-            </h2>
-            <p class="text-gray-600 text-lg mb-6">
-              ${service.description}
-            </p>
-            <div class="space-y-4">
-              ${featuresHTML}
+            <div class="bg-gray-100 rounded-lg w-full aspect-[4/3] md:aspect-[5/4] overflow-hidden">
+              <img src="${BASE}assets/images/${SERVICE_IMAGES[key] || 'engineering.png'}" alt="${escapeAttr(data.pageTitle || '')}" class="w-full h-full object-cover" />
             </div>
-          </div>
-          
-          <div class="${imageOrder} bg-gray-100 rounded-2xl p-8 flex items-center justify-center h-96">
-            ${service.icon}
           </div>
         </div>
-      </div>
-    </section>
-  `;
+      </section>
+
+      <!-- What We Offer -->
+      <section class="py-12 md:py-16">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8">
+          <div class="bg-gray-100 rounded-xl p-6 sm:p-10 md:p-14">
+            <div class="text-center mb-8 md:mb-10">
+              <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">What We Offer</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+              ${(data.offerings || []).map(o => `
+                <div class="bg-gray-100 border border-gray-400 rounded-lg p-6">
+                  <div class="text-gray-900 mb-4">${o.icon || ''}</div>
+                  <h3 class="font-bold text-gray-900 text-base md:text-lg mb-3">${escapeAttr(o.title || '')}</h3>
+                  <p class="text-gray-600 text-xs md:text-sm leading-relaxed">${escapeAttr(o.desc || '')}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Our Projects -->
+      ${projects.length > 0 ? `
+      <section class="py-12 md:py-16">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8">
+          <div class="text-center mb-8 md:mb-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Our Projects</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            ${projects.map(p => `
+              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                <div class="aspect-[4/3] bg-gray-100 flex items-center justify-center">
+                  <img src="${imageUrl(p.image_url, projectImg)}" alt="${escapeAttr(p.title)}" class="w-full h-full object-cover" />
+                </div>
+                <div class="p-5">
+                  <h3 class="text-sm md:text-base font-medium text-gray-900 text-center mb-4">${escapeAttr(p.title)}</h3>
+                  <a href="${BASE}project.html?slug=${escapeAttr(p.slug)}" class="block w-full bg-black text-white py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition text-center">Learn More</a>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>` : ''}
+
+      <!-- Editorial -->
+      ${articles.length > 0 ? `
+      <section class="py-12 md:py-16">
+        <div class="container mx-auto px-4 sm:px-6 md:px-8">
+          <div class="text-center mb-8 md:mb-10">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Editorial</h2>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            ${articles.map(e => `
+              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm flex flex-col">
+                <div class="aspect-[16/9] bg-gray-200">
+                  <img src="${imageUrl(e.image_url, editorialImg)}" alt="${escapeAttr(e.title)}" class="w-full h-full object-cover" />
+                </div>
+                <div class="p-5 flex flex-col flex-grow">
+                  <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 leading-snug">${escapeAttr(e.title)}</h3>
+                  <p class="text-xs text-gray-500 mb-3">${escapeAttr(e.date || '')}</p>
+                  <div class="flex items-center justify-end mt-auto pt-3 border-t border-gray-100">
+                    <a href="${BASE}article.html?slug=${escapeAttr(e.slug)}" class="bg-black text-white text-xs px-3 py-1.5 rounded-md font-medium hover:bg-gray-800 transition">See More</a>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>` : ''}
+    `;
+  })();
 }
-
-document.querySelector("#services-page").innerHTML = `
-  <!-- Hero Section -->
-  <section class="pt-24 pb-16 bg-gradient-to-br from-gray-900 to-black text-white">
-    <div class="container mx-auto px-4">
-      <div class="max-w-4xl mx-auto text-center">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">Our Services</h1>
-        <p class="text-lg md:text-xl text-gray-300">
-          Delivering excellence through innovative engineering, data-driven insights, and cutting-edge software solutions.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Service Sections -->
-  ${servicesData.map((service, index) => renderServiceSection(service, index)).join('')}
-
-  <!-- CTA Section -->
-  <section class="py-16 md:py-20 bg-black text-white">
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Get Started?</h2>
-      <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
-        Let's discuss how our services can help transform your business and achieve your goals.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#" class="bg-white text-black px-8 py-3 rounded-md font-semibold hover:bg-gray-200 transition-colors">
-          Contact Us
-        </a>
-        <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-md font-semibold hover:bg-white hover:text-black transition-colors">
-          View Portfolio
-        </a>
-      </div>
-    </div>
-  </section>
-`;
