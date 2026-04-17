@@ -1,7 +1,7 @@
 import '../styles/style.css';
 
 document.querySelector('#cookie-page').innerHTML = `
-  <section class="pt-24 sm:pt-28 pb-16 md:pb-20 bg-white">
+  <section class="pt-24 sm:pt-28 pb-16 md:pb-20 bg-background">
     <div class="container mx-auto px-4 sm:px-6 md:px-8 max-w-5xl">
 
       <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-8 md:mb-10">

@@ -42,7 +42,7 @@ export function toast(message, { type = 'info', duration = 4000, title = '' } = 
   const host = ensureContainer();
 
   const el = document.createElement('div');
-  el.className = `pointer-events-auto bg-white border border-gray-200 ${borderColor(type)} border-l-4 rounded-lg shadow-lg px-4 py-3 flex items-start gap-3 max-w-sm w-full transform translate-x-full transition-transform duration-300 ease-out`;
+  el.className = `pointer-events-auto bg-background border border-gray-200 ${borderColor(type)} border-l-4 rounded-lg shadow-lg px-4 py-3 flex items-start gap-3 max-w-sm w-full transform translate-x-full transition-transform duration-300 ease-out`;
 
   el.innerHTML = `
     ${iconSvg(type)}

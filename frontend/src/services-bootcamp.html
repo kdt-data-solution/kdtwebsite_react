@@ -5,15 +5,14 @@
     <link rel="icon" type="image/png" href="/assets/images/k-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/styles/style.css" rel="stylesheet">
-    <title>KDT TABS</title>
+    <title>KDT Bootcamp</title>
   </head>
-  <body>
+  <body class="min-h-screen flex flex-col">
     <div id="navbar"></div>
     <script type="module" src="./components/navbar.js"></script>
 
-    <div id="product-page"></div>
-    <script>window.PRODUCT_KEY = 'tabs';</script>
-    <script type="module" src="./pages/productPage.js"></script>
+    <div id="bootcamp-page" class="flex-1"></div>
+    <script type="module" src="./pages/bootcamp.js"></script>
 
     <div id="footer"></div>
     <script type="module" src="./components/footer.js"></script>

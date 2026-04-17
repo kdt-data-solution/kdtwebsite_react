@@ -38,8 +38,9 @@ function cardHtml(e) {
       <div class="p-5 flex flex-col flex-grow">
         <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 leading-snug line-clamp-2 h-[2.75rem]">${escapeHtml(e.title)}</h3>
         <p class="text-xs text-gray-500 mb-3">${escapeHtml(formatLongDate(e.date))}</p>
-        <div class="border-t border-gray-200 pt-3 mt-auto flex items-center justify-end">
-          <a href="${BASE}article.html?slug=${escapeHtml(e.slug)}" class="bg-black text-white text-xs px-4 py-1.5 rounded-md font-medium hover:bg-gray-800 transition flex-shrink-0">See More</a>
+        <div class="border-t border-gray-200 pt-3 mt-auto flex items-center justify-between gap-2">
+          ${e.tags ? `<p class="text-[11px] text-gray-600 line-clamp-1"><span class="font-semibold">Tag/s:</span> ${escapeHtml(e.tags)}</p>` : '<div></div>'}
+          <a href="${BASE}article.html?slug=${escapeHtml(e.slug)}" class="bg-foreground text-white text-xs px-4 py-1.5 rounded-md font-medium hover:shadow-2xl transition flex-shrink-0">See More</a>
         </div>
       </div>
     </div>
@@ -48,7 +49,7 @@ function cardHtml(e) {
 
 function renderShell(gridHtml, statusText) {
   document.querySelector('#media-page').innerHTML = `
-    <section class="pt-24 sm:pt-28 pb-16 md:pb-20 bg-white">
+    <section class="pt-24 sm:pt-28 pb-16 md:pb-20 bg-background">
       <div class="container mx-auto px-4 sm:px-6 md:px-8">
         <div class="text-center mb-8 md:mb-10">
           <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Editorial</h1>
@@ -60,7 +61,7 @@ function renderShell(gridHtml, statusText) {
         <div class="flex justify-center mb-10">
           <div class="bg-gray-100 rounded-lg p-2 inline-flex flex-col sm:flex-row gap-2">
             ${CATEGORIES.map(c => `
-              <button data-filter="${c.key}" class="filter-btn px-5 py-2 rounded-md text-xs sm:text-sm font-medium transition whitespace-nowrap ${c.key === 'all' ? 'bg-black text-white' : 'text-gray-700 hover:bg-white'}">${c.label}</button>
+              <button data-filter="${c.key}" class="filter-btn px-5 py-2 rounded-md text-xs sm:text-sm font-medium transition whitespace-nowrap ${c.key === 'all' ? 'bg-foreground text-white' : 'text-gray-700 hover:bg-background'}">${c.label}</button>
             `).join('')}
           </div>
         </div>
@@ -84,11 +85,11 @@ function attachFilters() {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
       buttons.forEach(b => {
-        b.classList.remove('bg-black', 'text-white');
-        b.classList.add('text-gray-700', 'hover:bg-white');
+        b.classList.remove('bg-foreground', 'text-white');
+        b.classList.add('text-gray-700', 'hover:bg-background');
       });
-      btn.classList.add('bg-black', 'text-white');
-      btn.classList.remove('text-gray-700', 'hover:bg-white');
+      btn.classList.add('bg-foreground', 'text-white');
+      btn.classList.remove('text-gray-700', 'hover:bg-background');
 
       let visible = 0;
       cards.forEach(card => {

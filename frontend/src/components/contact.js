@@ -14,7 +14,7 @@ function renderContactInfo(s) {
 }
 
 document.querySelector("#contact").innerHTML = `
-<section class="pt-0 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-white">
+<section class="pt-0 pb-12 sm:pb-16 md:pb-20 lg:pb-24 bg-background">
   <div class="container mx-auto px-4 sm:px-6 md:px-8">
 
     <div class="text-center mb-12">
@@ -72,19 +72,19 @@ document.querySelector("#contact").innerHTML = `
         <form id="contact-form" class="mt-5 md:mt-6 space-y-4 md:space-y-5 flex flex-col flex-grow">
           <div>
             <label class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Name</label>
-            <input name="name" type="text" required class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" />
+            <input name="name" type="text" required class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-gray-300" />
           </div>
           <div>
             <label class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Email</label>
-            <input name="email" type="email" required class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300" />
+            <input name="email" type="email" required class="w-full px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-gray-300" />
           </div>
           <div class="flex flex-col flex-grow">
             <label class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Message</label>
-            <textarea id="contact-message" name="message" rows="6" required class="w-full flex-grow px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none overflow-y-auto" style="min-height: 140px; max-height: 360px;"></textarea>
+            <textarea id="contact-message" name="message" rows="6" required class="w-full flex-grow px-3 sm:px-4 py-2 md:py-2.5 text-sm md:text-base border border-gray-200 rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-gray-300 resize-none overflow-y-auto" style="min-height: 140px; max-height: 360px;"></textarea>
           </div>
           <p id="contact-status" class="text-xs sm:text-sm hidden"></p>
           <div class="flex justify-end mt-auto">
-            <button id="contact-submit" type="submit" class="bg-black text-white px-5 sm:px-6 md:px-8 py-2 md:py-2.5 text-sm md:text-base rounded-md font-medium hover:bg-gray-800 transition-colors disabled:opacity-60">
+            <button id="contact-submit" type="submit" class="bg-foreground text-white px-5 sm:px-6 md:px-8 py-2 md:py-2.5 text-sm md:text-base rounded-md font-medium hover:shadow-2xl transition-colors disabled:opacity-60">
               Submit
             </button>
           </div>

@@ -61,7 +61,7 @@ function showView(view) {
   pageTitle.textContent = VIEW_TITLES[view] || 'Dashboard';
   navLinks.forEach((link) => {
     const active = link.dataset.view === view;
-    link.classList.toggle('bg-white/10', active);
+    link.classList.toggle('bg-background/10', active);
     link.classList.toggle('text-white', active);
   });
   if (window.innerWidth < 1024) closeSidebar();
@@ -142,7 +142,7 @@ function renderDashMessages() {
     container.innerHTML = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">${recent.map((m, i) => `
       <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 cursor-pointer hover:border-gray-400 hover:shadow-sm transition dash-msg flex flex-col" data-idx="${i}">
         <div class="flex items-center gap-2 mb-3">
-          <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold flex-shrink-0">${escapeHtml((m.name || '?')[0].toUpperCase())}</div>
+          <div class="w-8 h-8 rounded-full bg-foreground text-white flex items-center justify-center text-xs font-bold flex-shrink-0">${escapeHtml((m.name || '?')[0].toUpperCase())}</div>
           <div class="min-w-0">
             <p class="text-sm font-semibold text-gray-900 truncate">${escapeHtml(m.name)}</p>
             <p class="text-[10px] text-gray-400 truncate">${escapeHtml(m.email)}</p>
@@ -155,7 +155,7 @@ function renderDashMessages() {
   } else {
     container.innerHTML = `<div class="divide-y divide-gray-100">${recent.map((m, i) => `
       <div class="px-2 py-3 hover:bg-gray-50 flex items-start gap-3 cursor-pointer dash-msg rounded-md" data-idx="${i}">
-        <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">${escapeHtml((m.name || '?')[0].toUpperCase())}</div>
+        <div class="w-8 h-8 rounded-full bg-foreground text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">${escapeHtml((m.name || '?')[0].toUpperCase())}</div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between gap-2">
             <p class="text-sm font-medium text-gray-900 truncate">${escapeHtml(m.name)}</p>
@@ -179,14 +179,14 @@ function renderDashMessages() {
 function setMsgView(view) {
   dashMsgView = view;
   document.querySelectorAll('.msg-view-btn').forEach(b => {
-    b.classList.remove('bg-black', 'text-white');
+    b.classList.remove('bg-foreground', 'text-white');
     b.classList.add('text-gray-500', 'hover:text-black');
     const img = b.querySelector('img');
     if (img) img.classList.add('invert');
   });
   const active = document.getElementById(`msg-view-${view}`);
   if (active) {
-    active.classList.add('bg-black', 'text-white');
+    active.classList.add('bg-foreground', 'text-white');
     active.classList.remove('text-gray-500', 'hover:text-black');
     const img = active.querySelector('img');
     if (img) img.classList.remove('invert');
@@ -199,16 +199,16 @@ document.getElementById('msg-view-grid')?.addEventListener('click', () => setMsg
 
 function openMessageModal(m) {
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4';
+  overlay.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-foreground/50 px-4';
   overlay.innerHTML = `
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
       <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 class="text-base font-semibold text-gray-900">Message Details</h3>
         <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
       </div>
       <div class="p-6 space-y-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-sm font-bold flex-shrink-0">${escapeHtml((m.name || '?')[0].toUpperCase())}</div>
+          <div class="w-10 h-10 rounded-full bg-foreground text-white flex items-center justify-center text-sm font-bold flex-shrink-0">${escapeHtml((m.name || '?')[0].toUpperCase())}</div>
           <div>
             <p class="text-sm font-semibold text-gray-900">${escapeHtml(m.name)}</p>
             <a href="mailto:${escapeHtml(m.email)}" class="text-xs text-gray-500 hover:underline">${escapeHtml(m.email)}</a>
@@ -219,7 +219,7 @@ function openMessageModal(m) {
           <p class="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">${escapeHtml(m.message)}</p>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <a href="mailto:${escapeHtml(m.email)}?subject=Re: Message from ${encodeURIComponent(m.name)}" class="bg-black text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition">Reply via Email</a>
+          <a href="mailto:${escapeHtml(m.email)}?subject=Re: Message from ${encodeURIComponent(m.name)}" class="bg-foreground text-white px-4 py-2 rounded-md text-sm font-medium hover:shadow-2xl transition">Reply via Email</a>
           <button data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Close</button>
         </div>
       </div>
@@ -356,7 +356,7 @@ let portfolioViewMode = 'list';
 function renderPortfolioList() {
   const status = document.getElementById('portfolio-status');
   const list = document.getElementById('portfolio-list');
-  const activeBtn = document.querySelector('.portfolio-filter-btn.bg-black');
+  const activeBtn = document.querySelector('.portfolio-filter-btn.bg-foreground');
   const filter = activeBtn?.dataset.filter || 'all';
   const filtered = filter === 'all' ? allPortfolio : allPortfolio.filter(p => p.category === filter);
 
@@ -409,14 +409,14 @@ function renderPortfolioList() {
 function setPortfolioView(view) {
   portfolioViewMode = view;
   document.querySelectorAll('.portfolio-view-btn').forEach(b => {
-    b.classList.remove('bg-black', 'text-white');
+    b.classList.remove('bg-foreground', 'text-white');
     b.classList.add('text-gray-500', 'hover:text-black');
     const img = b.querySelector('img');
     if (img) img.classList.add('invert');
   });
   const active = document.getElementById(`portfolio-view-${view}`);
   if (active) {
-    active.classList.add('bg-black', 'text-white');
+    active.classList.add('bg-foreground', 'text-white');
     active.classList.remove('text-gray-500', 'hover:text-black');
     const img = active.querySelector('img');
     if (img) img.classList.remove('invert');
@@ -430,10 +430,10 @@ document.getElementById('portfolio-view-grid')?.addEventListener('click', () => 
 document.querySelectorAll('.portfolio-filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.portfolio-filter-btn').forEach(b => {
-      b.classList.remove('bg-black', 'text-white');
+      b.classList.remove('bg-foreground', 'text-white');
       b.classList.add('text-gray-700', 'border', 'border-gray-200', 'hover:bg-gray-100');
     });
-    btn.classList.add('bg-black', 'text-white');
+    btn.classList.add('bg-foreground', 'text-white');
     btn.classList.remove('text-gray-700', 'border', 'border-gray-200', 'hover:bg-gray-100');
     renderPortfolioList();
   });
@@ -460,9 +460,9 @@ async function deletePortfolio(id) {
 function openPortfolioForm(item = null) {
   const isEdit = !!item;
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-black/50 px-4 py-10 overflow-y-auto';
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-10 overflow-y-auto';
   overlay.innerHTML = `
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-lg">
       <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 class="text-base font-semibold text-gray-900">${isEdit ? 'Edit project' : 'Add project'}</h3>
         <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
@@ -515,7 +515,7 @@ function openPortfolioForm(item = null) {
         <p class="text-xs text-red-600 hidden" data-error></p>
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Cancel</button>
-          <button type="submit" class="bg-black text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-gray-800">${isEdit ? 'Save changes' : 'Create'}</button>
+          <button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium hover:shadow-2xl">${isEdit ? 'Save changes' : 'Create'}</button>
         </div>
       </form>
     </div>
@@ -636,7 +636,7 @@ let articleViewMode = 'list';
 function renderArticleList() {
   const status = document.getElementById('article-status');
   const list = document.getElementById('article-list');
-  const activeBtn = document.querySelector('.article-filter-btn.bg-black');
+  const activeBtn = document.querySelector('.article-filter-btn.bg-foreground');
   const filter = activeBtn?.dataset.filter || 'all';
   const filtered = filter === 'all' ? allArticles : allArticles.filter(a => a.category === filter);
 
@@ -689,14 +689,14 @@ function renderArticleList() {
 function setArticleView(view) {
   articleViewMode = view;
   document.querySelectorAll('.article-view-btn').forEach(b => {
-    b.classList.remove('bg-black', 'text-white');
+    b.classList.remove('bg-foreground', 'text-white');
     b.classList.add('text-gray-500', 'hover:text-black');
     const img = b.querySelector('img');
     if (img) img.classList.add('invert');
   });
   const active = document.getElementById(`article-view-${view}`);
   if (active) {
-    active.classList.add('bg-black', 'text-white');
+    active.classList.add('bg-foreground', 'text-white');
     active.classList.remove('text-gray-500', 'hover:text-black');
     const img = active.querySelector('img');
     if (img) img.classList.remove('invert');
@@ -710,10 +710,10 @@ document.getElementById('article-view-grid')?.addEventListener('click', () => se
 document.querySelectorAll('.article-filter-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.article-filter-btn').forEach(b => {
-      b.classList.remove('bg-black', 'text-white');
+      b.classList.remove('bg-foreground', 'text-white');
       b.classList.add('text-gray-700', 'border', 'border-gray-200', 'hover:bg-gray-100');
     });
-    btn.classList.add('bg-black', 'text-white');
+    btn.classList.add('bg-foreground', 'text-white');
     btn.classList.remove('text-gray-700', 'border', 'border-gray-200', 'hover:bg-gray-100');
     renderArticleList();
   });
@@ -736,9 +736,9 @@ async function deleteArticle(id) {
 function openArticleForm(item = null) {
   const isEdit = !!item;
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-black/50 px-4 py-10 overflow-y-auto';
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-10 overflow-y-auto';
   overlay.innerHTML = `
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-2xl">
       <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 class="text-base font-semibold text-gray-900">${isEdit ? 'Edit article' : 'Add article'}</h3>
         <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
@@ -765,6 +765,10 @@ function openArticleForm(item = null) {
               ${CATEGORIES.map(c => `<option value="${c.value}" ${item?.category === c.value ? 'selected' : ''}>${c.label}</option>`).join('')}
             </select>
           </div>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Tags <span class="text-gray-400">(comma-separated)</span></label>
+          <input name="tags" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" value="${escapeHtml(item?.tags || '')}" />
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-700 mb-1">Body <span class="text-gray-400">(separate paragraphs with a blank line)</span></label>
@@ -795,7 +799,7 @@ function openArticleForm(item = null) {
         <p class="text-xs text-red-600 hidden" data-error></p>
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Cancel</button>
-          <button type="submit" class="bg-black text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-gray-800">${isEdit ? 'Save changes' : 'Create'}</button>
+          <button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium hover:shadow-2xl">${isEdit ? 'Save changes' : 'Create'}</button>
         </div>
       </form>
     </div>
@@ -935,9 +939,9 @@ async function deleteService(id) {
 function openServiceForm(item = null) {
   const isEdit = !!item;
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-black/50 px-4 py-10 overflow-y-auto';
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-10 overflow-y-auto';
   overlay.innerHTML = `
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-2xl">
       <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 class="text-base font-semibold text-gray-900">${isEdit ? 'Edit service' : 'Add service'}</h3>
         <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
@@ -959,7 +963,7 @@ function openServiceForm(item = null) {
         <p class="text-xs text-red-600 hidden" data-error></p>
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Cancel</button>
-          <button type="submit" class="bg-black text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-gray-800">${isEdit ? 'Save changes' : 'Create'}</button>
+          <button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium hover:shadow-2xl">${isEdit ? 'Save changes' : 'Create'}</button>
         </div>
       </form>
     </div>
@@ -1106,13 +1110,13 @@ async function deleteProduct(id) {
 function openProductForm(item = null) {
   const isEdit = !!item;
   const overlay = document.createElement('div');
-  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-black/50 px-4 py-10 overflow-y-auto';
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-10 overflow-y-auto';
   const actionsJson = JSON.stringify(item?.actions || [{ label: 'Request a Demo', href: '#contact' }], null, 2);
   const stepsJson = JSON.stringify(item?.steps || [{ label: 'Step 1', desc: '' }], null, 2);
   const benefitsJson = JSON.stringify(item?.benefits || [{ title: '', icon: 'smile' }], null, 2);
 
   overlay.innerHTML = `
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl">
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-3xl">
       <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 class="text-base font-semibold text-gray-900">${isEdit ? 'Edit product' : 'Add product'}</h3>
         <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
@@ -1184,7 +1188,7 @@ function openProductForm(item = null) {
         <p class="text-xs text-red-600 hidden" data-error></p>
         <div class="flex justify-end gap-2 pt-2">
           <button type="button" data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Cancel</button>
-          <button type="submit" class="bg-black text-white px-5 py-2 rounded-md text-sm font-medium hover:bg-gray-800">${isEdit ? 'Save changes' : 'Create'}</button>
+          <button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium hover:shadow-2xl">${isEdit ? 'Save changes' : 'Create'}</button>
         </div>
       </form>
     </div>

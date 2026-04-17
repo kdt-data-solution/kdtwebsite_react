@@ -29,7 +29,7 @@ function notFound() {
   root.innerHTML = `
     <section class="pt-32 pb-20 container mx-auto px-4 text-center">
       <h1 class="text-2xl font-bold text-gray-900 mb-3">Article not found</h1>
-      <a href="${BASE}media.html" class="inline-block bg-black text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition">Back to Editorial</a>
+      <a href="${BASE}media.html" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">Back to Editorial</a>
     </section>
   `;
 }
@@ -48,17 +48,36 @@ function notFound() {
 
   document.title = `${article.title} — KDT`;
 
+  // Populate Open Graph / Twitter meta tags for rich previews on social
+  const PROD_HOST_META = 'https://www-react.kdtdatasolution.com';
+  const pageUrl = window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1')
+    ? `${PROD_HOST_META}/article.html?slug=${encodeURIComponent(slug)}`
+    : window.location.href;
+  const imgFull = imageUrl(article.image_url);
+  const excerpt = (article.body || '').replace(/\s+/g, ' ').trim().slice(0, 200);
+  const setMeta = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('content', value);
+  };
+  setMeta('og-title', article.title);
+  setMeta('og-description', excerpt);
+  setMeta('og-image', imgFull);
+  setMeta('og-url', pageUrl);
+  setMeta('tw-title', article.title);
+  setMeta('tw-description', excerpt);
+  setMeta('tw-image', imgFull);
+
   const paragraphs = (article.body || '').split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
   const bodyHtml = paragraphs.map(p =>
     `<p class="text-gray-700 text-sm md:text-base leading-relaxed mb-5">${escapeHtml(p).replace(/\r?\n/g, '<br />')}</p>`
   ).join('');
 
   root.innerHTML = `
-    <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-white">
+    <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-background">
       <div class="container mx-auto px-4 sm:px-6 md:px-8 max-w-5xl">
 
         <div class="flex justify-end mb-6">
-          <button id="go-back" class="inline-flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition">
+          <button id="go-back" class="inline-flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             Go back
           </button>
@@ -71,6 +90,12 @@ function notFound() {
         <p class="text-sm text-gray-700 mb-6">
           <span class="font-bold">Author:</span> ${escapeHtml(article.author || 'KDT')} | ${escapeHtml(formatLongDate(article.date))}
         </p>
+        ${article.tags ? `
+        <div class="flex flex-wrap gap-2 mb-4">
+          ${article.tags.split(',').filter(Boolean).map(t => `
+            <span class="inline-block bg-gray-100 border border-gray-300 text-xs text-gray-700 px-3 py-1 rounded-full">${escapeHtml(t.trim())}</span>
+          `).join('')}
+        </div>` : ''}
 
         <div class="rounded-lg overflow-hidden mb-6">
           <img src="${imageUrl(article.image_url)}" alt="${escapeHtml(article.title)}" class="w-full h-auto object-cover" />
@@ -103,13 +128,34 @@ function notFound() {
     else window.location.href = `${BASE}media.html`;
   });
 
-  const url = window.location.href;
-  document.getElementById('share-fb').href =
-    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+  // Use the PRODUCTION URL always (Facebook can't share localhost)
+  const PROD_HOST = 'https://www-react.kdtdatasolution.com';
+  const currentUrl = window.location.href;
+  const shareUrl = currentUrl.includes('localhost') || currentUrl.includes('127.0.0.1')
+    ? `${PROD_HOST}/article.html?slug=${encodeURIComponent(slug)}`
+    : currentUrl;
+
+  const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const fbBtn = document.getElementById('share-fb');
+  fbBtn.href = fbShareUrl;
+  fbBtn.target = '_blank';
+  fbBtn.rel = 'noopener noreferrer';
+  fbBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const w = 626, h = 436;
+    const left = (screen.width - w) / 2;
+    const top = (screen.height - h) / 2;
+    const popup = window.open(fbShareUrl, 'fb-share', `width=${w},height=${h},left=${left},top=${top},toolbar=0,location=0,menubar=0,status=0,scrollbars=1`);
+    // Fallback if popup was blocked
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+      window.location.href = fbShareUrl;
+    }
+  });
   document.getElementById('share-copy').addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(url);
+    const showTip = (ok = true) => {
       const tip = document.getElementById('copy-tooltip');
+      if (!tip) return;
+      tip.textContent = ok ? 'Copied!' : 'Copy failed';
       tip.classList.remove('opacity-0');
       tip.classList.add('opacity-100');
       clearTimeout(window.__copyTipTimer);
@@ -117,6 +163,30 @@ function notFound() {
         tip.classList.remove('opacity-100');
         tip.classList.add('opacity-0');
       }, 1500);
+    };
+
+    // Try the modern Clipboard API first
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(shareUrl);
+        showTip(true);
+        return;
+      }
     } catch {}
+
+    // Fallback for older browsers / non-HTTPS
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = shareUrl;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const success = document.execCommand('copy');
+      document.body.removeChild(ta);
+      showTip(success);
+    } catch {
+      showTip(false);
+    }
   });
 })();

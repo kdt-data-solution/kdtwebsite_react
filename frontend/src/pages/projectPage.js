@@ -29,7 +29,7 @@ function notFound() {
   root.innerHTML = `
     <section class="pt-32 pb-20 container mx-auto px-4 text-center">
       <h1 class="text-2xl font-bold text-gray-900 mb-3">Project not found</h1>
-      <a href="${BASE}portfolio.html" class="inline-block bg-black text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition">Back to Portfolio</a>
+      <a href="${BASE}portfolio.html" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">Back to Portfolio</a>
     </section>
   `;
 }
@@ -54,11 +54,11 @@ function notFound() {
     : '<span class="text-xs text-gray-400">No tags</span>';
 
   root.innerHTML = `
-    <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-white">
+    <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-background">
       <div class="container mx-auto px-4 sm:px-6 md:px-8">
 
         <div class="flex justify-end mb-6">
-          <button id="go-back" class="inline-flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition">
+          <button id="go-back" class="inline-flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             Go back
           </button>
@@ -85,7 +85,7 @@ function notFound() {
         ${project.description ? `<p class="text-gray-600 text-sm md:text-base leading-relaxed max-w-3xl mb-10 whitespace-pre-wrap">${escapeHtml(project.description)}</p>` : ''}
 
         <div class="pt-6 border-t border-gray-200">
-          <a href="${BASE}#contact" class="inline-block bg-black text-white px-6 py-2.5 rounded-md text-sm font-medium hover:bg-gray-800 transition">
+          <a href="${BASE}#contact" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">
             Build with Us
           </a>
         </div>

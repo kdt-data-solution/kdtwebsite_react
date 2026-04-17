@@ -34,6 +34,8 @@ router.post('/', async (req, res, next) => {
         attachments: getEmailAttachments(),
       }).then((r) => {
         if (!r.ok && !r.skipped) console.error('[contact] mail send failed:', r.error);
+      }).catch((err) => {
+        console.error('[contact] mail send error:', err.message);
       });
     }
 

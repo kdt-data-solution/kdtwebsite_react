@@ -12,7 +12,7 @@
     <div class="flex h-screen overflow-hidden">
 
       <!-- Sidebar -->
-      <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-black text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
+      <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-64 bg-foreground text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-200 flex flex-col">
         <div class="px-5 py-5 border-b border-white/10 flex items-center gap-3">
           <img class="h-3 w-auto" src="/assets/images/kdt-black.png" alt="KDT" />
           <div>
@@ -22,41 +22,41 @@
         </div>
 
         <nav class="flex-1 px-3 py-4 space-y-1 text-sm overflow-y-auto">
-          <a href="#dashboard" data-view="dashboard" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+          <a href="#dashboard" data-view="dashboard" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/dashboard.svg" alt="" class="w-5 h-5" />
             Dashboard
           </a>
-          <a href="#messages" data-view="messages" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+          <a href="#messages" data-view="messages" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/message.svg" alt="" class="w-5 h-5" />
             Messages
-            <span id="nav-msg-count" class="ml-auto text-[10px] bg-white/20 px-2 py-0.5 rounded-full hidden"></span>
+            <span id="nav-msg-count" class="ml-auto text-[10px] bg-background/20 px-2 py-0.5 rounded-full hidden"></span>
           </a>
-          <a href="#portfolio" data-view="portfolio" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+          <a href="#portfolio" data-view="portfolio" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/folder.svg" alt="" class="w-5 h-5" />
             Portfolio
           </a>
-          <a href="#media" data-view="media" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+          <a href="#media" data-view="media" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/news.svg" alt="" class="w-5 h-5" />
             Media
           </a>
-          <a href="#settings" data-view="settings" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-white/10 transition">
+          <a href="#settings" data-view="settings" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/settings.svg" alt="" class="w-5 h-5" />
             Settings
           </a>
         </nav>
 
         <div class="border-t border-white/10 p-4">
-          <button id="logout-btn" class="w-full text-sm bg-white text-black px-3 py-2 rounded-md font-medium hover:bg-gray-200 transition">Sign out</button>
+          <button id="logout-btn" class="w-full text-sm bg-background text-black px-3 py-2 rounded-md font-medium hover:bg-gray-200 transition">Sign out</button>
         </div>
       </aside>
 
       <!-- Backdrop for mobile -->
-      <div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden"></div>
+      <div id="sidebar-backdrop" class="fixed inset-0 bg-foreground/40 z-30 hidden lg:hidden"></div>
 
       <!-- Main column -->
       <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-        <header class="bg-white border-b border-gray-200 sticky top-0 z-20">
+        <header class="bg-background border-b border-gray-200 sticky top-0 z-20">
           <div class="px-4 sm:px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
               <button id="sidebar-toggle" class="lg:hidden text-gray-700 hover:text-black" aria-label="Toggle sidebar">
@@ -73,31 +73,31 @@
           <!-- Dashboard view -->
           <section id="view-dashboard" class="view space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div class="bg-white border border-gray-200 rounded-lg p-5">
+              <div class="bg-background border border-gray-200 rounded-lg p-5">
                 <p class="text-xs text-gray-500 uppercase tracking-wide">Total messages</p>
                 <p id="stat-total" class="text-2xl font-bold text-gray-900 mt-1">—</p>
               </div>
-              <div class="bg-white border border-gray-200 rounded-lg p-5">
+              <div class="bg-background border border-gray-200 rounded-lg p-5">
                 <p class="text-xs text-gray-500 uppercase tracking-wide">Latest message</p>
                 <p id="stat-latest" class="text-sm text-gray-900 mt-1">—</p>
               </div>
-              <div class="bg-white border border-gray-200 rounded-lg p-5">
+              <div class="bg-background border border-gray-200 rounded-lg p-5">
                 <p class="text-xs text-gray-500 uppercase tracking-wide">Total portfolio</p>
                 <p id="stat-portfolio" class="text-2xl font-bold text-gray-900 mt-1">—</p>
               </div>
-              <div class="bg-white border border-gray-200 rounded-lg p-5">
+              <div class="bg-background border border-gray-200 rounded-lg p-5">
                 <p class="text-xs text-gray-500 uppercase tracking-wide">Total media</p>
                 <p id="stat-media" class="text-2xl font-bold text-gray-900 mt-1">—</p>
               </div>
             </div>
 
             <!-- Recent messages preview -->
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                 <h2 class="text-base font-semibold text-gray-900">Recent Messages</h2>
                 <div class="flex items-center gap-3">
                   <div class="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
-                    <button id="msg-view-list" class="msg-view-btn p-2 rounded bg-black text-white" title="List view">
+                    <button id="msg-view-list" class="msg-view-btn p-2 rounded bg-foreground text-white" title="List view">
                       <img src="/assets/images/layout-list.svg" alt="List" class="w-5 h-5" />
                     </button>
                     <button id="msg-view-grid" class="msg-view-btn p-2 rounded text-gray-500 hover:text-black" title="Grid view">
@@ -115,7 +115,7 @@
 
           <!-- Messages view -->
           <section id="view-messages" class="view hidden">
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                 <h2 class="text-base font-semibold text-gray-900">Contact messages</h2>
               </div>
@@ -140,7 +140,7 @@
 
           <!-- Portfolio view -->
           <section id="view-portfolio" class="view hidden">
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                 <div>
                   <h2 class="text-base font-semibold text-gray-900">Portfolio</h2>
@@ -148,20 +148,20 @@
                 </div>
                 <div class="flex items-center gap-3">
                   <div class="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
-                    <button id="portfolio-view-list" class="portfolio-view-btn p-2 rounded bg-black text-white" title="List view">
+                    <button id="portfolio-view-list" class="portfolio-view-btn p-2 rounded bg-foreground text-white" title="List view">
                       <img src="/assets/images/layout-list.svg" alt="List" class="w-5 h-5" />
                     </button>
                     <button id="portfolio-view-grid" class="portfolio-view-btn p-2 rounded text-gray-500 hover:text-black" title="Grid view">
                       <img src="/assets/images/layout-grid.svg" alt="Grid" class="w-5 h-5 invert" />
                     </button>
                   </div>
-                  <button id="portfolio-add-btn" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">+ Add project</button>
+                  <button id="portfolio-add-btn" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">+ Add project</button>
                 </div>
               </div>
               <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-2">
                 <span class="text-xs text-gray-500">Filter:</span>
                 <div class="inline-flex gap-1.5">
-                  <button data-filter="all" class="portfolio-filter-btn bg-black text-white text-xs px-3 py-1.5 rounded-md font-medium transition">All</button>
+                  <button data-filter="all" class="portfolio-filter-btn bg-foreground text-white text-xs px-3 py-1.5 rounded-md font-medium transition">All</button>
                   <button data-filter="architecture" class="portfolio-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Architecture & Engineering</button>
                   <button data-filter="data" class="portfolio-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Data Science & Analytics</button>
                   <button data-filter="software" class="portfolio-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Software Development</button>
@@ -174,7 +174,7 @@
 
           <!-- Media view -->
           <section id="view-media" class="view hidden">
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
                 <div>
                   <h2 class="text-base font-semibold text-gray-900">Media / Editorial</h2>
@@ -182,20 +182,20 @@
                 </div>
                 <div class="flex items-center gap-3">
                   <div class="flex items-center gap-1 bg-gray-100 rounded-md p-0.5">
-                    <button id="article-view-list" class="article-view-btn p-2 rounded bg-black text-white" title="List view">
+                    <button id="article-view-list" class="article-view-btn p-2 rounded bg-foreground text-white" title="List view">
                       <img src="/assets/images/layout-list.svg" alt="List" class="w-5 h-5" />
                     </button>
                     <button id="article-view-grid" class="article-view-btn p-2 rounded text-gray-500 hover:text-black" title="Grid view">
                       <img src="/assets/images/layout-grid.svg" alt="Grid" class="w-5 h-5 invert" />
                     </button>
                   </div>
-                  <button id="article-add-btn" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">+ Add article</button>
+                  <button id="article-add-btn" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">+ Add article</button>
                 </div>
               </div>
               <div class="px-5 py-3 border-b border-gray-100 flex items-center gap-2">
                 <span class="text-xs text-gray-500">Filter:</span>
                 <div class="inline-flex gap-1.5">
-                  <button data-filter="all" class="article-filter-btn bg-black text-white text-xs px-3 py-1.5 rounded-md font-medium transition">All</button>
+                  <button data-filter="all" class="article-filter-btn bg-foreground text-white text-xs px-3 py-1.5 rounded-md font-medium transition">All</button>
                   <button data-filter="architecture" class="article-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Architecture & Engineering</button>
                   <button data-filter="data" class="article-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Data Science & Analytics</button>
                   <button data-filter="software" class="article-filter-btn text-xs text-gray-700 px-3 py-1.5 rounded-md font-medium border border-gray-200 hover:bg-gray-100 transition">Software Development</button>
@@ -210,7 +210,7 @@
           <section id="view-settings" class="view hidden space-y-6">
 
             <!-- Account -->
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="px-5 py-4 border-b border-gray-200">
                 <h2 class="text-base font-semibold text-gray-900">Account</h2>
                 <p class="text-xs text-gray-500 mt-1">Update your admin profile and password.</p>
@@ -228,7 +228,7 @@
                     <input name="email" type="email" id="settings-email" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
                   </div>
                   <p class="text-xs hidden" id="profile-status"></p>
-                  <button type="submit" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Save Profile</button>
+                  <button type="submit" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">Save Profile</button>
                 </form>
 
                 <!-- Change Password -->
@@ -255,13 +255,13 @@
                     </div>
                   </div>
                   <p class="text-xs hidden" id="password-status"></p>
-                  <button type="submit" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Update Password</button>
+                  <button type="submit" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">Update Password</button>
                 </form>
               </div>
             </div>
 
             <!-- Site Settings -->
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="px-5 py-4 border-b border-gray-200">
                 <h2 class="text-base font-semibold text-gray-900">Site Information</h2>
                 <p class="text-xs text-gray-500 mt-1">Company details shown on the website (footer, about, contact).</p>
@@ -307,12 +307,12 @@
                   </div>
                 </div>
                 <p class="text-xs hidden" id="site-status"></p>
-                <button type="submit" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Save Site Info</button>
+                <button type="submit" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">Save Site Info</button>
               </form>
             </div>
 
             <!-- Email Test -->
-            <div class="bg-white border border-gray-200 rounded-lg">
+            <div class="bg-background border border-gray-200 rounded-lg">
               <div class="px-5 py-4 border-b border-gray-200">
                 <h2 class="text-base font-semibold text-gray-900">Email</h2>
                 <p class="text-xs text-gray-500 mt-1">Verify your email notification setup.</p>
@@ -321,7 +321,7 @@
                 <p class="text-xs text-gray-600 mb-3">Send a test email to confirm the SMTP connection is working.</p>
                 <div class="flex items-center gap-3">
                   <input id="test-email-input" type="email" placeholder="recipient@email.com" class="px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black w-64" />
-                  <button id="test-email-btn" class="bg-black text-white text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-800">Send Test</button>
+                  <button id="test-email-btn" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">Send Test</button>
                 </div>
                 <p class="text-xs hidden mt-2" id="test-email-status"></p>
               </div>

@@ -35,7 +35,7 @@ document.querySelector("#faq").innerHTML = `
           Get quick answers to the most common questions about using our system and services. We've organized everything here to make your experience simple, clear, and hassle-free.
         </p>
         <div class="mt-3 sm:mt-4 md:mt-5">
-          <a href="#" class="inline-block bg-black text-white px-4 sm:px-5 md:px-8 py-1.5 sm:py-2 md:py-3 text-[11px] sm:text-xs md:text-base rounded-md font-medium hover:bg-gray-800 transition-colors duration-300">
+          <a href="${import.meta.env.BASE_URL}#contact" class="inline-block bg-foreground text-white px-4 sm:px-5 md:px-8 py-1.5 sm:py-2 md:py-3 text-[11px] sm:text-xs md:text-base rounded-md font-medium hover:shadow-2xl transition-colors duration-300">
             Chat with us
           </a>
         </div>

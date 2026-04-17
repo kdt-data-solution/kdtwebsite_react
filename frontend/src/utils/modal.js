@@ -31,13 +31,13 @@ function render({ title, message, variant = 'info', confirmText = 'OK', cancelTe
     const confirmClasses =
       variant === 'error' || variant === 'warning'
         ? 'bg-red-600 hover:bg-red-700 text-white'
-        : 'bg-black hover:bg-gray-800 text-white';
+        : 'bg-foreground hover:shadow-2xl text-white';
 
     const overlay = document.createElement('div');
     overlay.className =
-      'fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4 animate-[fadeIn_0.15s_ease-out]';
+      'fixed inset-0 z-[100] flex items-center justify-center bg-foreground/50 px-4 animate-[fadeIn_0.15s_ease-out]';
     overlay.innerHTML = `
-      <div role="dialog" aria-modal="true" class="bg-white rounded-lg shadow-xl w-full max-w-sm overflow-hidden">
+      <div role="dialog" aria-modal="true" class="bg-background rounded-lg shadow-xl w-full max-w-sm overflow-hidden">
         <div class="px-6 pt-6 pb-4">
           ${title ? `<h3 class="text-base font-semibold ${accent} mb-2">${escapeHtml(title)}</h3>` : ''}
           <p class="text-sm text-gray-700 whitespace-pre-wrap">${escapeHtml(message)}</p>

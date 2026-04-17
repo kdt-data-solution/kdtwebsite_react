@@ -2,10 +2,10 @@ import '../styles/style.css';
 import { getSiteSettings } from '../utils/siteSettings.js';
 
 const stats = [
-  { value: '2+', label: 'Years Experience' },
-  { value: '50+', label: 'Succesful Projects' },
-  { value: '10+', label: 'Active Partners' },
-  { value: '15+', label: 'Team Members' },
+  { value: '3+', label: 'Years Experience' },
+  { value: '30+', label: 'Succesful Projects' },
+  { value: '2+', label: 'Active Partners' },
+  { value: '9+', label: 'Team Members' },
 ];
 
 const img = (name) => `${import.meta.env.BASE_URL}assets/images/${name}`;
@@ -28,9 +28,9 @@ const values = [
   },
 ];
 
-document.querySelector("#about-page").innerHTML = `
-  <!-- Hero -->
-  <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-white">
+document.querySelector('#about-page').innerHTML = `
+  <!-- About Hero -->
+  <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-background">
     <div class="container mx-auto px-4 sm:px-6 md:px-8">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div>
@@ -38,17 +38,22 @@ document.querySelector("#about-page").innerHTML = `
           <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
             KDT Network and Data Solution 
           </h1>
-          <p class="text-gray-600 text-sm md:text-base max-w-xl leading-relaxed">
+          <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
             KDT Network and Data Solution (KDT Solution) is a Philippine-based consultancy firm dedicated to providing efficient and cost-effective data science/analytics, Information technology, and Professional Design Services. Combining these skillsets, we aim to be digital enablers for companies, institutions, and organizations.
           </p>
+          <a href="${import.meta.env.BASE_URL}about.html" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">
+            Company Profile
+          </a>
         </div>
-        <div class="bg-gray-500 rounded-lg w-full aspect-[4/5] md:aspect-[3/4] max-w-md justify-self-end"></div>
+        <div class="w-full max-w-xl justify-self-end flex items-center">
+          <img src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776392434/about-illustration_fj4suq.png" alt="About KDT" class="w-full h-auto" onerror="this.parentElement.classList.add('bg-gray-200');this.style.display='none'" />
+        </div>
       </div>
     </div>
   </section>
 
   <!-- Stats bar -->
-  <section class="bg-black text-white py-8 md:py-10">
+  <section class="bg-foreground text-white py-8 md:py-10">
     <div class="container mx-auto px-4 sm:px-6 md:px-8">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
         ${stats
@@ -60,13 +65,13 @@ document.querySelector("#about-page").innerHTML = `
           </div>
         `,
           )
-          .join("")}
+          .join('')}
       </div>
     </div>
   </section>
 
   <!-- We are Committed To -->
-  <section class="py-12 md:py-20 bg-white">
+  <section class="py-12 md:py-20 bg-background">
     <div class="container mx-auto px-4 sm:px-6 md:px-8">
       <div class="text-center mb-10 md:mb-12">
         <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">We are Committed To</h2>
@@ -78,14 +83,14 @@ document.querySelector("#about-page").innerHTML = `
         ${values
           .map(
             (v) => `
-          <div class="bg-white border border-border rounded-lg shadow-xl p-8 text-center flex flex-col items-center">
+          <div class="bg-background border border-border rounded-lg shadow-xl p-8 text-center flex flex-col items-center transition-all duration-300 ease-in-out hover:bg-muted hover:shadow-lg">
             <div class="text-gray-900 mb-4">${v.icon}</div>
             <h3 class="font-bold text-gray-900 text-base md:text-lg mb-3">${v.title}</h3>
             <p class="text-gray-500 text-xs md:text-sm leading-relaxed max-w-[14rem]">${v.desc}</p>
           </div>
         `,
           )
-          .join("")}
+          .join('')}
       </div>
     </div>
   </section>
@@ -96,22 +101,22 @@ document.querySelector("#about-page").innerHTML = `
   </div>
 
   <!-- Our Story -->
-  <section class="py-12 md:py-20 bg-white">
+  <section class="py-12 md:py-20 bg-background">
     <div class="container mx-auto px-4 sm:px-6 md:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-start">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-stretch">
 
         <div>
           <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-5">Our Story</h2>
           <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-5">
-            KDT Network and Data Solution (KDT Solution) is a Philippine-based consultancy firm dedicated to providing efficient and cost-effective data science/analytics, Information technology, and Professional Design Services. Combining these skillsets, we aim to be digital enablers for companies, institutions, and organizations.
+            KDT Network and Data Solution (KDT Solution) is a Philippine-based consultancy firm committed to helping organizations transform and improve through technology and design. By combining expertise in data science and analytics, information technology, and professional design services, KDT positions itself as a digital enabler for companies, institutions, and organizations. Their goal is to provide efficient and cost-effective solutions that support better decision-making, streamlined operations, and improved digital presence across various industries.
           </p>
           <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-8">
-            KDT Network and Data Solution (KDT Solution) is a Philippine-based consultancy firm dedicated to providing efficient and cost-effective data science/analytics, Information technology, and Professional Design Services. Combining these skillsets, we aim to be digital enablers for companies, institutions, and organizations.
+            KDT offers a wide range of services that cater to modern digital needs. Delivering practical digital solutions that help businesses and organizations adapt to the evolving technological landscape, improve productivity, and achieve long-term growth through innovation.
           </p>
 
           <div class="space-y-3">
             <div class="flex items-center gap-3 border border-gray-200 rounded-md w-100 px-4 py-3">
-              <img src="${img("loc.svg")}" alt="Address" class="w-5 h-5 flex-shrink-0" />
+              <img src="${img('loc.svg')}" alt="Address" class="w-5 h-5 flex-shrink-0" />
               <div class="leading-tight">
                 <p class="text-xs font-semibold text-gray-900">Address</p>
                 <p class="text-xs text-gray-600" id="about-address">Loading...</p>
@@ -119,7 +124,7 @@ document.querySelector("#about-page").innerHTML = `
             </div>
 
             <div class="flex items-center gap-3 border border-gray-200 rounded-md w-100 px-4 py-3">
-              <img src="${img("clock-01-stroke-rounded.svg")}" alt="Business Hours" class="w-5 h-5 flex-shrink-0" />
+              <img src="${img('clock-01-stroke-rounded.svg')}" alt="Business Hours" class="w-5 h-5 flex-shrink-0" />
               <div class="leading-tight">
                 <p class="text-xs font-semibold text-gray-900">Business hours</p>
                 <p class="text-xs text-gray-600" id="about-hours">Loading...</p>
@@ -127,7 +132,7 @@ document.querySelector("#about-page").innerHTML = `
             </div>
 
             <div class="flex items-center gap-3 border border-gray-200 rounded-md w-100 px-4 py-3">
-              <img src="${img("contact.svg")}" alt="Contact" class="w-5 h-5 flex-shrink-0" />
+              <img src="${img('contact.svg')}" alt="Contact" class="w-5 h-5 flex-shrink-0" />
               <div class="leading-tight">
                 <p class="text-xs font-semibold text-gray-900">Contact information</p>
                 <p class="text-xs text-gray-600" id="about-contact">Loading...</p>
@@ -136,14 +141,18 @@ document.querySelector("#about-page").innerHTML = `
           </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-black rounded-lg overflow-hidden flex items-center justify-center aspect-square">
-            <img src="${img("kdt-black.png")}" alt="KDT" class="max-h-20 w-auto" />
+        <div class="grid grid-cols-2 grid-rows-2 gap-4 w-full h-full min-h-[400px]">
+          <div class="bg-foreground rounded-lg overflow-hidden flex items-center justify-center">
+            <img src="${img('kdt-black.png')}" alt="KDT" class="max-h-20 w-auto" />
           </div>
-          <div class="bg-gray-200 rounded-lg overflow-hidden aspect-square"></div>
-          <div class="bg-gray-200 rounded-lg overflow-hidden aspect-square"></div>
-          <div class="bg-black rounded-lg overflow-hidden flex items-center justify-center aspect-square">
-            <img src="${img("kdt-black.png")}" alt="KDT" class="max-h-20 w-auto" />
+          <div class="bg-background rounded-lg border border-gray-200 overflow-hidden flex items-center justify-center">
+            <img src="${img('kdt-logo.png')}" alt="KDT" class="max-h-20 w-auto" />
+          </div>
+          <div class="bg-background rounded-lg border border-gray-200 overflow-hidden flex items-center justify-center">
+            <img src="${img('kdt-logo.png')}" alt="KDT" class="max-h-20 w-auto" />
+          </div>
+          <div class="bg-foreground rounded-lg overflow-hidden flex items-center justify-center">
+            <img src="${img('kdt-black.png')}" alt="KDT" class="max-h-20 w-auto" />
           </div>
         </div>
 

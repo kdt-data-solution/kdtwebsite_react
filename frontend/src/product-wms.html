@@ -5,14 +5,14 @@
     <link rel="icon" type="image/png" href="/assets/images/k-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/styles/style.css" rel="stylesheet">
-    <title>KDT TABS</title>
+    <title>KDT WMS</title>
   </head>
-  <body>
+  <body class="min-h-screen flex flex-col">
     <div id="navbar"></div>
     <script type="module" src="./components/navbar.js"></script>
 
-    <div id="product-page"></div>
-    <script>window.PRODUCT_KEY = 'tabs';</script>
+    <div id="product-page" class="flex-1"></div>
+    <script>window.PRODUCT_KEY = 'wms';</script>
     <script type="module" src="./pages/productPage.js"></script>
 
     <div id="footer"></div>
