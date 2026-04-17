@@ -30,12 +30,12 @@ document.querySelector("#contact").innerHTML = `
         <h3 class="text-xl sm:text-sm md:text-xl lg:text-3xl font-bold text-gray-900 leading-snug">
           Have Questions?<br/>We're Here to Help
         </h3>
-        <p class="text-gray-600 text-sm md:text-sm lg:text-m mt-3 md:mt-4 max-w-md lg:max-w-lg">
+        <p class="text-gray-600 text-sm md:text-sm lg:text-base mt-3 md:mt-4 max-w-md lg:max-w-lg">
           Reach out with your concerns and questions, we are happy to be at your service. Please take note of our business hours to accommodate your questions.
         </p>
 
         <div class="mt-4 space-y-2 w-full text-left">
-          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-100 px-4 py-4">
+          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-4 py-4">
             <img src="${BASE}assets/images/loc.svg" alt="Address" class="w-4 h-4 flex-shrink-0" />
             <div class="leading-tight">
               <p class="font-semibold text-gray-900 text-xs">Address</p>
@@ -43,7 +43,7 @@ document.querySelector("#contact").innerHTML = `
             </div>
           </div>
 
-          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-100 px-4 py-4">
+          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-4 py-4">
             <img src="${BASE}assets/images/clock-01-stroke-rounded.svg" alt="Business Hours" class="w-4 h-4 flex-shrink-0" />
             <div class="leading-tight">
               <p class="font-semibold text-gray-900 text-xs">Business Hours</p>
@@ -56,7 +56,7 @@ document.querySelector("#contact").innerHTML = `
           <iframe
             src="https://maps.google.com/maps?q=71+Detroit+Street,+Pinagkaisahan,+Cubao,+Quezon+City,+Metro+Manila,+Philippines&t=m&z=18&ie=UTF8&iwloc=&output=embed"
             width="100%"
-            class="block w-full h-56 h-70 rounded-md"
+            class="block w-full h-56 rounded-md"
             style="border:0;"
             allowfullscreen=""
             loading="lazy"

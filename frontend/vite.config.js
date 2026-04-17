@@ -25,7 +25,7 @@ const notFoundFallback = () => ({
 });
 
 export default defineConfig({
-  base: '/kdtwebsite_react/',
+  base: '/',
   plugins: [tailwindcss(), notFoundFallback()],
   root: 'src',
   publicDir: '../public',

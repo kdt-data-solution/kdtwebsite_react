@@ -54,15 +54,17 @@ function renderShell(gridHtml, statusText) {
         <div class="text-center mb-8 md:mb-10">
           <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Editorial</h1>
           <p class="text-gray-500 text-xs md:text-sm max-w-md mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            This section presents articles authored by the company owner, offering informed perspectives on the services provided.
           </p>
         </div>
 
         <div class="flex justify-center mb-10">
           <div class="bg-gray-100 rounded-lg p-2 inline-flex flex-col sm:flex-row gap-2">
-            ${CATEGORIES.map(c => `
+            ${CATEGORIES.map(
+              (c) => `
               <button data-filter="${c.key}" class="filter-btn px-5 py-2 rounded-md text-xs sm:text-sm font-medium transition whitespace-nowrap ${c.key === 'all' ? 'bg-foreground text-white' : 'text-gray-700 hover:bg-background'}">${c.label}</button>
-            `).join('')}
+            `,
+            ).join('')}
           </div>
         </div>
 

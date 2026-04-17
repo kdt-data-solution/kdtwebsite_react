@@ -35,7 +35,7 @@ logoutBtn.addEventListener('click', async () => {
   });
   if (ok) logout();
 });
-refreshBtn.addEventListener('click', loadAll);
+refreshBtn?.addEventListener('click', loadAll);
 
 // Sidebar toggle (mobile)
 function openSidebar() {

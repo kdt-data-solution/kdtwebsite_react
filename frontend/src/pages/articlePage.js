@@ -123,7 +123,7 @@ function notFound() {
     </section>
   `;
 
-  document.getElementById('go-back').addEventListener('click', () => {
+  document.getElementById('go-back')?.addEventListener('click', () => {
     if (document.referrer && document.referrer.includes(window.location.host)) history.back();
     else window.location.href = `${BASE}media.html`;
   });
@@ -137,10 +137,11 @@ function notFound() {
 
   const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
   const fbBtn = document.getElementById('share-fb');
-  fbBtn.href = fbShareUrl;
-  fbBtn.target = '_blank';
-  fbBtn.rel = 'noopener noreferrer';
-  fbBtn.addEventListener('click', (e) => {
+  if (fbBtn) {
+    fbBtn.href = fbShareUrl;
+    fbBtn.target = '_blank';
+    fbBtn.rel = 'noopener noreferrer';
+    fbBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const w = 626, h = 436;
     const left = (screen.width - w) / 2;
@@ -151,7 +152,8 @@ function notFound() {
       window.location.href = fbShareUrl;
     }
   });
-  document.getElementById('share-copy').addEventListener('click', async () => {
+  }
+  document.getElementById('share-copy')?.addEventListener('click', async () => {
     const showTip = (ok = true) => {
       const tip = document.getElementById('copy-tooltip');
       if (!tip) return;

@@ -37,13 +37,13 @@ function cardHtml(p) {
 }
 
 function renderShell(gridHtml, statusText) {
-  document.querySelector("#portfolio-page").innerHTML = `
+  document.querySelector('#portfolio-page').innerHTML = `
     <section class="pt-24 sm:pt-28 pb-16 md:pb-20 bg-background">
       <div class="container mx-auto px-4 sm:px-6 md:px-8">
         <div class="text-center mb-8 md:mb-10">
           <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Portfolio</h1>
           <p class="text-gray-500 text-xs md:text-sm max-w-md mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            This section showcases a curated selection of the company’s completed projects, demonstrating the scope and quality of its work.
           </p>
         </div>
 
@@ -51,9 +51,9 @@ function renderShell(gridHtml, statusText) {
           <div class="bg-gray-100 rounded-lg p-2 inline-flex flex-col sm:flex-row gap-2">
             ${CATEGORIES.map(
               (c) => `
-              <button data-filter="${c.key}" class="filter-btn px-5 py-2 rounded-md text-xs sm:text-sm font-medium transition whitespace-nowrap ${c.key === "all" ? "bg-foreground text-white" : "text-gray-700 hover:bg-background"}">${c.label}</button>
+              <button data-filter="${c.key}" class="filter-btn px-5 py-2 rounded-md text-xs sm:text-sm font-medium transition whitespace-nowrap ${c.key === 'all' ? 'bg-foreground text-white' : 'text-gray-700 hover:bg-background'}">${c.label}</button>
             `,
-            ).join("")}
+            ).join('')}
           </div>
         </div>
 
@@ -61,7 +61,7 @@ function renderShell(gridHtml, statusText) {
           ${gridHtml}
         </div>
 
-        <p id="portfolio-empty" class="text-center text-gray-500 text-sm mt-10 ${statusText ? "" : "hidden"}">${statusText || ""}</p>
+        <p id="portfolio-empty" class="text-center text-gray-500 text-sm mt-10 ${statusText ? '' : 'hidden'}">${statusText || ''}</p>
       </div>
     </section>
   `;

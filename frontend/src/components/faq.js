@@ -41,7 +41,7 @@ document.querySelector("#faq").innerHTML = `
         </div>
       </div>
 
-      <div class="rounded-lg overflow-hidden min-h-[260px] sm:min-h-[325px] w-full max-w-md md:max-w-m lg:max-w-lg xl:max-w-xl mx-auto md:ml-auto md:mr-0 mt-2 md:mt-0">
+      <div class="rounded-lg w-full max-w-md md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto md:ml-auto md:mr-0 mt-2 md:mt-0 min-h-[290px] sm:min-h-[310px] md:min-h-[340px]">
         ${dropdownsHTML}
       </div>
       

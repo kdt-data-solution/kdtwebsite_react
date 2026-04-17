@@ -33,10 +33,10 @@ document.querySelector('#about-page').innerHTML = `
   <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-background">
     <div class="container mx-auto px-4 sm:px-6 md:px-8">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-        <div>
+        <div class="text-center md:text-left flex flex-col items-center md:items-start">
           <span class="inline-block border border-border rounded-md px-3 py-1 text-xs font-medium text-foreground mb-4">About KDT</span>
           <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
-            KDT Network and Data Solution 
+            KDT Network and Data Solution
           </h1>
           <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
             KDT Network and Data Solution (KDT Solution) is a Philippine-based consultancy firm dedicated to providing efficient and cost-effective data science/analytics, Information technology, and Professional Design Services. Combining these skillsets, we aim to be digital enablers for companies, institutions, and organizations.
@@ -45,7 +45,7 @@ document.querySelector('#about-page').innerHTML = `
             Company Profile
           </a>
         </div>
-        <div class="w-full max-w-xl justify-self-end flex items-center">
+        <div class="w-full max-w-xl md:justify-self-end mx-auto md:mx-0 flex items-center">
           <img src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776392434/about-illustration_fj4suq.png" alt="About KDT" class="w-full h-auto" onerror="this.parentElement.classList.add('bg-gray-200');this.style.display='none'" />
         </div>
       </div>
@@ -115,7 +115,7 @@ document.querySelector('#about-page').innerHTML = `
           </p>
 
           <div class="space-y-3">
-            <div class="flex items-center gap-3 border border-gray-200 rounded-md w-100 px-4 py-3">
+            <div class="flex items-center gap-3 border border-gray-200 rounded-md w-full px-4 py-3">
               <img src="${img('loc.svg')}" alt="Address" class="w-5 h-5 flex-shrink-0" />
               <div class="leading-tight">
                 <p class="text-xs font-semibold text-gray-900">Address</p>
@@ -123,7 +123,7 @@ document.querySelector('#about-page').innerHTML = `
               </div>
             </div>
 
-            <div class="flex items-center gap-3 border border-gray-200 rounded-md w-100 px-4 py-3">
+            <div class="flex items-center gap-3 border border-gray-200 rounded-md w-full px-4 py-3">
               <img src="${img('clock-01-stroke-rounded.svg')}" alt="Business Hours" class="w-5 h-5 flex-shrink-0" />
               <div class="leading-tight">
                 <p class="text-xs font-semibold text-gray-900">Business hours</p>
@@ -131,7 +131,7 @@ document.querySelector('#about-page').innerHTML = `
               </div>
             </div>
 
-            <div class="flex items-center gap-3 border border-gray-200 rounded-md w-100 px-4 py-3">
+            <div class="flex items-center gap-3 border border-gray-200 rounded-md w-full px-4 py-3">
               <img src="${img('contact.svg')}" alt="Contact" class="w-5 h-5 flex-shrink-0" />
               <div class="leading-tight">
                 <p class="text-xs font-semibold text-gray-900">Contact information</p>

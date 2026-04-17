@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS products (
     title TEXT NOT NULL,
     description TEXT,
     category TEXT NOT NULL DEFAULT 'software',
+    date TEXT,
+    features TEXT,
     actions_json TEXT NOT NULL DEFAULT '[]',
     steps_json TEXT NOT NULL DEFAULT '[]',
     benefits_json TEXT NOT NULL DEFAULT '[]',

@@ -93,7 +93,7 @@ function notFound() {
     </section>
   `;
 
-  document.getElementById('go-back').addEventListener('click', () => {
+  document.getElementById('go-back')?.addEventListener('click', () => {
     if (document.referrer && document.referrer.includes(window.location.host)) history.back();
     else window.location.href = `${BASE}portfolio.html`;
   });
