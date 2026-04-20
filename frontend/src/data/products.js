@@ -34,8 +34,8 @@ export const products = {
     comingSoon: false,
   },
   'construct-pro': {
-    title: 'Intelligent search for value-driven properties',
-    pageTitle: 'Property Finder',
+    title: 'Intelligent Search for Value-driven Properties',
+    pageTitle: 'Intelligent Search for Value-driven Properties',
     description:
       'A smart property finder designed to help users discover affordable opportunities with greater speed and clarity. From regular listings to bank foreclosed properties, it streamlines search and tracking for a more efficient and value-focused property journey.',
     actions: [
@@ -86,8 +86,8 @@ export const products = {
     comingSoon: false,
   },
   wms: {
-    title: 'Sophisticated tracking for modern warehousing',
-    pageTitle: 'WMS',
+    title: 'Sophisticated Tracking for Modern Warehousing',
+    pageTitle: 'Sophisticated Tracking for Modern Warehousing',
     description:
       'A smart warehouse solution designed to improve visibility, accuracy, and control across daily operations. It supports faster tracking, efficient inventory handling, and more organized warehouse workflows through modern, reliable system processes.',
     actions: [

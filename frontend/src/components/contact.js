@@ -34,7 +34,7 @@ document.querySelector("#contact").innerHTML = `
           Reach out with your concerns and questions, we are happy to be at your service. Please take note of our business hours to accommodate your questions.
         </p>
 
-        <div class="mt-4 space-y-2 w-full text-left">
+        <div class="mt-4 space-y-2 w-100 text-left">
           <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-4 py-4">
             <img src="${BASE}assets/images/loc.svg" alt="Address" class="w-4 h-4 flex-shrink-0" />
             <div class="leading-tight">

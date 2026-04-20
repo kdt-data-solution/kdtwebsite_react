@@ -141,7 +141,7 @@ document.querySelector('#about-page').innerHTML = `
           </div>
         </div>
 
-        <div class="grid grid-cols-2 grid-rows-2 gap-4 w-full h-full min-h-[400px]">
+        <div class="grid grid-cols-2 grid-rows-2 gap-3 sm:gap-4 w-full h-full min-h-[280px] sm:min-h-[350px] lg:min-h-[400px]">
           <div class="bg-foreground rounded-lg overflow-hidden flex items-center justify-center">
             <img src="${img('kdt-black.png')}" alt="KDT" class="max-h-20 w-auto" />
           </div>
