@@ -44,6 +44,7 @@ function renderFooter(s) {
           <li><a href="${BASE}services.html" class="hover:text-white transition">Architecture and Engineering</a></li>
           <li><a href="${BASE}services-data.html" class="hover:text-white transition">Data Science and Analytics</a></li>
           <li><a href="${BASE}services-software.html" class="hover:text-white transition">Software Development</a></li>
+          <li><a href="${BASE}services-bootcamp.html" class="hover:text-white transition">Bootcamp</a></a></li>
         </ul>
       </div>
 

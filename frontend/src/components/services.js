@@ -4,25 +4,29 @@ const services = [
   {
     title: 'Architecture and Engineering Services',
     desc: 'Professional design and engineering solutions tailored to your project requirements.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317603/eng-card_b99f6c.webp',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317603/eng-card_b99f6c.webp',
     href: 'services.html',
   },
   {
     title: 'Data Science and Analytics',
     desc: 'Transform your data into actionable insights with our advanced analytics solutions.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317603/dsa-card_bnnv0x.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317603/dsa-card_bnnv0x.png',
     href: 'services-data.html',
   },
   {
     title: 'Software Development',
     desc: 'Custom software and web applications tailored to your specific business needs.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317604/sd-card_jwzlef.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317604/sd-card_jwzlef.png',
     href: 'services-software.html',
   },
   {
     title: 'Bootcamp',
     desc: 'Intensive training programs designed to upskill professionals in technology and engineering.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776347679/bot-card_zgmr5w.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772395/bootcamp-card_rceyil.png',
     href: 'services-bootcamp.html',
   },
 ];

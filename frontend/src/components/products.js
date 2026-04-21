@@ -6,42 +6,48 @@ const products = [
   {
     title: 'Membership Portal',
     desc: 'Professional engineering tools and solutions tailored to your project requirements.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/mb-card_lnpi4c.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/mb-card_lnpi4c.png',
     href: 'product-membership.html',
     soon: false,
   },
   {
     title: 'Intelligent Search for Value-driven Properties',
     desc: 'A smart property finder designed to help users discover affordable opportunities with greater speed and clarity. From regular listings to bank foreclosed properties, it streamlines search and tracking for a more efficient and value-focused property journey.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324222/pf-card_rniidz.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324222/pf-card_rniidz.png',
     href: 'product-construct.html',
     soon: false,
   },
   {
     title: 'Smart Service Chat Agent for Selling and Ordering',
     desc: 'A smart conversational assistant designed to simplify and accelerate the way businesses handle selling and ordering. It enables customers and business owners to browse products, place orders, check availability, and get instant answers all through a natural, chat-based experience without the need for phone calls, manual order forms, or dedicated sales staff.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776327212/chatbot-card_as2n2p.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776327212/chatbot-card_as2n2p.png',
     href: 'product-chatbot.html',
     soon: false,
   },
   {
     title: 'Sophisticated Tracking for Modern Warehousing',
     desc: 'A smart warehouse solution designed to improve visibility, accuracy, and control across daily operations.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/wms-card_bgkw2y.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772755/wms-card_teymis.png',
     href: 'product-wms.html',
     soon: false,
   },
   {
     title: 'CardKo',
     desc: 'A digital business card and networking platform for professionals and organizations. Easily share your contact details, portfolio, and social links with a simple scan.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/ck-card_ca85hx.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/ck-card_ca85hx.png',
     href: 'product-cardko.html',
     soon: false,
   },
   {
     title: 'Three-dimensional AI-Powered Building Systems',
     desc: 'An AI-powered 3D building system that transforms how architects and engineers plan, visualize, and manage construction projects.',
-    image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776348583/tabs-card_eq6luh.png',
+    image:
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772399/tabs-card1_zuofsy.png',
     href: '',
     soon: true,
   },
