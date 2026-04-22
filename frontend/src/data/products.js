@@ -69,7 +69,7 @@ export const products = {
       { label: 'Try It', href: '#' },
       { label: 'Learn More', href: '#' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776327212/chatbot-card_as2n2p.png'],
+    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776837709/agentic-card_c3loqn.png'],
     steps: [
       { label: 'Step 1', desc: 'Ask a question' },
       { label: 'Step 2', desc: 'Review answer & sources' },
