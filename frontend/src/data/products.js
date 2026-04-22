@@ -95,7 +95,7 @@ export const products = {
       { label: 'Pricing', href: '#' },
       { label: 'Get Started', href: '#' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/wms-card_bgkw2y.png'],
+    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772755/wms-card_teymis.png'],
     steps: [
       { label: 'Step 1', desc: 'Set up your warehouse' },
       { label: 'Step 2', desc: 'Track inventory in real-time' },
@@ -144,7 +144,7 @@ export const products = {
     actions: [
       { label: 'Notify Me', href: '#contact' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776348583/tabs-card_eq6luh.png'],
+    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772399/tabs-card1_zuofsy.png'],
     steps: COMMON_STEPS,
     benefitsTitle: 'What to Expect from TABS',
     benefitsBlurb: COMMON_BENEFITS_BLURB,

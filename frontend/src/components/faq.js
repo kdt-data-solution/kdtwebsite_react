@@ -34,11 +34,6 @@ document.querySelector("#faq").innerHTML = `
         <p class="text-gray-600 text-xs sm:text-sm md:text-base lg:text-base mt-2 sm:mt-3 md:mt-5">
           Get quick answers to the most common questions about using our system and services. We've organized everything here to make your experience simple, clear, and hassle-free.
         </p>
-        <div class="mt-3 sm:mt-4 md:mt-5">
-          <a href="${import.meta.env.BASE_URL}#contact" class="inline-block bg-foreground text-white px-4 sm:px-5 md:px-8 py-1.5 sm:py-2 md:py-3 text-[11px] sm:text-xs md:text-base rounded-md font-medium hover:shadow-2xl transition-colors duration-300">
-            Chat with us
-          </a>
-        </div>
       </div>
 
       <div class="rounded-lg w-full max-w-md md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto md:ml-auto md:mr-0 mt-2 md:mt-0 min-h-[290px] sm:min-h-[310px] md:min-h-[340px]">
