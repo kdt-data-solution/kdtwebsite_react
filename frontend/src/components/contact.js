@@ -98,7 +98,7 @@ document.querySelector("#contact").innerHTML = `
 
 getSiteSettings().then(renderContactInfo);
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://www.kdtdatasolution.com/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://www.kdtdatasolution.com';
 
 document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();

@@ -1,4 +1,4 @@
-export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://www.kdtdatasolution.com/api';
+export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://www.kdtdatasolution.com';
 
 const TOKEN_KEY = 'kdt_token';
 const USER_KEY = 'kdt_user';
