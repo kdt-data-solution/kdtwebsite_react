@@ -49,7 +49,7 @@ function notFound() {
   document.title = `${article.title} — KDT`;
 
   // Populate Open Graph / Twitter meta tags for rich previews on social
-  const PROD_HOST_META = 'https://www-react.kdtdatasolution.com';
+  const PROD_HOST_META = 'https://www.kdtdatasolution.com';
   const pageUrl = window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1')
     ? `${PROD_HOST_META}/article.html?slug=${encodeURIComponent(slug)}`
     : window.location.href;
@@ -129,7 +129,7 @@ function notFound() {
   });
 
   // Use the PRODUCTION URL always (Facebook can't share localhost)
-  const PROD_HOST = 'https://www-react.kdtdatasolution.com';
+  const PROD_HOST = 'https://www.kdtdatasolution.com';
   const currentUrl = window.location.href;
   const shareUrl = currentUrl.includes('localhost') || currentUrl.includes('127.0.0.1')
     ? `${PROD_HOST}/article.html?slug=${encodeURIComponent(slug)}`
