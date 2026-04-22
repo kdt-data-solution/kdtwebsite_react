@@ -23,7 +23,7 @@ const products = [
     title: 'Smart Service Chat Agent for Selling and Ordering',
     desc: 'A smart conversational assistant designed to simplify and accelerate the way businesses handle selling and ordering. It enables customers and business owners to browse products, place orders, check availability, and get instant answers all through a natural, chat-based experience without the need for phone calls, manual order forms, or dedicated sales staff.',
     image:
-      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776327212/chatbot-card_as2n2p.png',
+      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776837709/agentic-card_c3loqn.png',
     href: 'product-chatbot.html',
     soon: false,
   },
