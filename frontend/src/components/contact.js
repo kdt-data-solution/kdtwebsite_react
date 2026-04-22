@@ -34,20 +34,20 @@ document.querySelector("#contact").innerHTML = `
           Reach out with your concerns and questions, we are happy to be at your service. Please take note of our business hours to accommodate your questions.
         </p>
 
-        <div class="mt-4 space-y-2 w-100 text-left">
-          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-4 py-4">
+        <div class="mt-4 space-y-2 w-full text-left">
+          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-3 py-3 sm:px-4 sm:py-4">
             <img src="${BASE}assets/images/loc.svg" alt="Address" class="w-4 h-4 flex-shrink-0" />
-            <div class="leading-tight">
+            <div class="leading-tight min-w-0 flex-1">
               <p class="font-semibold text-gray-900 text-xs">Address</p>
-              <p class="text-gray-600 text-xs" id="contact-address">Loading...</p>
+              <p class="text-gray-600 text-[11px] sm:text-xs break-words" id="contact-address">Loading...</p>
             </div>
           </div>
 
-          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-4 py-4">
+          <div class="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-md w-full px-3 py-3 sm:px-4 sm:py-4">
             <img src="${BASE}assets/images/clock-01-stroke-rounded.svg" alt="Business Hours" class="w-4 h-4 flex-shrink-0" />
-            <div class="leading-tight">
+            <div class="leading-tight min-w-0 flex-1">
               <p class="font-semibold text-gray-900 text-xs">Business Hours</p>
-              <p class="text-gray-600 text-xs" id="contact-hours">Loading...</p>
+              <p class="text-gray-600 text-[11px] sm:text-xs break-words" id="contact-hours">Loading...</p>
             </div>
           </div>
         </div>
