@@ -43,6 +43,7 @@ export default defineConfig({
         servicesData: resolve(__dirname, 'src/services-data.html'),
         servicesSoftware: resolve(__dirname, 'src/services-software.html'),
         servicesBootcamp: resolve(__dirname, 'src/services-bootcamp.html'),
+        course: resolve(__dirname, 'src/course.html'),
         product: resolve(__dirname, 'src/product.html'),
         productMembership: resolve(__dirname, 'src/product-membership.html'),
         productConstruct: resolve(__dirname, 'src/product-construct.html'),

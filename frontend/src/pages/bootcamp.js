@@ -1,4 +1,41 @@
 import '../styles/style.css';
+import { courses } from '../data/courses.js';
+
+const BASE = import.meta.env.BASE_URL;
+
+function courseCardHtml(c) {
+  const tagsHtml = c.tags
+    .map(
+      (t) =>
+        `<span class="inline-block bg-foreground text-white text-[10px] sm:text-xs font-medium px-2.5 py-1 rounded-md">${t}</span>`,
+    )
+    .join('');
+
+  return `
+    <div class="flex flex-col rounded-md overflow-hidden shadow-md bg-background border border-gray-200 transition-shadow duration-300 hover:shadow-2xl">
+      <div class="overflow-hidden">
+        <img src="${c.image}" alt="${c.title}" class="w-full h-44 sm:h-48 md:h-52 object-cover" />
+      </div>
+      <div class="p-5 sm:p-6 flex-grow flex flex-col">
+        <h3 class="text-gray-900 font-bold text-base sm:text-lg md:text-xl leading-snug mb-2 line-clamp-2 min-h-[2.75rem] sm:min-h-[3.25rem] md:min-h-[3.5rem]">${c.title}</h3>
+        <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-6 min-h-[7.5rem] sm:min-h-[8.5rem]">${c.desc}</p>
+        <div class="flex flex-wrap gap-2 mb-4 min-h-[3.25rem] sm:min-h-[3.5rem] content-start">${tagsHtml}</div>
+        <div class="flex items-center gap-2 text-gray-700 text-xs sm:text-sm mb-2">
+          <img src="${BASE}assets/images/calendarr.svg" alt="" class="w-4 h-4 flex-shrink-0" />
+          <span>${c.startDate}</span>
+        </div>
+        <div class="flex items-center gap-2 text-gray-700 text-xs sm:text-sm mb-5">
+          <img src="${BASE}assets/images/user.svg" alt="" class="w-4 h-4 flex-shrink-0" />
+          <span>${c.level}</span>
+        </div>
+        <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
+          <a href="${BASE}course.html?slug=${encodeURIComponent(c.slug)}" class="flex-1 bg-background text-gray-900 py-2.5 md:py-3 text-xs sm:text-sm rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">View Course</a>
+          <a href="${c.registerHref}" target="_blank" rel="noopener noreferrer" class="flex-1 text-white bg-foreground py-2.5 md:py-3 text-xs sm:text-sm rounded-md font-semibold hover:shadow-2xl transition-shadow text-center">Register Now</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
 const reviews = [
   {
@@ -60,7 +97,7 @@ document.querySelector('#bootcamp-page').innerHTML = `
   </section>
 
   <!-- Bootcamp Reviews (marquee) -->
-  <section class="py-12 md:py-16 bg-background overflow-hidden">
+  <section class="pb-12 md:pb-16 bg-background overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6 md:px-8">
       <div class="mb-8 md:mb-10">
         <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1">Bootcamp Reviews for Batch 1</h2>
@@ -71,6 +108,21 @@ document.querySelector('#bootcamp-page').innerHTML = `
     <div class="reviews-marquee-wrapper relative overflow-hidden w-full">
       <div class="reviews-marquee-track flex gap-5 md:gap-6 w-max">
         ${reviews.map(reviewCardHtml).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Bootcamp Series 2026 -->
+  <section class="pb-12 md:pb-16 bg-background">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+      <div class="text-center mb-8 md:mb-12">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">AI Bootcamp Series 2026</h2>
+        <p class="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
+          Build your future-ready skills through a guided, hands-on bootcamp series
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-7 lg:gap-8">
+        ${courses.map(courseCardHtml).join('')}
       </div>
     </div>
   </section>
