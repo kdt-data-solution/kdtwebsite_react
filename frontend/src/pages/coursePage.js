@@ -8,9 +8,51 @@ const params = new URLSearchParams(window.location.search);
 const slug = params.get('slug');
 
 function escapeHtml(s) {
-  return String(s ?? '').replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-  }[c]));
+  return String(s ?? '').replace(
+    /[&<>"']/g,
+    (c) =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      })[c],
+  );
+}
+
+const TOPIC_ICONS = {
+  code: `<img src="${BASE}assets/images/programming.svg" alt="" class="w-6 h-6" />`,
+  puzzle: `<img src="${BASE}assets/images/logic.svg" alt="" class="w-6 h-6" />`,
+  ai: `<img src="${BASE}assets/images/ai-assistant.svg" alt="" class="w-6 h-6" />`,
+  spark: `<img src="${BASE}assets/images/claude.svg" alt="" class="w-6 h-6" />`,
+  programming: `<img src="${BASE}assets/images/programming.svg" alt="" class="w-6 h-6" />`,
+  logic: `<img src="${BASE}assets/images/logic.svg" alt="" class="w-6 h-6" />`,
+  'ai-assistant': `<img src="${BASE}assets/images/ai-assistant.svg" alt="" class="w-6 h-6" />`,
+  claude: `<img src="${BASE}assets/images/claude.svg" alt="" class="w-6 h-6" />`,
+  chatbot: `<img src="${BASE}assets/images/chatbot.svg" alt="" class="w-6 h-6" />`,
+  tools: `<img src="${BASE}assets/images/tools.svg" alt="" class="w-6 h-6" />`,
+  'voice-agent': `<img src="${BASE}assets/images/voice-agent.svg" alt="" class="w-6 h-6" />`,
+  deployment: `<img src="${BASE}assets/images/deployment.svg" alt="" class="w-6 h-6" />`,
+  'data-visualization': `<img src="${BASE}assets/images/data-visualization.svg" alt="" class="w-6 h-6" />`,
+  charts: `<img src="${BASE}assets/images/charts.svg" alt="" class="w-6 h-6" />`,
+  'first-dashboard': `<img src="${BASE}assets/images/first-dashboard.svg" alt="" class="w-6 h-6" />`,
+  automation: `<img src="${BASE}assets/images/automation.svg" alt="" class="w-6 h-6" />`,
+  agent: `<img src="${BASE}assets/images/agent.svg" alt="" class="w-6 h-6" />`,
+  browser: `<img src="${BASE}assets/images/browser.svg" alt="" class="w-6 h-6" />`,
+};
+
+function topicCardHtml(topic) {
+  const icon = TOPIC_ICONS[topic.icon] || TOPIC_ICONS.code;
+  return `
+    <div class="bg-background rounded-lg border border-gray-200 shadow-lg hover:shadow-2xl hover:-translate-y-1 hover:border-gray-300 transition-all duration-300 p-5 sm:p-6">
+      <div class="inline-flex items-center justify-center w-10 h-10 bg-gray-100 rounded-md text-gray-700 mb-4">
+        ${icon}
+      </div>
+      <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-2">${escapeHtml(topic.title)}</h3>
+      <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">${escapeHtml(topic.desc)}</p>
+    </div>
+  `;
 }
 
 function notFound() {
@@ -108,6 +150,20 @@ if (!course) {
             </a>
           </aside>
         </div>
+
+        ${
+          course.topics && course.topics.length > 0
+            ? `
+        <div class="mt-12 md:mt-16">
+          <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">Course Topics</h2>
+          <p class="text-gray-500 text-xs sm:text-sm mb-6 md:mb-8">An overview of the topics covered in each session.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6">
+            ${course.topics.map(topicCardHtml).join('')}
+          </div>
+        </div>
+        `
+            : ''
+        }
       </div>
     </section>
   `;

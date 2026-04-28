@@ -17,9 +17,9 @@ function courseCardHtml(c) {
         <img src="${c.image}" alt="${c.title}" class="w-full h-44 sm:h-48 md:h-52 object-cover" />
       </div>
       <div class="p-5 sm:p-6 flex-grow flex flex-col">
-        <h3 class="text-gray-900 font-bold text-base sm:text-lg md:text-xl leading-snug mb-2 line-clamp-2 min-h-[2.75rem] sm:min-h-[3.25rem] md:min-h-[3.5rem]">${c.title}</h3>
-        <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-6 min-h-[7.5rem] sm:min-h-[8.5rem]">${c.desc}</p>
-        <div class="flex flex-wrap gap-2 mb-4 min-h-[3.25rem] sm:min-h-[3.5rem] content-start">${tagsHtml}</div>
+        <h3 class="text-gray-900 font-bold text-base sm:text-lg md:text-xl leading-snug mb-2 line-clamp-2 sm:min-h-[3.25rem] md:min-h-[3.5rem]">${c.title}</h3>
+        <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-6 sm:min-h-[8.5rem]">${c.desc}</p>
+        <div class="flex flex-wrap gap-2 mb-4 sm:min-h-[3.5rem] content-start">${tagsHtml}</div>
         <div class="flex items-center gap-2 text-gray-700 text-xs sm:text-sm mb-2">
           <img src="${BASE}assets/images/calendarr.svg" alt="" class="w-4 h-4 flex-shrink-0" />
           <span>${c.startDate}</span>
