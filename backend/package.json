@@ -10,6 +10,7 @@
     "seed:admin": "node scripts/seedAdmin.js"
   },
   "dependencies": {
+    "adm-zip": "^0.5.17",
     "bcrypt": "^6.0.0",
     "better-sqlite3": "^12.8.0",
     "cloudinary": "^2.9.0",

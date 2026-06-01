@@ -66,5 +66,5 @@ export async function fetchMe() {
 
 export function logout() {
   clearSession();
-  window.location.href = `${import.meta.env.BASE_URL}login.html`;
+  window.location.href = `${import.meta.env.BASE_URL}kdt-portal.html`;
 }

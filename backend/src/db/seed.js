@@ -1,5 +1,6 @@
 // Seed initial products on first boot (only if table is empty).
 import db from './index.js';
+import bcrypt from 'bcrypt';
 
 const COMMON_BENEFITS_BLURB =
   "Get quick answers to the most common questions about using our system and services. We've organized everything here to make your experience simple, clear, and hassle-free.";
@@ -79,7 +80,36 @@ const PRODUCTS = [
   },
 ];
 
+// Seed an admin user on first boot if one doesn't already exist.
+// Credentials come from backend/.env (ADMIN_EMAIL / ADMIN_PASSWORD / ADMIN_NAME).
+// Existing accounts are never overwritten here — use `npm run seed:admin` to reset.
+export function seedAdminUser() {
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  const name = process.env.ADMIN_NAME || 'Administrator';
+
+  if (!email || !password) {
+    console.warn('[seed] ADMIN_EMAIL / ADMIN_PASSWORD not set — skipping admin seed');
+    return;
+  }
+  if (password.length < 8) {
+    console.warn('[seed] ADMIN_PASSWORD must be at least 8 characters — skipping admin seed');
+    return;
+  }
+
+  const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+  if (existing) return; // already seeded; leave it alone
+
+  const password_hash = bcrypt.hashSync(password, 10);
+  db.prepare(
+    "INSERT INTO users (email, password_hash, name, role) VALUES (?, ?, ?, 'admin')"
+  ).run(email, password_hash, name);
+  console.log(`[seed] created admin user: ${email}`);
+}
+
 export function seedInitial() {
+  seedAdminUser();
+
   const prodCount = db.prepare('SELECT COUNT(*) as c FROM products').get().c;
   if (prodCount === 0) {
     const insert = db.prepare(

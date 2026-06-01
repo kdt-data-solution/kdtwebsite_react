@@ -28,6 +28,8 @@ export default defineConfig({
   base: '/',
   plugins: [tailwindcss(), notFoundFallback()],
   root: 'src',
+  // root is 'src', but .env files live in the frontend dir — load them from here.
+  envDir: __dirname,
   publicDir: '../public',
   build: {
     outDir: '../dist',
@@ -36,7 +38,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'src/index.html'),
         services: resolve(__dirname, 'src/services.html'),
-        login: resolve(__dirname, 'src/login.html'),
+        login: resolve(__dirname, 'src/kdt-portal.html'),
         admin: resolve(__dirname, 'src/admin.html'),
         about: resolve(__dirname, 'src/about.html'),
         project: resolve(__dirname, 'src/project.html'),

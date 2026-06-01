@@ -39,6 +39,10 @@
             <img src="/assets/images/news.svg" alt="" class="w-5 h-5" />
             Media
           </a>
+          <a href="#prototypes" data-view="prototypes" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
+            <img src="/assets/images/folder.svg" alt="" class="w-5 h-5" />
+            Prototypes
+          </a>
           <a href="#settings" data-view="settings" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/settings.svg" alt="" class="w-5 h-5" />
             Settings
@@ -202,6 +206,21 @@
               </div>
               <div id="article-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
               <div id="article-list" class="divide-y divide-gray-100 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
+            </div>
+          </section>
+
+          <!-- Prototypes view -->
+          <section id="view-prototypes" class="view hidden">
+            <div class="bg-background border border-gray-200 rounded-lg">
+              <div class="flex items-center justify-between px-5 py-4 border-b border-gray-200">
+                <div>
+                  <h2 class="text-base font-semibold text-gray-900">Prototypes</h2>
+                  <p class="text-xs text-gray-500 mt-1">Upload a .zip of static HTML/CSS/JS to host a password-protected prototype, then share the link with a tester.</p>
+                </div>
+                <button id="prototype-add-btn" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">+ Upload prototype</button>
+              </div>
+              <div id="prototype-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
+              <div id="prototype-list" class="divide-y divide-gray-100 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
             </div>
           </section>
 

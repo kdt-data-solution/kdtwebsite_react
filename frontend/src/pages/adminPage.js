@@ -3,7 +3,7 @@ import { apiFetch, apiUpload, fetchMe, logout, isAuthenticated, API_BASE } from 
 import { showAlert, showConfirm } from '../utils/modal.js';
 import { toastSuccess, toastError } from '../utils/toast.js';
 
-const LOGIN_URL = `${import.meta.env.BASE_URL}login.html`;
+const LOGIN_URL = `${import.meta.env.BASE_URL}kdt-portal.html`;
 
 if (!isAuthenticated()) {
   window.location.href = LOGIN_URL;
@@ -53,7 +53,7 @@ sidebarToggle.addEventListener('click', () => {
 sidebarBackdrop.addEventListener('click', closeSidebar);
 
 // View switching
-const VIEW_TITLES = { dashboard: 'Dashboard', messages: 'Messages', portfolio: 'Portfolio', media: 'Media', settings: 'Settings' };
+const VIEW_TITLES = { dashboard: 'Dashboard', messages: 'Messages', portfolio: 'Portfolio', media: 'Media', prototypes: 'Prototypes', settings: 'Settings' };
 
 function showView(view) {
   document.querySelectorAll('.view').forEach((el) => el.classList.add('hidden'));
@@ -314,7 +314,7 @@ async function loadMessages() {
 }
 
 async function loadAll() {
-  await Promise.all([loadHealth(), loadMessages(), loadPortfolio(), loadArticles()]);
+  await Promise.all([loadHealth(), loadMessages(), loadPortfolio(), loadArticles(), loadPrototypes()]);
 }
 
 // ---------- Portfolio CRUD ----------
@@ -1408,6 +1408,165 @@ document.getElementById('test-email-btn')?.addEventListener('click', async () =>
     btn.textContent = 'Send Test';
   }
 });
+
+// ---------- Prototypes ----------
+let allPrototypes = [];
+
+function formatBytes(bytes) {
+  if (!bytes) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
+  return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+}
+
+function prototypeLink(p) {
+  return `${API_BASE}${p.url}`;
+}
+
+async function loadPrototypes() {
+  const status = document.getElementById('prototype-status');
+  const list = document.getElementById('prototype-list');
+  if (!status || !list) return;
+  status.textContent = 'Loading...';
+  status.classList.remove('hidden');
+  list.innerHTML = '';
+  try {
+    allPrototypes = await apiFetch('/api/prototypes', { auth: true });
+    if (allPrototypes.length === 0) {
+      status.textContent = 'No prototypes yet. Click + Upload prototype to host one.';
+      return;
+    }
+    renderPrototypeList();
+  } catch (err) {
+    status.textContent = `Failed to load: ${err.message}`;
+  }
+}
+
+function renderPrototypeList() {
+  const status = document.getElementById('prototype-status');
+  const list = document.getElementById('prototype-list');
+  status.classList.add('hidden');
+  list.innerHTML = allPrototypes.map(p => `
+    <div class="px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-4">
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-sm text-gray-900 truncate">${escapeHtml(p.title)}</p>
+          <p class="text-xs text-gray-500 truncate">${escapeHtml(p.entry)} · ${p.file_count} file${p.file_count === 1 ? '' : 's'} · ${formatBytes(p.size_bytes)} · ${formatDate(p.created_at)}</p>
+        </div>
+        <a href="${escapeHtml(prototypeLink(p))}" target="_blank" rel="noopener" class="text-xs text-gray-800 bg-gray-200 border border-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-md font-medium transition">Open</a>
+        <button data-copy="${p.id}" class="text-xs text-white bg-foreground border border-foreground hover:opacity-90 px-3 py-1.5 rounded-md font-medium transition">Copy link</button>
+        <button data-delete="${p.id}" class="text-xs text-white bg-red-600 border border-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md font-medium transition">Delete</button>
+      </div>
+      <div class="mt-2 flex items-center gap-2">
+        <span class="text-[11px] text-gray-400">🔒 password-protected</span>
+        <code class="text-[11px] text-gray-500 bg-gray-100 px-2 py-0.5 rounded truncate max-w-md">${escapeHtml(prototypeLink(p))}</code>
+      </div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copyPrototypeLink(allPrototypes.find(p => p.id == b.dataset.copy))));
+  list.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => deletePrototype(b.dataset.delete)));
+}
+
+async function copyPrototypeLink(p) {
+  if (!p) return;
+  const link = prototypeLink(p);
+  try {
+    await navigator.clipboard.writeText(link);
+    toastSuccess('Link copied to clipboard.');
+  } catch {
+    await showAlert(link, { title: 'Prototype link', variant: 'info' });
+  }
+}
+
+async function deletePrototype(id) {
+  const ok = await showConfirm('Delete this prototype? The link will stop working and the files will be removed. This cannot be undone.', {
+    title: 'Delete prototype', confirmText: 'Delete', variant: 'error',
+  });
+  if (!ok) return;
+  try {
+    await apiFetch(`/api/prototypes/${id}`, { method: 'DELETE', auth: true });
+    toastSuccess('Prototype deleted.');
+    await loadPrototypes();
+  } catch (err) {
+    toastError(err.message);
+  }
+}
+
+function openPrototypeForm() {
+  const overlay = document.createElement('div');
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-10 overflow-y-auto';
+  overlay.innerHTML = `
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-lg">
+      <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-base font-semibold text-gray-900">Upload prototype</h3>
+        <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
+      </div>
+      <form id="prototype-form" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Title *</label>
+          <input name="title" required class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" placeholder="e.g. Client landing page v2" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">View password *</label>
+          <input name="password" required minlength="4" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black" placeholder="Min 4 characters — share this with the tester" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Site archive (.zip) *</label>
+          <input name="archive" type="file" accept=".zip,application/zip" required class="hidden file-input" />
+          <div class="flex items-center gap-2">
+            <button type="button" class="choose-file-btn bg-gray-200 text-gray-800 text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-300 transition">Choose .zip file</button>
+            <span class="text-xs text-gray-500 file-label">No file chosen</span>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-2">The zip should contain your HTML/CSS/JS. An <code>index.html</code> at the top level is used as the entry page.</p>
+        </div>
+        <p class="text-xs text-red-600 hidden" data-error></p>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Cancel</button>
+          <button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium hover:shadow-2xl">Upload &amp; deploy</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const fileInput = overlay.querySelector('.file-input');
+  const fileLabel = overlay.querySelector('.file-label');
+  overlay.querySelector('.choose-file-btn').addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    fileLabel.textContent = fileInput.files[0] ? fileInput.files[0].name : 'No file chosen';
+  });
+  overlay.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => overlay.remove()));
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+  overlay.querySelector('#prototype-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errEl = overlay.querySelector('[data-error]');
+    errEl.classList.add('hidden');
+    if (!fileInput.files[0]) {
+      errEl.textContent = 'Please choose a .zip file.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+    const submitBtn = e.currentTarget.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Uploading...';
+    try {
+      const fd = new FormData(e.currentTarget);
+      await apiUpload('/api/prototypes', fd, 'POST');
+      overlay.remove();
+      toastSuccess('Prototype deployed.');
+      await loadPrototypes();
+    } catch (err) {
+      errEl.textContent = err.message;
+      errEl.classList.remove('hidden');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Upload & deploy';
+    }
+  });
+}
+
+document.getElementById('prototype-add-btn')?.addEventListener('click', () => openPrototypeForm());
 
 (async function init() {
   const user = await loadMe();
