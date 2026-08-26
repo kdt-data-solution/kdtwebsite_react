@@ -548,6 +548,12 @@ export function seedInitial() {
   }
   if (insertedProducts) console.log(`[seed] inserted ${insertedProducts} products`);
 
+  // Retire the discontinued TABS entry from databases created by older releases.
+  const removedTabs = db.prepare(
+    "DELETE FROM products WHERE lower(trim(slug)) = 'tabs' OR lower(trim(title)) = 'tabs'"
+  ).run();
+  if (removedTabs.changes) console.log(`[seed] removed ${removedTabs.changes} retired TABS product`);
+
   // One-time alignment of legacy product titles with their public KDT names.
   // The title guard preserves any later administrator-authored changes.
   const alignProductTitle = db.prepare(
