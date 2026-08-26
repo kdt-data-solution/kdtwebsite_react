@@ -1,6 +1,7 @@
 import "../styles/style.css";
+import { contentUrl, escapeHtml, getContentSection } from '../utils/content.js';
 
-const services = [
+const fallbackServices = [
   {
     title: 'Architecture and Engineering Services',
     desc: 'Professional design and engineering solutions tailored to your project requirements.',
@@ -31,38 +32,48 @@ const services = [
   },
 ];
 
-const BASE = import.meta.env.BASE_URL;
-
-const cardsHtml = services.map(s => `
-  <div class="flex flex-col rounded-md sm:rounded-lg lg:rounded-xl overflow-hidden shadow-lg transition-shadow duration-300 hover:shadow-2xl">
-    <div class="bg-gray-200 h-40 sm:h-48 md:h-52 lg:h-56 flex items-center justify-center overflow-hidden">
-      <img src="${s.image}" alt="${s.title}" class="h-full w-full object-cover" />
+function cardsHtml(services) { return services.map(s => `
+  <article class="kdt-card group flex flex-col overflow-hidden bg-white">
+    <div class="block bg-gray-200 aspect-[16/10] overflow-hidden">
+      <img src="${contentUrl(s.image)}" alt="" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
     </div>
-    <div class="bg-foreground p-4 sm:p-5 md:p-6 lg:p-7 flex-grow flex flex-col">
-      <h3 class="text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl mb-2 sm:mb-3">${s.title}</h3>
-      <p class="text-gray-400 text-[11px] sm:text-xs md:text-sm lg:text-base mb-4 md:mb-6 flex-grow">
-        ${s.desc}
+    <div class="p-5 sm:p-6 flex-grow flex flex-col border-t border-black/10">
+      <p class="kdt-eyebrow text-gray-500 mb-3">KDT Service</p>
+      <h3 class="text-gray-950 font-semibold text-lg sm:text-xl leading-snug">${escapeHtml(s.title)}</h3>
+      <p class="text-gray-600 text-sm leading-relaxed mt-3 mb-6 flex-grow">
+        ${escapeHtml(s.description || s.desc)}
       </p>
-      <a href="${BASE}${s.href}" class="inline-block w-full bg-background text-black py-2 md:py-2.5 text-xs sm:text-sm md:text-base rounded font-semibold hover:bg-gray-200 transition-colors text-center">
-        More Info
+      <a href="${contentUrl(s.href)}" class="kdt-text-link">
+        Explore service <span class="kdt-arrow-icon" aria-hidden="true"></span>
       </a>
     </div>
-  </div>
-`).join('');
+  </article>
+`).join(''); }
 
+(async function renderServices() {
+const content = await getContentSection('home.services', {
+  eyebrow: 'What we offer',
+  title: 'Expertise that moves work forward.',
+  body: 'KDT brings engineering, data, software, and practical training together to help organizations move from challenge to working solution.',
+  items: fallbackServices,
+});
 document.querySelector('#services').innerHTML = `
-<section class="py-8 sm:py-10 md:py-12 lg:py-14 bg-gray-50">
-  <div class="container mx-auto px-6 sm:px-8 md:px-12 lg:px-20">
-    <div class="text-center mb-6 sm:mb-8 md:mb-12">
-      <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-1">Services Offered</h2>
-      <p class="text-gray-600 text-xs sm:text-sm md:text-base max-w-xl mx-auto">
-        We provide a wide range of services to help you achieve your business goals.
+<section class="kdt-section kdt-section-after-divider bg-[#f7f7f5]" aria-labelledby="services-heading">
+  <div class="kdt-container">
+    <div class="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-5 lg:gap-16 items-end mb-8 md:mb-10">
+      <div>
+        <p class="kdt-eyebrow text-gray-500 mb-3">${escapeHtml(content.eyebrow)}</p>
+        <h2 id="services-heading" class="kdt-section-title">${escapeHtml(content.title)}</h2>
+      </div>
+      <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-2xl lg:justify-self-end">
+        ${escapeHtml(content.body)}
       </p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
-      ${cardsHtml}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-black/10 border border-black/10">
+      ${cardsHtml(content.items.length ? content.items : fallbackServices)}
     </div>
   </div>
 </section>
 `;
+})();

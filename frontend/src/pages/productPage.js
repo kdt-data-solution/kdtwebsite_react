@@ -1,5 +1,6 @@
 import '../styles/style.css';
 import { products } from '../data/products.js';
+import { API_BASE } from '../utils/auth.js';
 
 const params = new URLSearchParams(window.location.search);
 const slug = params.get('slug') || window.PRODUCT_KEY || 'membership';
@@ -19,88 +20,116 @@ const ICONS = {
   clock: `<img src="${BASE}assets/images/time.svg" alt="" class="w-6 h-6" />`,
 };
 
-const data = products[slug];
+async function loadProduct() {
+  const fallback = products[slug];
+  try {
+    const response = await fetch(`${API_BASE}/api/products/slug/${encodeURIComponent(slug)}`);
+    if (!response.ok) return null;
+    const item = await response.json();
+    return {
+      ...fallback,
+      ...item,
+      images: item.image_url ? [item.image_url] : (fallback?.images || []),
+      benefitsTitle: item.benefits_title || fallback?.benefitsTitle,
+      benefitsBlurb: item.benefits_blurb || fallback?.benefitsBlurb,
+      comingSoon: Boolean(item.coming_soon),
+    };
+  } catch {
+    return fallback;
+  }
+}
 
+(async function renderProduct() {
+const data = await loadProduct();
 if (!data) {
   root.innerHTML = `<section class="pt-32 pb-20 text-center"><h1 class="text-2xl font-bold text-gray-900">Product not found</h1></section>`;
 } else {
   document.title = `${data.title} — KDT`;
 
-  const actionsHtml = (data.actions || []).map(a => `
-    <a href="${escapeHtml(a.href || '#')}" class="bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">${escapeHtml(a.label || '')}</a>
-  `).join('');
+  const actionsHtml = (data.actions || []).map((a, index) => {
+    const href = a.href === '#contact' ? `${BASE}#contact` : (a.href || '#');
+    return `<a href="${escapeHtml(href)}" class="kdt-btn ${index === 0 ? 'kdt-btn-light' : 'border-white/50 text-white hover:bg-white/10 hover:border-white'}">${escapeHtml(a.label || '')}${index === 0 ? ' <span class="kdt-arrow-icon" aria-hidden="true"></span>' : ''}</a>`;
+  }).join('');
 
-  const productImages = data.images || ['assets/images/kdt-products.png'];
+  const productImages = data.images?.length ? data.images : ['assets/images/kdt-products.png'];
   const imagesHtml = productImages.map(src => {
-    const fullSrc = src.startsWith('http') ? src : `${BASE}${src}`;
+    const fullSrc = src.startsWith('http') ? src : (src.startsWith('/') ? `${API_BASE}${src}` : `${BASE}${src}`);
     return `
-      <div class="bg-gray-100 rounded-lg overflow-hidden">
+      <div class="bg-[#eeeeeb] overflow-hidden border border-black/10">
         <img src="${fullSrc}" alt="${escapeHtml(data.title)}" class="w-full h-auto object-contain" />
       </div>
     `;
   }).join('');
 
   const stepsHtml = (data.steps || []).map((s, i) => `
-    <div class="flex flex-col items-center text-center flex-1 relative">
-      ${i > 0 ? `<div class="hidden md:block absolute top-4 right-1/2 w-full h-px bg-gray-300"></div>` : ''}
-      <div class="relative z-10 w-8 h-8 rounded-full bg-foreground text-white text-xs font-bold flex items-center justify-center">${i + 1}</div>
-      <p class="font-semibold text-gray-900 text-sm mt-3">${escapeHtml(s.label || '')}</p>
-      <p class="text-xs text-gray-500 mt-1">${escapeHtml(s.desc || '')}</p>
-    </div>
+    <article class="bg-white p-6 sm:p-8 min-h-52 border border-black/10">
+      <p class="kdt-eyebrow text-gray-500">0${i + 1}</p>
+      <p class="font-semibold text-gray-950 text-lg mt-8">${escapeHtml(s.label || '')}</p>
+      <p class="text-sm text-gray-600 leading-relaxed mt-2">${escapeHtml(s.desc || '')}</p>
+    </article>
   `).join('');
 
   const benefitsHtml = (data.benefits || []).map(b => `
-    <div class="flex items-center gap-4 border border-gray-200 rounded-md px-5 py-4">
+    <div class="flex items-center gap-4 border-t border-black/20 py-5">
       <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">${ICONS[b.icon] || ICONS.smile}</div>
       <p class="text-sm text-gray-900 font-medium">${escapeHtml(b.title || '')}</p>
     </div>
   `).join('');
 
   root.innerHTML = `
-    <section class="pt-24 sm:pt-28 pb-10 md:pb-14 bg-background">
-      <div class="container mx-auto px-4 sm:px-6 md:px-8">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 text-center mb-6">
-          ${escapeHtml(data.title)}${data.comingSoon ? ' <span class="text-base align-middle text-gray-500 font-medium">(Coming Soon)</span>' : ''}
-        </h1>
-        <p class="text-gray-600 text-sm md:text-base text-center max-w-4xl mx-auto leading-relaxed mb-8">
-          ${escapeHtml(data.description || '')}
-        </p>
-        <div class="flex flex-wrap justify-center gap-3 mb-12">
-          ${actionsHtml}
-        </div>
-        <div class="flex justify-center max-w-4xl mx-auto">
-          ${imagesHtml}
+    <section class="bg-[#0b0b0b] text-white overflow-hidden">
+      <div class="kdt-container px-0">
+        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[590px]">
+          <div class="kdt-hero-copy flex flex-col justify-center items-start">
+            <p class="kdt-eyebrow text-gray-400 mb-4">KDT Product</p>
+            <h1 class="kdt-display text-white">
+              ${escapeHtml(data.title)}${data.comingSoon ? ' <span class="block mt-5 text-xs uppercase tracking-[0.14em] text-gray-400 font-semibold">Coming soon</span>' : ''}
+            </h1>
+            <p class="text-gray-300 text-base sm:text-lg max-w-xl leading-relaxed mt-6 mb-8">
+              ${escapeHtml(data.description || '')}
+            </p>
+            <div class="flex flex-wrap gap-3">
+              ${actionsHtml}
+            </div>
+          </div>
+          <div class="bg-[#eeeeeb] p-5 sm:p-8 flex items-center justify-center">
+            <div class="grid gap-4 w-full max-w-3xl">
+              ${imagesHtml}
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     ${(data.steps || []).length > 0 ? `
-    <section class="py-12 md:py-16 bg-background">
-      <div class="container mx-auto px-4 sm:px-6 md:px-8">
-        <div class="text-center mb-10">
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">How it Works</h2>
-          <p class="text-gray-500 text-xs md:text-sm max-w-md mx-auto">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    <section class="kdt-section bg-[#f7f7f5]">
+      <div class="kdt-container">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-16 items-end mb-10 md:mb-14">
+          <div>
+            <p class="kdt-eyebrow text-gray-500 mb-3">Product flow</p>
+            <h2 class="kdt-section-title">How it works</h2>
+          </div>
+          <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-xl lg:justify-self-end">
+            A clear, practical path from initial setup to measurable day-to-day value.
           </p>
         </div>
-        <div class="bg-gray-100 rounded-xl px-6 md:px-12 py-8 md:py-10 max-w-5xl mx-auto">
-          <div class="flex flex-col md:flex-row gap-8 md:gap-0">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-black/10">
             ${stepsHtml}
-          </div>
         </div>
       </div>
     </section>` : ''}
 
     ${(data.benefits || []).length > 0 ? `
-    <section class="py-12 md:py-20 bg-background">
-      <div class="container mx-auto px-4 sm:px-6 md:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-14 items-start">
-          <div class="text-center lg:text-left flex flex-col items-center lg:items-start">
-            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight mb-5">${escapeHtml(data.benefitsTitle || 'Key Benefits')}</h2>
-            <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6 max-w-md">
+    <section class="kdt-section bg-white">
+      <div class="kdt-container">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <div>
+            <p class="kdt-eyebrow text-gray-500 mb-3">Outcomes</p>
+            <h2 class="kdt-section-title mb-5">${escapeHtml(data.benefitsTitle || 'Key Benefits')}</h2>
+            <p class="text-gray-600 text-base sm:text-lg leading-relaxed mb-7 max-w-lg">
               ${escapeHtml(data.benefitsBlurb || '')}
             </p>
-            <a href="${BASE}#contact" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">Build with Us</a>
+            <a href="${BASE}#contact" class="kdt-btn kdt-btn-dark">Build with us <span class="kdt-arrow-icon" aria-hidden="true"></span></a>
           </div>
           <div class="space-y-3">
             ${benefitsHtml}
@@ -110,3 +139,4 @@ if (!data) {
     </section>` : ''}
   `;
 }
+})();

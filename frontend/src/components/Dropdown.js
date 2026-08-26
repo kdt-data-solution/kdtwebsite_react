@@ -6,16 +6,17 @@ export class Dropdown {
   }
 
   render() {
+    const panelId = `faq-${this.question.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`;
     return `
-      <div class="mb-2 rounded-md overflow-hidden bg-foreground">
-        <button class="dropdown-toggle w-full text-background text-left py-3 sm:py-4 px-4 sm:px-6 flex justify-between items-center cursor-pointer focus:outline-none focus:ring-0 active:outline-none bg-transparent border-0" style="-webkit-tap-highlight-color: transparent;">
-          <span class="font-medium text-background text-xs sm:text-sm md:text-base">${this.question}</span>
-          <svg class="dropdown-icon w-4 h-4 sm:w-5 sm:h-5 text-background transition-transform duration-300 ease-in-out flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="border-b border-black/20">
+        <button class="dropdown-toggle w-full text-gray-950 text-left py-5 sm:py-6 flex justify-between items-center gap-6 cursor-pointer bg-transparent border-0" aria-expanded="false" aria-controls="${panelId}">
+          <span class="font-semibold text-base sm:text-lg">${this.question}</span>
+          <svg class="dropdown-icon w-5 h-5 text-gray-950 transition-transform duration-300 ease-in-out flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
-        <div class="dropdown-content text-background overflow-hidden transition-[max-height] duration-500 ease-in-out" style="max-height: 0px;">
-          <div class="px-4 sm:px-6 pb-3 sm:pb-4 pt-0 text-[11px] sm:text-xs md:text-sm">${this.answer}</div>
+        <div id="${panelId}" class="dropdown-content text-gray-600 overflow-hidden transition-[max-height] duration-500 ease-in-out" style="max-height: 0px;">
+          <div class="pb-5 sm:pb-6 pr-10 text-sm sm:text-base leading-relaxed">${this.answer}</div>
         </div>
       </div>
     `;
@@ -35,15 +36,18 @@ export class Dropdown {
             const otherIcon = otherBtn.querySelector('.dropdown-icon');
             otherContent.style.maxHeight = '0px';
             otherIcon.classList.remove('rotate-180');
+            otherBtn.setAttribute('aria-expanded', 'false');
           }
         });
 
         if (isOpen) {
           content.style.maxHeight = '0px';
           icon.classList.remove('rotate-180');
+          this.setAttribute('aria-expanded', 'false');
         } else {
           content.style.maxHeight = content.scrollHeight + 'px';
           icon.classList.add('rotate-180');
+          this.setAttribute('aria-expanded', 'true');
         }
       });
     });

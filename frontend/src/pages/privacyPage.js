@@ -1,13 +1,14 @@
 import '../styles/style.css';
 
 document.querySelector('#privacy-page').innerHTML = `
-  <section class="pt-24 sm:pt-28 pb-16 md:pb-20 bg-background">
-    <div class="container mx-auto px-4 sm:px-6 md:px-8 max-w-5xl">
+  <section class="kdt-section bg-[#f7f7f5]">
+    <div class="kdt-container max-w-5xl">
 
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between mb-8 md:mb-10">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 pb-8 mb-10 border-b border-black/20">
         <div>
-          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-1">PRIVACY NOTICE</h1>
-          <p class="text-xs text-gray-500">KDT Network and Data Solution</p>
+          <p class="kdt-eyebrow text-gray-500 mb-3">Legal</p>
+          <h1 class="kdt-section-title">Privacy Notice</h1>
+          <p class="text-sm text-gray-600 mt-3">KDT Network and Data Solution</p>
         </div>
         <p class="text-xs text-gray-500 mt-2 md:mt-1"><span class="font-semibold">Effective Date:</span> September 7, 2024</p>
       </div>

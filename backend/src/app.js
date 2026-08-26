@@ -11,7 +11,9 @@ import portfolioRouter from './routes/portfolio.js';
 import articlesRouter from './routes/articles.js';
 import productsRouter from './routes/products.js';
 import servicesRouter from './routes/services.js';
+import coursesRouter from './routes/courses.js';
 import settingsRouter from './routes/settings.js';
+import contentRouter from './routes/content.js';
 import prototypesRouter from './routes/prototypes.js';
 import prototypeServeRouter from './routes/prototypeServe.js';
 import { errorHandler } from './middleware/errorHandler.js';
@@ -33,7 +35,9 @@ app.use('/api/portfolio', portfolioRouter);
 app.use('/api/articles', articlesRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/services', servicesRouter);
+app.use('/api/courses', coursesRouter);
 app.use('/api/settings', settingsRouter);
+app.use('/api/content', contentRouter);
 app.use('/api/prototypes', prototypesRouter);
 
 // Public, password-gated hosting of uploaded prototype sites.

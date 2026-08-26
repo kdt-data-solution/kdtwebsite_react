@@ -1,5 +1,7 @@
 import '../styles/style.css';
-import { courses } from '../data/courses.js';
+import { courses as fallbackCourses } from '../data/courses.js';
+import { API_BASE } from '../utils/auth.js';
+import { contentUrl, escapeHtml } from '../utils/content.js';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -7,33 +9,34 @@ function courseCardHtml(c) {
   const tagsHtml = c.tags
     .map(
       (t) =>
-        `<span class="inline-block bg-foreground text-white text-[10px] sm:text-xs font-medium px-2.5 py-1 rounded-md">${t}</span>`,
+        `<span class="inline-block border border-black/20 text-gray-700 text-[10px] sm:text-xs font-medium px-2.5 py-1">${escapeHtml(t)}</span>`,
     )
     .join('');
 
   return `
-    <div class="flex flex-col rounded-md overflow-hidden shadow-md bg-background border border-gray-200 transition-shadow duration-300 hover:shadow-2xl">
+    <article class="kdt-card group flex flex-col overflow-hidden bg-white">
       <div class="overflow-hidden">
-        <img src="${c.image}" alt="${c.title}" class="w-full h-44 sm:h-48 md:h-52 object-cover" />
+        <img src="${contentUrl(c.image)}" alt="${escapeHtml(c.title)}" class="w-full h-44 sm:h-48 md:h-52 object-cover" />
       </div>
       <div class="p-5 sm:p-6 flex-grow flex flex-col">
-        <h3 class="text-gray-900 font-bold text-base sm:text-lg md:text-xl leading-snug mb-2 line-clamp-2 sm:min-h-[3.25rem] md:min-h-[3.5rem]">${c.title}</h3>
-        <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-6 sm:min-h-[8.5rem]">${c.desc}</p>
+        <p class="kdt-eyebrow text-gray-500 mb-3">KDT Bootcamp</p>
+        <h3 class="text-gray-950 font-semibold text-lg md:text-xl leading-snug mb-2 line-clamp-2 sm:min-h-[3.25rem] md:min-h-[3.5rem]">${escapeHtml(c.title)}</h3>
+        <p class="text-gray-600 text-xs sm:text-sm leading-relaxed mb-4 line-clamp-6 sm:min-h-[8.5rem]">${escapeHtml(c.desc)}</p>
         <div class="flex flex-wrap gap-2 mb-4 sm:min-h-[3.5rem] content-start">${tagsHtml}</div>
         <div class="flex items-center gap-2 text-gray-700 text-xs sm:text-sm mb-2">
           <img src="${BASE}assets/images/calendarr.svg" alt="" class="w-4 h-4 flex-shrink-0" />
-          <span>${c.startDate}</span>
+          <span>${escapeHtml(c.startDate)}</span>
         </div>
         <div class="flex items-center gap-2 text-gray-700 text-xs sm:text-sm mb-5">
           <img src="${BASE}assets/images/user.svg" alt="" class="w-4 h-4 flex-shrink-0" />
-          <span>${c.level}</span>
+          <span>${escapeHtml(c.level)}</span>
         </div>
         <div class="flex flex-row gap-2 sm:gap-3 mt-auto">
-          <a href="${BASE}course.html?slug=${encodeURIComponent(c.slug)}" class="flex-1 bg-background text-gray-900 py-2.5 md:py-3 text-xs sm:text-sm rounded-md font-semibold hover:bg-gray-100 transition-colors border border-gray-300 text-center">View Course</a>
-          <a href="${c.registerHref}" target="_blank" rel="noopener noreferrer" class="flex-1 text-white bg-foreground py-2.5 md:py-3 text-xs sm:text-sm rounded-md font-semibold hover:shadow-2xl transition-shadow text-center">Register Now</a>
+          <a href="${BASE}course.html?slug=${encodeURIComponent(c.slug)}" class="kdt-btn kdt-btn-outline flex-1">View course</a>
+          <a href="${contentUrl(c.registerHref)}" target="_blank" rel="noopener noreferrer" class="kdt-btn kdt-btn-dark flex-1">Register now</a>
         </div>
       </div>
-    </div>
+    </article>
   `;
 }
 
@@ -62,32 +65,53 @@ const reviews = [
 
 function reviewCardHtml(r) {
   return `
-    <div class="bootcamp-review group flex-shrink-0 w-72 sm:w-80 md:w-96 bg-gray-100 rounded-lg border border-gray-200 shadow-sm p-5 transition-colors duration-300 hover:bg-foreground hover:border-foreground">
-      <p class="text-sm font-semibold text-gray-900 group-hover:text-background mb-2 transition-colors duration-300">${r.name}</p>
-      <p class="text-xs md:text-sm text-gray-600 group-hover:text-background leading-relaxed transition-colors duration-300">${r.text}</p>
-    </div>
+    <article class="bootcamp-review flex-shrink-0 w-72 sm:w-80 md:w-96 bg-[#f1f1ef] border border-black/10 p-6">
+      <p class="kdt-eyebrow text-gray-500 mb-4">${r.name}</p>
+      <p class="text-sm md:text-base text-gray-700 leading-relaxed">“${r.text}”</p>
+    </article>
   `;
 }
 
+async function loadCourses() {
+  try {
+    const response = await fetch(`${API_BASE}/api/courses`);
+    if (!response.ok) return fallbackCourses;
+    const rows = await response.json();
+    return rows.map(row => {
+      const fallback = fallbackCourses.find(course => course.slug === row.slug) || {};
+      return {
+        ...fallback, ...row,
+        topics: row.topics?.length ? row.topics : (fallback.topics || []),
+        inclusions: row.inclusions?.length ? row.inclusions : (fallback.inclusions || []),
+      };
+    });
+  } catch {
+    return fallbackCourses;
+  }
+}
+
+(async function renderBootcamp() {
+const courses = await loadCourses();
 document.querySelector('#bootcamp-page').innerHTML = `
   <!-- Hero -->
-  <section class="pt-24 sm:pt-28 pb-12 md:pb-20 bg-background overflow-x-hidden">
-    <div class="container mx-auto px-4 sm:px-6 md:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-4 md:gap-6 lg:gap-8 items-center w-full min-w-0">
-        <div class="text-center md:text-left flex flex-col items-center md:items-start w-full min-w-0">
-          <h1 class="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight mb-3 sm:mb-4 md:mb-6 max-w-xs sm:max-w-sm md:max-w-full break-words">
+  <section class="bg-[#0b0b0b] text-white overflow-hidden">
+    <div class="kdt-container px-0">
+      <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[590px]">
+        <div class="kdt-hero-copy flex flex-col justify-center items-start">
+          <p class="kdt-eyebrow text-gray-400 mb-4">KDT Learning</p>
+          <h1 class="kdt-display text-white">
             Start Your Tech Journey<br/>Today
           </h1>
-          <p class="text-gray-600 text-sm md:text-base lg:w-140 mb-6 leading-relaxed">
+          <p class="text-gray-300 text-base sm:text-lg max-w-xl mt-6 mb-8 leading-relaxed">
             Gain practical, in-demand skills through hands-on training designed for real-world applications. Learn from experienced mentors who guide you every step of the way. Build the confidence and portfolio you need to start your career in tech.
           </p>
-          <a href="https://events.kdtdatasolution.com" target="_blank" rel="noopener noreferrer" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">
-            Learn more
+          <a href="https://events.kdtdatasolution.com" target="_blank" rel="noopener noreferrer" class="kdt-btn kdt-btn-light">
+            Explore upcoming events <span class="kdt-arrow-icon is-external" aria-hidden="true"></span>
           </a>
         </div>
-        <div id="bootcamp-slider" class="relative rounded-lg w-full max-w-sm md:ml-auto overflow-hidden bg-gray-100">
+        <div id="bootcamp-slider" class="relative w-full min-h-[420px] lg:min-h-full overflow-hidden bg-[#242624]">
           <!-- First image is "relative" so it dictates the container height -->
-          <img class="bootcamp-slide block w-full h-auto opacity-100 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot2-card_pynov3.png" alt="Bootcamp 1" onerror="this.style.display='none'" />
+          <img class="bootcamp-slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot2-card_pynov3.png" alt="KDT bootcamp participants and learning session" onerror="this.style.display='none'" />
           <img class="bootcamp-slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot3-card_spoada.png" alt="Bootcamp 2" onerror="this.style.display='none'" />
           <img class="bootcamp-slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot1-card_e86ffg.png" alt="Bootcamp 3" onerror="this.style.display='none'" />
           <div id="bootcamp-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10"></div>
@@ -97,10 +121,11 @@ document.querySelector('#bootcamp-page').innerHTML = `
   </section>
 
   <!-- Bootcamp Reviews (marquee) -->
-  <section class="pb-12 md:pb-16 bg-background overflow-hidden">
-    <div class="container mx-auto px-4 sm:px-6 md:px-8">
-      <div class="mb-8 md:mb-10">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-1">Bootcamp Reviews for Batch 1</h2>
+  <section class="kdt-section bg-white overflow-hidden">
+    <div class="kdt-container">
+      <div class="mb-10 md:mb-14">
+        <p class="kdt-eyebrow text-gray-500 mb-3">Participant feedback</p>
+        <h2 class="kdt-section-title mb-2">Bootcamp Reviews for Batch 1</h2>
         <p class="text-gray-500 text-sm">August 23 - September 2025</p>
       </div>
     </div>
@@ -113,11 +138,14 @@ document.querySelector('#bootcamp-page').innerHTML = `
   </section>
 
   <!-- AI Bootcamp Series 2026 -->
-  <section class="pb-12 md:pb-16 bg-background">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
-      <div class="text-center mb-8 md:mb-12">
-        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">AI Bootcamp Series 2026</h2>
-        <p class="text-gray-500 text-sm md:text-base max-w-xl mx-auto">
+  <section class="kdt-section bg-[#f7f7f5]">
+    <div class="kdt-container">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-16 items-end mb-10 md:mb-14">
+        <div>
+          <p class="kdt-eyebrow text-gray-500 mb-3">Course catalog</p>
+          <h2 class="kdt-section-title">AI Bootcamp Series 2026</h2>
+        </div>
+        <p class="text-gray-600 text-base sm:text-lg max-w-xl lg:justify-self-end">
           Build your future-ready skills through a guided, hands-on bootcamp series
         </p>
       </div>
@@ -137,6 +165,9 @@ document.querySelector('#bootcamp-page').innerHTML = `
     @keyframes reviews-scroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reviews-marquee-track { animation: none; }
     }
   </style>
 `;
@@ -209,4 +240,5 @@ document.querySelector('#bootcamp-page').innerHTML = `
   slider?.addEventListener('mouseleave', () => {
     timer = setInterval(() => show((current + 1) % slides.length), 4000);
   });
+})();
 })();

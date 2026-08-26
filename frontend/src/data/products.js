@@ -17,8 +17,8 @@ const COMMON_BENEFITS_BLURB =
 
 export const products = {
   membership: {
-    title: 'Membership Portal',
-    pageTitle: 'Membership Portal',
+    title: 'Nexus',
+    pageTitle: 'Nexus',
     description:
       'Professional engineering tools and solutions tailored to your project requirements. A membership portal is an online system or platform that allows registered users (members) to access exclusive content, services, or features based on their account. It typically includes functionalities such as user registration, login authentication, profile management, and access to member-specific resources like documents, events, or services. Organizations use membership portals to manage member information, track activities, and provide a centralized space where users can interact, submit requests, or receive updates efficiently.',
     actions: [
@@ -34,8 +34,8 @@ export const products = {
     comingSoon: false,
   },
   'construct-pro': {
-    title: 'Intelligent Search for Value-driven Properties',
-    pageTitle: 'Intelligent Search for Value-driven Properties',
+    title: 'Axis',
+    pageTitle: 'Axis',
     description:
       'A smart property finder designed to help users discover affordable opportunities with greater speed and clarity. From regular listings to bank foreclosed properties, it streamlines search and tracking for a more efficient and value-focused property journey.',
     actions: [
@@ -60,8 +60,8 @@ export const products = {
     comingSoon: false,
   },
   'structural-chatbot': {
-    title: 'Smart Service Chat Agent for Selling and Ordering',
-    pageTitle: 'AI Chatbot',
+    title: 'Vantage',
+    pageTitle: 'Vantage',
     description:
       'A smart conversational assistant designed to simplify and accelerate the way businesses handle selling and ordering. It enables customers and business owners to browse products, place orders, check availability, and get instant answers all through a natural, chat-based experience without the need for phone calls, manual order forms, or dedicated sales staff. By automating routine sales interactions and order processing, it reduces response time, minimizes human error, and keeps the business running efficiently even outside of operating hours — making it an ideal solution for small to medium enterprises looking to modernize their sales operations through accessible and intelligent technology.',
     actions: [
@@ -86,8 +86,8 @@ export const products = {
     comingSoon: false,
   },
   wms: {
-    title: 'Sophisticated Tracking for Modern Warehousing',
-    pageTitle: 'Sophisticated Tracking for Modern Warehousing',
+    title: 'Kuwalog',
+    pageTitle: 'Kuwalog',
     description:
       'A smart warehouse solution designed to improve visibility, accuracy, and control across daily operations. It supports faster tracking, efficient inventory handling, and more organized warehouse workflows through modern, reliable system processes.',
     actions: [
@@ -112,8 +112,8 @@ export const products = {
     comingSoon: false,
   },
   cardko: {
-    title: 'CardKo',
-    pageTitle: 'CardKo',
+    title: 'TakeOff',
+    pageTitle: 'TakeOff',
     description:
       'A digital business card and networking platform for professionals and organizations. Easily share your contact details, portfolio, and social links with a simple scan — no more paper cards, no more lost connections.',
     actions: [
@@ -135,20 +135,5 @@ export const products = {
       { title: 'Saves time and reduces paper waste', icon: 'clock' },
     ],
     comingSoon: false,
-  },
-  tabs: {
-    title: 'Three-dimensional AI-Powered Building Systems',
-    pageTitle: 'TABS (Coming Soon)',
-    description:
-      'TABS (Three-dimensional AI-Powered Building Systems) is an intelligent architectural and engineering platform that transforms how professionals plan, visualize, and manage construction projects. By combining AI-driven 3D modeling, real-time structural analysis, and collaborative design tools, TABS streamlines complex workflows, reduces costly errors, and brings architectural concepts to life with unmatched precision. From concept to construction, it empowers architects, engineers, and project managers to make smarter, faster, and more informed decisions. Stay tuned — we are putting the finishing touches on TABS and an early access program is coming soon.',
-    actions: [
-      { label: 'Notify Me', href: '#contact' },
-    ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772399/tabs-card1_zuofsy.png'],
-    steps: COMMON_STEPS,
-    benefitsTitle: 'What to Expect from TABS',
-    benefitsBlurb: COMMON_BENEFITS_BLURB,
-    benefits: COMMON_BENEFITS,
-    comingSoon: true,
   },
 };

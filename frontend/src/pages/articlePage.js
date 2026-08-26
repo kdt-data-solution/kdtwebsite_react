@@ -22,14 +22,17 @@ function formatLongDate(s) {
 
 function imageUrl(url) {
   if (!url) return `${BASE}assets/images/here-illustration.png`;
-  return url.startsWith('http') ? url : `${API_BASE}${url}`;
+  if (url.startsWith('http')) return url;
+  if (url.startsWith('/media/')) return `${API_BASE}${url}`;
+  return `${BASE}${url.replace(/^\/+/, '')}`;
 }
 
 function notFound() {
   root.innerHTML = `
-    <section class="pt-32 pb-20 container mx-auto px-4 text-center">
-      <h1 class="text-2xl font-bold text-gray-900 mb-3">Article not found</h1>
-      <a href="${BASE}media.html" class="inline-block bg-foreground text-white px-6 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">Back to Editorial</a>
+    <section class="kdt-section"><div class="kdt-container text-center">
+      <h1 class="kdt-section-title mb-5">Article not found</h1>
+      <a href="${BASE}media.html" class="kdt-btn kdt-btn-dark">Back to Editorial</a>
+    </div>
     </section>
   `;
 }
@@ -69,21 +72,22 @@ function notFound() {
 
   const paragraphs = (article.body || '').split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
   const bodyHtml = paragraphs.map(p =>
-    `<p class="text-gray-700 text-sm md:text-base leading-relaxed mb-5">${escapeHtml(p).replace(/\r?\n/g, '<br />')}</p>`
+    `<p class="text-gray-700 text-base sm:text-lg leading-relaxed mb-6">${escapeHtml(p).replace(/\r?\n/g, '<br />')}</p>`
   ).join('');
 
   root.innerHTML = `
-    <section class="pt-24 sm:pt-28 pb-12 md:pb-16 bg-background">
-      <div class="container mx-auto px-4 sm:px-6 md:px-8 max-w-5xl">
+    <section class="kdt-section bg-[#f7f7f5]">
+      <div class="kdt-container max-w-5xl">
 
         <div class="flex justify-end mb-6">
-          <button id="go-back" class="inline-flex items-center gap-2 bg-foreground text-white px-5 py-2.5 rounded-md text-sm font-medium hover:shadow-2xl transition">
+          <button id="go-back" class="kdt-btn kdt-btn-outline">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             Go back
           </button>
         </div>
 
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-6">
+        <p class="kdt-eyebrow text-gray-500 mb-4">KDT Editorial</p>
+        <h1 class="kdt-display text-gray-950 mb-7">
           ${escapeHtml(article.title)}
         </h1>
 
@@ -93,20 +97,20 @@ function notFound() {
         ${article.tags ? `
         <div class="flex flex-wrap gap-2 mb-4">
           ${article.tags.split(',').filter(Boolean).map(t => `
-            <span class="inline-block bg-gray-100 border border-gray-300 text-xs text-gray-700 px-3 py-1 rounded-full">${escapeHtml(t.trim())}</span>
+            <span class="inline-block bg-white border border-black/20 text-xs text-gray-700 px-3 py-1">${escapeHtml(t.trim())}</span>
           `).join('')}
         </div>` : ''}
 
-        <div class="rounded-lg overflow-hidden mb-6">
+        <div class="overflow-hidden border border-black/10 mb-6">
           <img src="${imageUrl(article.image_url)}" alt="${escapeHtml(article.title)}" class="w-full h-auto object-cover" />
         </div>
 
         <div class="flex justify-end gap-2 mb-8">
-          <a id="share-fb" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook" class="w-10 h-10 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-800">
+          <a id="share-fb" href="#" target="_blank" rel="noopener" aria-label="Share on Facebook" class="w-10 h-10 border border-black/20 bg-white hover:bg-gray-200 flex items-center justify-center text-gray-800">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
           </a>
           <div class="relative">
-            <button id="share-copy" aria-label="Copy link" class="w-10 h-10 rounded-md bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-800">
+            <button id="share-copy" aria-label="Copy link" class="w-10 h-10 border border-black/20 bg-white hover:bg-gray-200 flex items-center justify-center text-gray-800">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
             </button>
             <span id="copy-tooltip" class="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-medium px-2.5 py-1 rounded opacity-0 transition-opacity duration-150 whitespace-nowrap">
@@ -116,7 +120,7 @@ function notFound() {
           </div>
         </div>
 
-        <article class="max-w-none">
+        <article class="border-t border-black/20 pt-9">
           ${bodyHtml}
         </article>
       </div>

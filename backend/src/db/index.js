@@ -94,6 +94,47 @@ db.exec(`
 `);
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS courses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    description TEXT,
+    image_url TEXT,
+    tags_json TEXT NOT NULL DEFAULT '[]',
+    start_date TEXT,
+    level TEXT,
+    mode TEXT,
+    status TEXT,
+    inclusions_json TEXT NOT NULL DEFAULT '[]',
+    register_url TEXT,
+    topics_json TEXT NOT NULL DEFAULT '[]',
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS content_sections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    key TEXT NOT NULL UNIQUE,
+    page TEXT NOT NULL DEFAULT 'global',
+    label TEXT NOT NULL DEFAULT '',
+    eyebrow TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL DEFAULT '',
+    subtitle TEXT NOT NULL DEFAULT '',
+    body TEXT NOT NULL DEFAULT '',
+    image_url TEXT NOT NULL DEFAULT '',
+    image_alt TEXT NOT NULL DEFAULT '',
+    cta_label TEXT NOT NULL DEFAULT '',
+    cta_url TEXT NOT NULL DEFAULT '',
+    items_json TEXT NOT NULL DEFAULT '[]',
+    display_order INTEGER NOT NULL DEFAULT 0,
+    is_active INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS prototypes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     slug TEXT NOT NULL UNIQUE,
@@ -111,5 +152,17 @@ db.exec(`
 try { db.exec(`ALTER TABLE products ADD COLUMN category TEXT NOT NULL DEFAULT 'software'`); } catch {}
 try { db.exec(`ALTER TABLE products ADD COLUMN date TEXT`); } catch {}
 try { db.exec(`ALTER TABLE products ADD COLUMN features TEXT`); } catch {}
+
+// Replace the original placeholder contact settings in existing databases.
+// The value match keeps genuine admin-entered settings untouched.
+const migrateLegacySetting = db.prepare(
+  'UPDATE site_settings SET value = ? WHERE key = ? AND value = ?'
+);
+migrateLegacySetting.run('84635344', 'contact_phone', '639+ 000 000 000');
+migrateLegacySetting.run(
+  'kristoffer.tabong@kdtdatasolution.com',
+  'contact_email',
+  'kdy@gmail.com'
+);
 
 export default db;
