@@ -37,6 +37,11 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description', 'slug')
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ('created_at',)
+    fields = (
+        'title', 'slug', 'description', 'category', 'date', 'features',
+        'actions_json', 'steps_json', 'benefits_json', 'benefits_title',
+        'benefits_blurb', 'image_upload', 'image_url', 'coming_soon', 'created_at',
+    )
 
 
 @admin.register(Service)

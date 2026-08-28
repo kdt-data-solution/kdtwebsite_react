@@ -9,6 +9,50 @@ from django.utils.text import slugify
 from .models import ContentSection, Course, Product, Project, Service
 
 
+class ImageUploadModelForm(forms.ModelForm):
+    upload_directory = 'uploads'
+    upload_fallback_name = 'image'
+    allowed_image_extensions = {'.gif', '.jpeg', '.jpg', '.png', '.webp'}
+    allowed_image_content_types = {
+        'image/gif', 'image/jpeg', 'image/png', 'image/webp',
+    }
+
+    image_upload = forms.FileField(
+        required=False,
+        help_text=(
+            'Optional image upload (PNG, JPG, WEBP, or GIF; maximum 10 MB). '
+            'You can also paste an existing Cloudinary or public image URL below.'
+        ),
+    )
+
+    def clean_image_upload(self):
+        uploaded = self.cleaned_data.get('image_upload')
+        if not uploaded:
+            return uploaded
+        if uploaded.size > 10 * 1024 * 1024:
+            raise forms.ValidationError('Image must be 10 MB or smaller.')
+        suffix = Path(uploaded.name).suffix.lower()
+        if suffix not in self.allowed_image_extensions:
+            raise forms.ValidationError('Upload a PNG, JPG, WEBP, or GIF image.')
+        if uploaded.content_type not in self.allowed_image_content_types:
+            raise forms.ValidationError('Upload a valid image file.')
+        return uploaded
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        uploaded = self.cleaned_data.get('image_upload')
+        if uploaded:
+            suffix = Path(uploaded.name).suffix.lower()[:10]
+            fallback_name = self.upload_fallback_name
+            safe_name = f'{slugify(instance.slug or instance.title) or fallback_name}{suffix}'
+            storage = FileSystemStorage(location=settings.MEDIA_ROOT, base_url=settings.MEDIA_URL)
+            stored_name = storage.save(f'{self.upload_directory}/{safe_name}', uploaded)
+            instance.image_url = f'{settings.PUBLIC_BASE_URL}{storage.url(stored_name)}'
+        if commit:
+            instance.save()
+        return instance
+
+
 class JsonTextMixin:
     json_fields = ()
 
@@ -42,7 +86,9 @@ class ContentSectionForm(JsonTextMixin, forms.ModelForm):
         fields = '__all__'
 
 
-class ProductForm(JsonTextMixin, forms.ModelForm):
+class ProductForm(JsonTextMixin, ImageUploadModelForm):
+    upload_directory = 'products'
+    upload_fallback_name = 'product'
     json_fields = ('actions_json', 'steps_json', 'benefits_json')
 
     class Meta:
@@ -66,35 +112,10 @@ class CourseForm(JsonTextMixin, forms.ModelForm):
         fields = '__all__'
 
 
-class ProjectForm(forms.ModelForm):
-    image_upload = forms.FileField(
-        required=False,
-        help_text='Optional image upload. You can also paste an existing Cloudinary or public image URL below.',
-    )
+class ProjectForm(ImageUploadModelForm):
+    upload_directory = 'projects'
+    upload_fallback_name = 'project'
 
     class Meta:
         model = Project
         fields = '__all__'
-
-    def clean_image_upload(self):
-        uploaded = self.cleaned_data.get('image_upload')
-        if not uploaded:
-            return uploaded
-        if uploaded.size > 10 * 1024 * 1024:
-            raise forms.ValidationError('Image must be 10 MB or smaller.')
-        if uploaded.content_type and not uploaded.content_type.startswith('image/'):
-            raise forms.ValidationError('Upload a valid image file.')
-        return uploaded
-
-    def save(self, commit=True):
-        project = super().save(commit=False)
-        uploaded = self.cleaned_data.get('image_upload')
-        if uploaded:
-            suffix = Path(uploaded.name).suffix.lower()[:10]
-            safe_name = f'{slugify(project.slug or project.title) or "project"}{suffix}'
-            storage = FileSystemStorage(location=settings.MEDIA_ROOT, base_url=settings.MEDIA_URL)
-            stored_name = storage.save(f'projects/{safe_name}', uploaded)
-            project.image_url = f'{settings.PUBLIC_BASE_URL}{storage.url(stored_name)}'
-        if commit:
-            project.save()
-        return project
