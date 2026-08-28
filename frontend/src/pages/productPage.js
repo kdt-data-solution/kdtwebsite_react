@@ -14,10 +14,10 @@ function escapeHtml(s) {
 }
 
 const ICONS = {
-  smile: `<img src="${BASE}assets/images/improves.svg" alt="" class="w-6 h-6" />`,
-  shield: `<img src="${BASE}assets/images/secure.svg" alt="" class="w-6 h-6" />`,
-  calendar: `<img src="${BASE}assets/images/track.svg" alt="" class="w-6 h-6" />`,
-  clock: `<img src="${BASE}assets/images/time.svg" alt="" class="w-6 h-6" />`,
+  smile: `<img src="${BASE}assets/images/improves.svg" alt="" class="kdt-product-benefit-icon w-6 h-6" />`,
+  shield: `<img src="${BASE}assets/images/secure.svg" alt="" class="kdt-product-benefit-icon w-6 h-6" />`,
+  calendar: `<img src="${BASE}assets/images/track.svg" alt="" class="kdt-product-benefit-icon w-6 h-6" />`,
+  clock: `<img src="${BASE}assets/images/time.svg" alt="" class="kdt-product-benefit-icon w-6 h-6" />`,
 };
 
 async function loadProduct() {
@@ -71,7 +71,7 @@ if (!data) {
 
   const benefitsHtml = (data.benefits || []).map(b => `
     <div class="flex items-center gap-4 border-t border-black/20 py-5">
-      <div class="w-10 h-10 flex items-center justify-center flex-shrink-0">${ICONS[b.icon] || ICONS.smile}</div>
+      <div class="kdt-product-benefit-icon-wrap w-10 h-10 flex items-center justify-center flex-shrink-0">${ICONS[b.icon] || ICONS.smile}</div>
       <p class="text-sm text-gray-900 font-medium">${escapeHtml(b.title || '')}</p>
     </div>
   `).join('');
