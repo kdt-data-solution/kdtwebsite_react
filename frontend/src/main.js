@@ -6,7 +6,6 @@ document.querySelector("#app").innerHTML = `
   <div id="industries"></div>
   <div id="products"></div>
   <div id="services"></div>
-  <div id="partners"></div>
   <div id="solution-divider"></div>
   <div id="product-directory"></div>
   <div id="faq"></div>
@@ -19,7 +18,6 @@ setTimeout(() => {
   import('./components/industries.js');
   import('./components/products.js');
   import('./components/services.js');
-  import('./components/partners.js');
   import('./components/solutionDivider.js');
   import('./components/productDirectory.js');
   import('./components/faq.js');

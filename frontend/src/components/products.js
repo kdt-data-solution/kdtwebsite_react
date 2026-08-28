@@ -6,14 +6,19 @@ const root = document.querySelector('#products');
 
 function renderCards(items) {
   return items.map((product) => `
-    <a href="${contentUrl(product.href || `product.html?slug=${encodeURIComponent(product.slug || '')}`)}" class="kdt-product-card group hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black" aria-label="View ${escapeHtml(product.name)} product details">
+    <a href="${contentUrl(product.href || `product.html?slug=${encodeURIComponent(product.slug || '')}`)}" class="kdt-product-card group" aria-label="View ${escapeHtml(product.name)} product details">
       <div class="flex items-center justify-between gap-4">
-        <span class="kdt-product-mark" aria-hidden="true">${escapeHtml(product.name.charAt(0))}</span>
+        <span class="kdt-eyebrow">KDT Product</span>
         <span class="kdt-eyebrow text-gray-500">${escapeHtml(product.number)}</span>
       </div>
-      <div class="mt-12 sm:mt-16">
-        <p class="text-xs uppercase tracking-[0.13em] text-gray-500 mb-2">KDT Product</p>
+      <div class="kdt-product-media" aria-hidden="true">
+        ${product.logo
+          ? `<img class="kdt-product-logo" src="${contentUrl(product.logo)}" alt="" loading="lazy" decoding="async" />`
+          : `<span class="kdt-product-mark">${escapeHtml(product.name.charAt(0))}</span>`}
+      </div>
+      <div>
         <h3 class="text-gray-950 font-semibold text-2xl leading-tight">${escapeHtml(product.name)}</h3>
+        <span class="kdt-product-card-link">View product <span class="kdt-arrow-icon" aria-hidden="true"></span></span>
       </div>
     </a>
   `).join('');

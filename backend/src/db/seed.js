@@ -259,11 +259,11 @@ const CONTENT_SECTIONS = [
     key: 'home.products', page: 'home', label: 'Popular products', display_order: 30,
     eyebrow: 'Built by KDT', title: 'Popular products', subtitle: 'KDT products A–Z',
     items: [
-      { name: 'Nexus', number: '01', slug: 'membership', href: 'product-membership.html' },
-      { name: 'Axis', number: '02', slug: 'construct-pro', href: 'product-construct.html' },
-      { name: 'Vantage', number: '03', slug: 'structural-chatbot', href: 'product-chatbot.html' },
-      { name: 'Kuwalog', number: '04', slug: 'wms', href: 'product-wms.html' },
-      { name: 'TakeOff', number: '05', slug: 'cardko', href: 'product-cardko.html' },
+      { name: 'Nexus', number: '01', slug: 'membership', href: 'product-membership.html', logo: 'assets/images/product-nexus.png' },
+      { name: 'Axis', number: '02', slug: 'construct-pro', href: 'product-construct.html', logo: 'assets/images/product-axis.png' },
+      { name: 'Vantage', number: '03', slug: 'structural-chatbot', href: 'product-chatbot.html', logo: 'assets/images/product-vantage.png' },
+      { name: 'Kuwalog', number: '04', slug: 'wms', href: 'product-wms.html', logo: 'assets/images/product-kuwalog.png' },
+      { name: 'TakeOff', number: '05', slug: 'cardko', href: 'product-cardko.html', logo: 'assets/images/product-takeoff.png' },
     ],
   },
   {
@@ -274,7 +274,7 @@ const CONTENT_SECTIONS = [
       { title: 'Architecture and Engineering Services', description: 'Professional design and engineering solutions tailored to your project requirements.', image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317603/eng-card_b99f6c.webp', href: 'services.html' },
       { title: 'Data Science and Analytics', description: 'Transform your data into actionable insights with our advanced analytics solutions.', image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317603/dsa-card_bnnv0x.png', href: 'services-data.html' },
       { title: 'Software Development', description: 'Custom software and web applications tailored to your specific business needs.', image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776317604/sd-card_jwzlef.png', href: 'services-software.html' },
-      { title: 'Bootcamp', description: 'Intensive training programs designed to upskill professionals in technology and engineering.', image: 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772395/bootcamp-card_rceyil.png', href: 'services-bootcamp.html' },
+      { title: 'Bootcamp', description: 'Intensive training programs designed to upskill professionals in technology and engineering.', image: 'assets/images/kdt-bootcamp-workshop.png', href: 'services-bootcamp.html' },
     ],
   },
   {
@@ -475,11 +475,11 @@ export function seedInitial() {
   ).get('home.products');
   if (homeProductsSection) {
     const linkMap = {
-      nexus: { slug: 'membership', href: 'product-membership.html' },
-      axis: { slug: 'construct-pro', href: 'product-construct.html' },
-      vantage: { slug: 'structural-chatbot', href: 'product-chatbot.html' },
-      kuwalog: { slug: 'wms', href: 'product-wms.html' },
-      takeoff: { slug: 'cardko', href: 'product-cardko.html' },
+      nexus: { slug: 'membership', href: 'product-membership.html', logo: 'assets/images/product-nexus.png' },
+      axis: { slug: 'construct-pro', href: 'product-construct.html', logo: 'assets/images/product-axis.png' },
+      vantage: { slug: 'structural-chatbot', href: 'product-chatbot.html', logo: 'assets/images/product-vantage.png' },
+      kuwalog: { slug: 'wms', href: 'product-wms.html', logo: 'assets/images/product-kuwalog.png' },
+      takeoff: { slug: 'cardko', href: 'product-cardko.html', logo: 'assets/images/product-takeoff.png' },
     };
     let items = [];
     try { items = JSON.parse(homeProductsSection.items_json || '[]'); } catch {}
@@ -489,11 +489,34 @@ export function seedInitial() {
       if (!mapped) continue;
       if (!item.slug) { item.slug = mapped.slug; changed = true; }
       if (!item.href) { item.href = mapped.href; changed = true; }
+      if (!item.logo) { item.logo = mapped.logo; changed = true; }
     }
     if (changed) {
       db.prepare(
         "UPDATE content_sections SET items_json = ?, updated_at = datetime('now') WHERE key = ?"
       ).run(JSON.stringify(items), 'home.products');
+    }
+  }
+
+  // Migrate only the legacy Bootcamp card image so existing administrator
+  // edits to the rest of the services section remain untouched.
+  const homeServicesSection = db.prepare(
+    'SELECT items_json FROM content_sections WHERE key = ?'
+  ).get('home.services');
+  if (homeServicesSection) {
+    let items = [];
+    try { items = JSON.parse(homeServicesSection.items_json || '[]'); } catch {}
+    const legacyImage = 'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772395/bootcamp-card_rceyil.png';
+    let changed = false;
+    for (const item of items) {
+      if (String(item.title || '').toLowerCase() !== 'bootcamp' || item.image !== legacyImage) continue;
+      item.image = 'assets/images/kdt-bootcamp-workshop.png';
+      changed = true;
+    }
+    if (changed) {
+      db.prepare(
+        "UPDATE content_sections SET items_json = ?, updated_at = datetime('now') WHERE key = ?"
+      ).run(JSON.stringify(items), 'home.services');
     }
   }
 

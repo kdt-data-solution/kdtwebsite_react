@@ -26,8 +26,7 @@ const fallbackServices = [
   {
     title: 'Bootcamp',
     desc: 'Intensive training programs designed to upskill professionals in technology and engineering.',
-    image:
-      'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772395/bootcamp-card_rceyil.png',
+    image: 'assets/images/kdt-bootcamp-workshop.png',
     href: 'services-bootcamp.html',
   },
 ];

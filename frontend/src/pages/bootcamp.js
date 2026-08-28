@@ -109,12 +109,8 @@ document.querySelector('#bootcamp-page').innerHTML = `
             Explore upcoming events <span class="kdt-arrow-icon is-external" aria-hidden="true"></span>
           </a>
         </div>
-        <div id="bootcamp-slider" class="relative w-full min-h-[420px] lg:min-h-full overflow-hidden bg-[#242624]">
-          <!-- First image is "relative" so it dictates the container height -->
-          <img class="bootcamp-slide absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot2-card_pynov3.png" alt="KDT bootcamp participants and learning session" onerror="this.style.display='none'" />
-          <img class="bootcamp-slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot3-card_spoada.png" alt="Bootcamp 2" onerror="this.style.display='none'" />
-          <img class="bootcamp-slide absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000" src="https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776349570/boot1-card_e86ffg.png" alt="Bootcamp 3" onerror="this.style.display='none'" />
-          <div id="bootcamp-dots" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10"></div>
+        <div class="relative w-full min-h-[420px] lg:min-h-full overflow-hidden bg-[#242624]">
+          <img class="absolute inset-0 h-full w-full object-cover" src="${BASE}assets/images/kdt-bootcamp-workshop.png" alt="Filipino professionals collaborating during a KDT technology bootcamp" />
         </div>
       </div>
     </div>
@@ -197,48 +193,4 @@ document.querySelector('#bootcamp-page').innerHTML = `
   window.addEventListener('resize', ensureWidth);
 })();
 
-(function initBootcampSlider() {
-  const slides = document.querySelectorAll('.bootcamp-slide');
-  if (slides.length < 2) return;
-
-  const dotsContainer = document.getElementById('bootcamp-dots');
-  let current = 0;
-
-  // Build dot indicators
-  slides.forEach((_, i) => {
-    const dot = document.createElement('button');
-    dot.type = 'button';
-    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
-    dot.className = 'w-2 h-2 rounded-full bg-white/50 hover:bg-white transition';
-    dot.addEventListener('click', () => show(i));
-    dotsContainer.appendChild(dot);
-  });
-
-  function updateDots() {
-    dotsContainer.querySelectorAll('button').forEach((d, i) => {
-      d.className = 'rounded-full transition ' + (i === current ? 'w-6 h-2 bg-white' : 'w-2 h-2 bg-white/50 hover:bg-white');
-    });
-  }
-
-  function show(i) {
-    slides[current].classList.remove('opacity-100');
-    slides[current].classList.add('opacity-0');
-    current = i;
-    slides[current].classList.remove('opacity-0');
-    slides[current].classList.add('opacity-100');
-    updateDots();
-  }
-
-  updateDots();
-
-  // Auto-advance every 4s
-  let timer = setInterval(() => show((current + 1) % slides.length), 4000);
-
-  // Pause on hover
-  const slider = document.getElementById('bootcamp-slider');
-  slider?.addEventListener('mouseenter', () => clearInterval(timer));
-  slider?.addEventListener('mouseleave', () => {
-    timer = setInterval(() => show((current + 1) % slides.length), 4000);
-  });
-})();
 })();
