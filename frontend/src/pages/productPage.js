@@ -52,14 +52,10 @@ if (!data) {
   }).join('');
 
   const productImages = data.images?.length ? data.images : ['assets/images/kdt-products.png'];
-  const imagesHtml = productImages.map(src => {
-    const fullSrc = src.startsWith('http') ? src : (src.startsWith('/') ? `${API_BASE}${src}` : `${BASE}${src}`);
-    return `
-      <div class="bg-[#eeeeeb] overflow-hidden border border-black/10">
-        <img src="${fullSrc}" alt="${escapeHtml(data.title)}" class="w-full h-auto object-contain" />
-      </div>
-    `;
-  }).join('');
+  const heroImage = productImages[0];
+  const heroImageSrc = heroImage.startsWith('http')
+    ? heroImage
+    : (heroImage.startsWith('/') ? `${API_BASE}${heroImage}` : `${BASE}${heroImage}`);
 
   const stepsHtml = (data.steps || []).map((s, i) => `
     <article class="bg-white p-6 sm:p-8 min-h-52 border border-black/10">
@@ -77,25 +73,27 @@ if (!data) {
   `).join('');
 
   root.innerHTML = `
-    <section class="bg-[#0b0b0b] text-white overflow-hidden">
-      <div class="kdt-container px-0">
-        <div class="grid grid-cols-1 lg:grid-cols-2 min-h-[590px]">
-          <div class="kdt-hero-copy flex flex-col justify-center items-start">
-            <p class="kdt-eyebrow text-gray-400 mb-4">KDT Product</p>
-            <h1 class="kdt-display text-white">
-              ${escapeHtml(data.title)}${data.comingSoon ? ' <span class="block mt-5 text-xs uppercase tracking-[0.14em] text-gray-400 font-semibold">Coming soon</span>' : ''}
-            </h1>
-            <p class="text-gray-300 text-base sm:text-lg max-w-xl leading-relaxed mt-6 mb-8">
-              ${escapeHtml(data.description || '')}
-            </p>
-            <div class="flex flex-wrap gap-3">
-              ${actionsHtml}
-            </div>
-          </div>
-          <div class="bg-[#eeeeeb] p-5 sm:p-8 flex items-center justify-center">
-            <div class="grid gap-4 w-full max-w-3xl">
-              ${imagesHtml}
-            </div>
+    <section class="kdt-product-hero text-white" aria-labelledby="product-heading">
+      <img
+        src="${escapeHtml(heroImageSrc)}"
+        alt=""
+        decoding="async"
+        fetchpriority="high"
+        class="kdt-product-hero-image"
+      />
+      <div class="kdt-product-hero-gradient" aria-hidden="true"></div>
+
+      <div class="kdt-container relative z-10">
+        <div class="kdt-product-hero-copy flex flex-col justify-center items-start">
+          <p class="kdt-eyebrow text-gray-400 mb-4">KDT Product</p>
+          <h1 id="product-heading" class="kdt-display text-white">
+            ${escapeHtml(data.title)}${data.comingSoon ? ' <span class="block mt-5 text-xs uppercase tracking-[0.14em] text-gray-400 font-semibold">Coming soon</span>' : ''}
+          </h1>
+          <p class="kdt-product-hero-description text-gray-200 text-base sm:text-lg leading-relaxed mt-6 mb-8">
+            ${escapeHtml(data.description || '')}
+          </p>
+          <div class="flex flex-wrap gap-3">
+            ${actionsHtml}
           </div>
         </div>
       </div>
