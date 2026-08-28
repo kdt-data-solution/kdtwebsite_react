@@ -3,6 +3,7 @@ import db from '../db/index.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
 import { uploadBuffer, destroyAsset } from '../services/cloudinary.js';
+import { parseJsonList } from '../utils/json.js';
 
 const router = Router();
 
@@ -20,14 +21,13 @@ const findById = db.prepare('SELECT * FROM products WHERE id = ?');
 const findBySlug = db.prepare('SELECT * FROM products WHERE slug = ?');
 const listAll = db.prepare('SELECT * FROM products ORDER BY id ASC');
 
-function safeJson(s, fallback) { try { return JSON.parse(s); } catch { return fallback; } }
 function hydrate(row) {
   if (!row) return row;
   return {
     ...row,
-    actions: safeJson(row.actions_json, []),
-    steps: safeJson(row.steps_json, []),
-    benefits: safeJson(row.benefits_json, []),
+    actions: parseJsonList(row.actions_json),
+    steps: parseJsonList(row.steps_json),
+    benefits: parseJsonList(row.benefits_json),
     coming_soon: !!row.coming_soon,
   };
 }
@@ -48,8 +48,7 @@ function uniqueSlug(base, ignoreId = null) {
 // Multipart bodies arrive as strings — parse JSON fields if present.
 function parseField(v, fallback) {
   if (v == null) return fallback;
-  if (typeof v === 'object') return v;
-  try { return JSON.parse(v); } catch { return fallback; }
+  return parseJsonList(v, fallback);
 }
 
 router.get('/', (req, res, next) => {
@@ -109,9 +108,9 @@ router.put('/:id', requireAuth, requireRole('admin'), upload.single('image'), as
     const features = req.body.features ?? existing.features;
     const benefits_title = req.body.benefits_title ?? existing.benefits_title;
     const benefits_blurb = req.body.benefits_blurb ?? existing.benefits_blurb;
-    const actions = parseField(req.body.actions, safeJson(existing.actions_json, []));
-    const steps = parseField(req.body.steps, safeJson(existing.steps_json, []));
-    const benefits = parseField(req.body.benefits, safeJson(existing.benefits_json, []));
+    const actions = parseField(req.body.actions, parseJsonList(existing.actions_json));
+    const steps = parseField(req.body.steps, parseJsonList(existing.steps_json));
+    const benefits = parseField(req.body.benefits, parseJsonList(existing.benefits_json));
     const coming_soon = req.body.coming_soon != null
       ? (req.body.coming_soon === 'true' || req.body.coming_soon === '1' ? 1 : 0)
       : existing.coming_soon;

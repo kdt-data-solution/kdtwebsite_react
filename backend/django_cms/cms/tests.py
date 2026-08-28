@@ -1,4 +1,5 @@
 import tempfile
+import json
 from pathlib import Path
 from unittest.mock import patch
 
@@ -50,6 +51,26 @@ class ProductFormImageUploadTests(SimpleTestCase):
         with patch.object(Product, 'validate_unique'):
             self.assertFalse(form.is_valid())
         self.assertIn('image_upload', form.errors)
+
+    def test_repeatedly_encoded_json_is_normalized_when_saving_an_image(self):
+        actions = [{'label': 'Request a Demo', 'href': '#contact'}]
+        repeatedly_encoded = json.dumps(json.dumps(json.dumps(actions)))
+        form = ProductForm(
+            data={
+                'slug': 'axis',
+                'title': 'Axis',
+                'category': 'software',
+                'actions_json': repeatedly_encoded,
+                'steps_json': '[]',
+                'benefits_json': '[]',
+            },
+        )
+
+        with patch.object(Product, 'validate_unique'):
+            self.assertTrue(form.is_valid(), form.errors)
+        product = form.save(commit=False)
+
+        self.assertEqual(json.loads(product.actions_json), actions)
 
     def test_image_content_type_with_unsafe_extension_is_rejected(self):
         upload = SimpleUploadedFile('logo.html', b'<script>alert(1)</script>', content_type='image/png')

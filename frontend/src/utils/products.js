@@ -13,6 +13,7 @@ function normalizeProduct(row, index, metadata = {}) {
     number: String(index + 1).padStart(2, '0'),
     slug,
     href,
+    logo: row.image_url || metadata.logo || '',
   };
 }
 

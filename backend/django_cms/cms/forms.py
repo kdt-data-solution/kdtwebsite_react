@@ -9,6 +9,26 @@ from django.utils.text import slugify
 from .models import ContentSection, Course, Product, Project, Service
 
 
+def decode_json_list(value):
+    """Decode legacy repeatedly-encoded JSON and return None for non-lists."""
+    if value in (None, ''):
+        return []
+    normalized = value
+    for _ in range(6):
+        if not isinstance(normalized, str):
+            break
+        try:
+            normalized = json.loads(normalized or '[]')
+        except (TypeError, json.JSONDecodeError):
+            return None
+    return normalized if isinstance(normalized, list) else None
+
+
+def normalize_json_list(value):
+    normalized = decode_json_list(value)
+    return normalized if normalized is not None else []
+
+
 class ImageUploadModelForm(forms.ModelForm):
     upload_directory = 'uploads'
     upload_fallback_name = 'image'
@@ -60,10 +80,7 @@ class JsonTextMixin:
         super().__init__(*args, **kwargs)
         for name in self.json_fields:
             value = getattr(self.instance, name, '[]') if self.instance else '[]'
-            try:
-                value = json.loads(value or '[]')
-            except (TypeError, json.JSONDecodeError):
-                value = []
+            value = normalize_json_list(value)
             self.fields[name] = forms.JSONField(
                 required=False,
                 initial=value,
@@ -74,7 +91,12 @@ class JsonTextMixin:
     def clean(self):
         cleaned = super().clean()
         for name in self.json_fields:
-            cleaned[name] = json.dumps(cleaned.get(name) or [], ensure_ascii=False)
+            raw_value = cleaned.get(name)
+            normalized = decode_json_list(raw_value)
+            if normalized is None:
+                self.add_error(name, 'Enter a JSON list.')
+                normalized = []
+            cleaned[name] = json.dumps(normalized, ensure_ascii=False)
         return cleaned
 
 

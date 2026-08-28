@@ -46,7 +46,11 @@ if (!data) {
 } else {
   document.title = `${data.title} — KDT`;
 
-  const actionsHtml = (data.actions || []).map((a, index) => {
+  const actions = Array.isArray(data.actions) ? data.actions : [];
+  const steps = Array.isArray(data.steps) ? data.steps : [];
+  const benefits = Array.isArray(data.benefits) ? data.benefits : [];
+
+  const actionsHtml = actions.map((a, index) => {
     const href = a.href === '#contact' ? `${BASE}#contact` : (a.href || '#');
     return `<a href="${escapeHtml(href)}" class="kdt-btn ${index === 0 ? 'kdt-btn-light' : 'border-white/50 text-white hover:bg-white/10 hover:border-white'}">${escapeHtml(a.label || '')}${index === 0 ? ' <span class="kdt-arrow-icon" aria-hidden="true"></span>' : ''}</a>`;
   }).join('');
@@ -57,7 +61,7 @@ if (!data) {
     ? heroImage
     : (heroImage.startsWith('/') ? `${API_BASE}${heroImage}` : `${BASE}${heroImage}`);
 
-  const stepsHtml = (data.steps || []).map((s, i) => `
+  const stepsHtml = steps.map((s, i) => `
     <article class="bg-white p-6 sm:p-8 min-h-52 border border-black/10">
       <p class="kdt-eyebrow text-gray-500">0${i + 1}</p>
       <p class="font-semibold text-gray-950 text-lg mt-8">${escapeHtml(s.label || '')}</p>
@@ -65,7 +69,7 @@ if (!data) {
     </article>
   `).join('');
 
-  const benefitsHtml = (data.benefits || []).map(b => `
+  const benefitsHtml = benefits.map(b => `
     <div class="flex items-center gap-4 border-t border-black/20 py-5">
       <div class="kdt-product-benefit-icon-wrap w-10 h-10 flex items-center justify-center flex-shrink-0">${ICONS[b.icon] || ICONS.smile}</div>
       <p class="text-sm text-gray-900 font-medium">${escapeHtml(b.title || '')}</p>
@@ -99,7 +103,7 @@ if (!data) {
       </div>
     </section>
 
-    ${(data.steps || []).length > 0 ? `
+    ${steps.length > 0 ? `
     <section class="kdt-section bg-[#f7f7f5]">
       <div class="kdt-container">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-16 items-end mb-10 md:mb-14">
@@ -117,7 +121,7 @@ if (!data) {
       </div>
     </section>` : ''}
 
-    ${(data.benefits || []).length > 0 ? `
+    ${benefits.length > 0 ? `
     <section class="kdt-section bg-white">
       <div class="kdt-container">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
