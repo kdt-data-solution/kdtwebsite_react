@@ -38,11 +38,11 @@ const socialPreview = () => ({
         { tag: 'meta', attrs: { property: 'og:site_name', content: 'KDT Network and Data Solution' }, injectTo: 'head' },
         { tag: 'meta', attrs: { property: 'og:title', content: 'KDT Network and Data Solution' }, injectTo: 'head' },
         { tag: 'meta', attrs: { property: 'og:description', content: 'Engineering insight. Digital intelligence.' }, injectTo: 'head' },
-        { tag: 'meta', attrs: { property: 'og:image', content: 'https://www.kdtdatasolution.com/og.png' }, injectTo: 'head' },
+        { tag: 'meta', attrs: { property: 'og:image', content: 'https://www.kdtdatasolution.com/og-kdt-logo.png' }, injectTo: 'head' },
         { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' }, injectTo: 'head' },
         { tag: 'meta', attrs: { name: 'twitter:title', content: 'KDT Network and Data Solution' }, injectTo: 'head' },
         { tag: 'meta', attrs: { name: 'twitter:description', content: 'Engineering insight. Digital intelligence.' }, injectTo: 'head' },
-        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://www.kdtdatasolution.com/og.png' }, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: 'https://www.kdtdatasolution.com/og-kdt-logo.png' }, injectTo: 'head' },
       ],
     };
   },
