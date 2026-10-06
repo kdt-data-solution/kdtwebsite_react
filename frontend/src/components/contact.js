@@ -2,6 +2,8 @@ import "../styles/style.css";
 import { getSiteSettings } from '../utils/siteSettings.js';
 import { API_BASE } from '../utils/auth.js';
 import { enquiryContext } from '../utils/enquiry.js';
+import { pageReady } from '../utils/pageReady.js';
+import { setupContactNavigation } from '../utils/contactNavigation.js';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -41,7 +43,7 @@ document.querySelector("#contact").innerHTML = `
     <div class="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-5 lg:gap-16 items-end mb-8 md:mb-10">
       <div>
         <p class="kdt-eyebrow text-gray-500 mb-3">Contact KDT</p>
-        <h2 id="contact-heading" class="kdt-section-title">Let’s solve the right problem.</h2>
+        <h2 id="contact-heading" tabindex="-1" class="kdt-section-title">Let’s solve the right problem.</h2>
       </div>
       <p class="text-gray-600 text-base sm:text-lg leading-relaxed max-w-2xl lg:justify-self-end">
         Tell us what you are building, improving, or trying to understand. Our team will respond with a practical next step.
@@ -173,19 +175,8 @@ function applyEnquiryContext(search = window.location.search) {
   webinarNote.hidden = context.type !== 'webinar';
 }
 
-applyEnquiryContext();
 enquiryType.addEventListener('change', () => { webinarNote.hidden = enquiryType.value !== 'webinar'; });
-window.addEventListener('popstate', () => applyEnquiryContext());
-document.addEventListener('click', event => {
-  const link = event.target.closest('a[href]');
-  if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
-  const url = new URL(link.href);
-  if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || url.hash !== '#contact' || !url.searchParams.has('enquiry')) return;
-  event.preventDefault();
-  applyEnquiryContext(url.search);
-  window.history.pushState(null, '', url);
-  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
-});
+setupContactNavigation(window, document, pageReady, applyEnquiryContext);
 
 document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();

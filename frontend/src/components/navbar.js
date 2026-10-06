@@ -63,12 +63,14 @@ function closeMobileMenu() {
 mobileMenu?.addEventListener('click', event => {
   if (event.target.closest('a[href]')) closeMobileMenu();
 });
-mobileMenu?.addEventListener('keydown', event => {
-  if (event.key === 'Escape') {
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && menuButton?.getAttribute('aria-expanded') === 'true') {
+    event.preventDefault();
     closeMobileMenu();
     menuButton?.focus();
   }
 });
+window.addEventListener('pageshow', closeMobileMenu);
 menuButton?.addEventListener('click', () => { const open = menuButton.getAttribute('aria-expanded') === 'true'; menuButton.setAttribute('aria-expanded', String(!open)); menuButton.setAttribute('aria-label', open ? 'Open navigation menu' : 'Close navigation menu'); mobileMenu?.toggleAttribute('hidden', open); });
 document.getElementById('mobile-about-button')?.addEventListener('click', event => { const button = event.currentTarget; const open = button.getAttribute('aria-expanded') === 'true'; button.setAttribute('aria-expanded', String(!open)); document.getElementById('mobile-about-menu')?.toggleAttribute('hidden', open); document.getElementById('mobile-about-icon')?.classList.toggle('is-open', !open); });
 

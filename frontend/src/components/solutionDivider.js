@@ -1,7 +1,7 @@
 import '../styles/style.css';
 import { contentUrl, escapeHtml, getContentSection } from '../utils/content.js';
 
-(async function renderSolutionDivider() {
+export const ready = (async function renderSolutionDivider() {
   const content = await getContentSection('home.solution-divider', {
     eyebrow: 'From insight to execution',
     title: 'What can KDT help you build next?',

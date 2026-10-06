@@ -1,6 +1,7 @@
 import { homeProducts } from '../data/homeProducts.js';
 import { API_BASE } from './auth.js';
 import { getContentSection } from './content.js';
+import { getPublicJson } from './publicJson.js';
 
 function normalizeProduct(row, index, metadata = {}) {
   const slug = String(row.slug || metadata.slug || '').trim();
@@ -32,10 +33,8 @@ export async function getWebsiteProducts() {
 
   const [section, productsResult] = await Promise.all([
     getContentSection('home.products', fallbackSection),
-    fetch(`${API_BASE}/api/products`)
-      .then(async response => {
-        if (!response.ok) throw new Error(`Products request failed (${response.status})`);
-        const rows = await response.json();
+    getPublicJson(`${API_BASE}/api/products`)
+      .then(rows => {
         if (!Array.isArray(rows)) throw new Error('Products response is not a list');
         return rows;
       })

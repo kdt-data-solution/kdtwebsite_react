@@ -4,7 +4,7 @@ import { getWebsiteProducts } from '../utils/products.js';
 
 const root = document.querySelector('#product-directory');
 
-(async function renderProductDirectory() {
+export const ready = (async function renderProductDirectory() {
 const content = await getWebsiteProducts();
 const productsSource = content.items;
 const groups = [...productsSource]

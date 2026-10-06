@@ -29,7 +29,7 @@ const fallback = {
   ],
 };
 
-(async function renderIndustries() {
+export const ready = (async function renderIndustries() {
   const content = await getContentSection('home.industries', fallback);
   document.querySelector('#industries').innerHTML = `
   <section class="bg-[#f1f1ef] border-y border-black/15" aria-labelledby="industries-heading">

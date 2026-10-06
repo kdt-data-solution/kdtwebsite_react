@@ -1,6 +1,8 @@
 import '../styles/style.css';
 import { services } from '../data/services.js';
 import { API_BASE } from '../utils/auth.js';
+import { markPageReady } from '../utils/pageReady.js';
+import { getPublicJson } from '../utils/publicJson.js';
 
 const params = new URLSearchParams(window.location.search);
 const key = params.get('slug') || window.SERVICE_KEY || 'architecture';
@@ -15,19 +17,17 @@ const SERVICE_IMAGES = {
 async function loadService() {
   const fallback = services[key];
   try {
-    const response = await fetch(`${API_BASE}/api/services/slug/${encodeURIComponent(key)}`);
-    if (!response.ok) return null;
-    const item = await response.json();
+    const item = await getPublicJson(`${API_BASE}/api/services/slug/${encodeURIComponent(key)}`);
     const offerings = item.offerings?.length
       ? item.offerings.map((offering, index) => ({ ...(fallback?.offerings?.[index] || {}), ...offering }))
       : fallback?.offerings;
     return { ...fallback, ...item, offerings, pageTitle: item.title || fallback?.pageTitle };
-  } catch {
-    return fallback;
+  } catch (error) {
+    return error.status ? null : fallback;
   }
 }
 
-(async function renderService() {
+const ready = (async function renderService() {
 const data = await loadService();
 if (!data) {
   root.innerHTML = `<section class="pt-32 pb-20 text-center"><h1 class="text-2xl font-bold text-gray-900">Service not found</h1></section>`;
@@ -52,9 +52,10 @@ if (!data) {
   }
 
   async function loadDynamic() {
-    let projects = [], articles = [];
-    try { projects = await fetch(`${API_BASE}/api/portfolio`).then(r => r.json()); } catch {}
-    try { articles = await fetch(`${API_BASE}/api/articles`).then(r => r.json()); } catch {}
+    const [projects, articles] = await Promise.all([
+      getPublicJson(`${API_BASE}/api/portfolio`).catch(() => []),
+      getPublicJson(`${API_BASE}/api/articles`).catch(() => []),
+    ]);
     // Filter by service category (architecture | data | software)
     const filteredProjects = projects.filter(p => p.category === key).slice(0, 3);
     const filteredArticles = articles.filter(a => a.category === key).slice(0, 3);
@@ -166,3 +167,4 @@ if (!data) {
     `;
 }
 })();
+ready.then(markPageReady, markPageReady);

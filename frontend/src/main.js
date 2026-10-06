@@ -1,4 +1,5 @@
 import './styles/style.css'
+import { markPageReady } from './utils/pageReady.js';
 
 document.querySelector("#app").innerHTML = `
 <div>
@@ -12,13 +13,13 @@ document.querySelector("#app").innerHTML = `
 </div>
 `;
 
-// Load hero after DOM is ready
-setTimeout(() => {
-  import('./components/hero.js');
-  import('./components/industries.js');
-  import('./components/products.js');
-  import('./components/services.js');
-  import('./components/solutionDivider.js');
-  import('./components/productDirectory.js');
-  import('./components/faq.js');
-}, 0);
+const sections = [
+  import('./components/hero.js'),
+  import('./components/industries.js'),
+  import('./components/products.js'),
+  import('./components/services.js'),
+  import('./components/solutionDivider.js'),
+  import('./components/productDirectory.js'),
+  import('./components/faq.js'),
+];
+Promise.allSettled(sections.map(async section => (await section).ready)).then(markPageReady);

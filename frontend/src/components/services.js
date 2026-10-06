@@ -49,7 +49,7 @@ function cardsHtml(services) { return services.map(s => `
   </article>
 `).join(''); }
 
-(async function renderServices() {
+export const ready = (async function renderServices() {
 const content = await getContentSection('home.services', {
   eyebrow: 'What we offer',
   title: 'Expertise that moves work forward.',

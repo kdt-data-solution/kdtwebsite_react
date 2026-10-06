@@ -21,7 +21,7 @@ const faqData = [
   }
 ];
 
-(async function renderFaq() {
+export const ready = (async function renderFaq() {
 const content = await getContentSection('home.faq', {
   eyebrow: 'Questions, answered',
   title: 'Frequently Asked Questions',

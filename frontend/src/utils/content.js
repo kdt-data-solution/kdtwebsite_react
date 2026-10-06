@@ -1,4 +1,5 @@
 import { API_BASE } from './auth.js';
+import { getPublicJson } from './publicJson.js';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -17,9 +18,7 @@ export function contentUrl(value = '') {
 
 export async function getContentSection(key, fallback = {}) {
   try {
-    const response = await fetch(`${API_BASE}/api/content/${encodeURIComponent(key)}`);
-    if (!response.ok) return fallback;
-    const section = await response.json();
+    const section = await getPublicJson(`${API_BASE}/api/content/${encodeURIComponent(key)}`);
     return { ...fallback, ...section, items: Array.isArray(section.items) ? section.items : (fallback.items || []) };
   } catch {
     return fallback;

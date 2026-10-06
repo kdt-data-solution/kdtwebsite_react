@@ -12,7 +12,7 @@ const fallback = {
   cta_url: '#contact',
 };
 
-(async function renderHero() {
+export const ready = (async function renderHero() {
   const content = await getContentSection('home.hero', fallback);
   const ctaUrl = !content.cta_url || content.cta_url === '#contact'
     ? enquiryUrl('webinar', 'KDT webinar', window.location.pathname, import.meta.env.BASE_URL)

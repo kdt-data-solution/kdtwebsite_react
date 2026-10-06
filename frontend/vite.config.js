@@ -27,12 +27,14 @@ const notFoundFallback = () => ({
 const socialPreview = () => ({
   name: 'kdt-social-preview',
   transformIndexHtml(html) {
+    const buildTag = { tag: 'meta', attrs: { name: 'kdt-build', content: process.env.KDT_BUILD_SHA || 'development' }, injectTo: 'head' };
     // Article pages provide record-specific Open Graph metadata at runtime.
-    if (html.includes('property="og:title"')) return html;
+    if (html.includes('property="og:title"')) return { html, tags: [buildTag] };
 
     return {
       html,
       tags: [
+        buildTag,
         { tag: 'meta', attrs: { name: 'description', content: 'KDT Network and Data Solution provides engineering, data science, AI, and custom software solutions.' }, injectTo: 'head' },
         { tag: 'meta', attrs: { property: 'og:type', content: 'website' }, injectTo: 'head' },
         { tag: 'meta', attrs: { property: 'og:site_name', content: 'KDT Network and Data Solution' }, injectTo: 'head' },

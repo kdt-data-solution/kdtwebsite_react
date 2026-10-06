@@ -24,7 +24,7 @@ function renderCards(items) {
   `).join('');
 }
 
-(async function renderProducts() {
+export const ready = (async function renderProducts() {
   const content = await getWebsiteProducts();
   const products = content.items;
   root.innerHTML = `
