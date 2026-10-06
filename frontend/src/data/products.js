@@ -37,26 +37,15 @@ export const products = {
     title: 'Axis',
     pageTitle: 'Axis',
     description:
-      'A smart property finder designed to help users discover affordable opportunities with greater speed and clarity. From regular listings to bank foreclosed properties, it streamlines search and tracking for a more efficient and value-focused property journey.',
+      'Discuss Axis with KDT to confirm its product scope, current availability and pricing before planning a rollout.',
     actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Pricing', href: '#' },
-      { label: 'Get Started', href: '#' },
+      { label: 'Ask about Axis', href: '#contact' },
     ],
     images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324222/pf-card_rniidz.png'],
-    steps: [
-      { label: 'Step 1', desc: 'Search properties' },
-      { label: 'Step 2', desc: 'Compare listings' },
-      { label: 'Step 3', desc: 'Contact the agent' },
-    ],
-    benefitsTitle: 'Key Benefits of Property Finder',
-    benefitsBlurb: COMMON_BENEFITS_BLURB,
-    benefits: [
-      { title: 'Advanced property search and filters', icon: 'smile' },
-      { title: 'Verified and up-to-date listings', icon: 'shield' },
-      { title: 'Map-based property discovery', icon: 'calendar' },
-      { title: 'Direct connection to property agents', icon: 'clock' },
-    ],
+    steps: [],
+    benefitsTitle: '',
+    benefitsBlurb: '',
+    benefits: [],
     comingSoon: false,
   },
   'structural-chatbot': {

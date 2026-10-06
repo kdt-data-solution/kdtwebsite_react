@@ -1,6 +1,7 @@
 import '../styles/style.css';
 import { products } from '../data/products.js';
 import { API_BASE } from '../utils/auth.js';
+import { enquiryUrl } from '../utils/enquiry.js';
 
 const params = new URLSearchParams(window.location.search);
 const slug = params.get('slug') || window.PRODUCT_KEY || 'membership';
@@ -26,7 +27,7 @@ async function loadProduct() {
     const response = await fetch(`${API_BASE}/api/products/slug/${encodeURIComponent(slug)}`);
     if (!response.ok) return null;
     const item = await response.json();
-    return {
+    const data = {
       ...fallback,
       ...item,
       images: item.image_url ? [item.image_url] : (fallback?.images || []),
@@ -34,6 +35,11 @@ async function loadProduct() {
       benefitsBlurb: item.benefits_blurb || fallback?.benefitsBlurb,
       comingSoon: Boolean(item.coming_soon),
     };
+    if (slug === 'construct-pro') {
+      // The CMS and fallback disagree on Axis's scope; use enquiry copy until it is approved.
+      return { ...data, ...fallback, images: data.images };
+    }
+    return data;
   } catch {
     return fallback;
   }
@@ -51,7 +57,9 @@ if (!data) {
   const benefits = Array.isArray(data.benefits) ? data.benefits : [];
 
   const actionsHtml = actions.map((a, index) => {
-    const href = a.href === '#contact' ? `${BASE}#contact` : (a.href || '#');
+    const href = a.href === '#contact'
+      ? enquiryUrl('product', data.title, window.location.pathname, BASE)
+      : (a.href || '#');
     return `<a href="${escapeHtml(href)}" class="kdt-btn ${index === 0 ? 'kdt-btn-light' : 'border-white/50 text-white hover:bg-white/10 hover:border-white'}">${escapeHtml(a.label || '')}${index === 0 ? ' <span class="kdt-arrow-icon" aria-hidden="true"></span>' : ''}</a>`;
   }).join('');
 
@@ -131,7 +139,7 @@ if (!data) {
             <p class="text-gray-600 text-base sm:text-lg leading-relaxed mb-7 max-w-lg">
               ${escapeHtml(data.benefitsBlurb || '')}
             </p>
-            <a href="${BASE}#contact" class="kdt-btn kdt-btn-dark">Build with us <span class="kdt-arrow-icon" aria-hidden="true"></span></a>
+            <a href="${escapeHtml(enquiryUrl('product', data.title, window.location.pathname, BASE))}" class="kdt-btn kdt-btn-dark">Ask about ${escapeHtml(data.title)} <span class="kdt-arrow-icon" aria-hidden="true"></span></a>
           </div>
           <div class="space-y-3">
             ${benefitsHtml}

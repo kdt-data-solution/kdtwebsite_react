@@ -20,6 +20,9 @@ function getTransporter() {
     port,
     secure: port === 465, // true for 465 (SSL), false for 587 (STARTTLS)
     auth: { user, pass },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 
   return transporter;
@@ -44,6 +47,9 @@ export async function sendMail({ to, subject, text, html, replyTo, attachments }
       replyTo,
       attachments,
     });
+    if (Array.isArray(info.accepted) && info.accepted.length === 0) {
+      return { ok: false, error: 'Mail transport accepted no recipients' };
+    }
     return { ok: true, messageId: info.messageId };
   } catch (err) {
     console.error('[mailer] send failed:', err);

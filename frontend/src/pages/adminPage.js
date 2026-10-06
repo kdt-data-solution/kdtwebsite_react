@@ -201,7 +201,7 @@ function openMessageModal(m) {
   const overlay = document.createElement('div');
   overlay.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-foreground/50 px-4';
   overlay.innerHTML = `
-    <div class="bg-background rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-lg max-h-[90dvh] overflow-y-auto">
       <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h3 class="text-base font-semibold text-gray-900">Message Details</h3>
         <button data-close class="text-gray-500 hover:text-black text-xl leading-none">&times;</button>
@@ -275,12 +275,12 @@ async function loadMessages() {
       return;
     }
 
-    tbody.innerHTML = messages.map((m) => `
+    tbody.innerHTML = messages.map((m, index) => `
       <tr class="hover:bg-gray-50">
         <td class="px-5 py-3 text-gray-500">#${m.id}</td>
         <td class="px-5 py-3 font-medium text-gray-900">${escapeHtml(m.name)}</td>
         <td class="px-5 py-3 text-gray-700"><a class="hover:underline" href="mailto:${escapeHtml(m.email)}">${escapeHtml(m.email)}</a></td>
-        <td class="px-5 py-3 text-gray-700 max-w-md"><div class="line-clamp-2 whitespace-pre-wrap">${escapeHtml(m.message)}</div></td>
+        <td class="px-5 py-3 text-gray-700 max-w-md"><div class="line-clamp-2 whitespace-pre-wrap">${escapeHtml(m.message)}</div><button type="button" data-message-index="${index}" class="view-message-btn text-xs underline underline-offset-2 mt-2 hover:text-black">View message</button></td>
         <td class="px-5 py-3 text-xs text-gray-500 whitespace-nowrap">${formatDate(m.created_at)}</td>
         <td class="px-5 py-3 text-right">
           <button data-id="${m.id}" class="delete-btn text-xs text-white bg-red-600 border border-red-600 hover:bg-red-700 hover:border-red-700 w-20 py-1.5 rounded-md font-medium transition">Delete</button>
@@ -290,6 +290,10 @@ async function loadMessages() {
 
     msgStatus.classList.add('hidden');
     table.classList.remove('hidden');
+
+    tbody.querySelectorAll('.view-message-btn').forEach(button => {
+      button.addEventListener('click', () => openMessageModal(messages[Number(button.dataset.messageIndex)]));
+    });
 
     tbody.querySelectorAll('.delete-btn').forEach((btn) => {
       btn.addEventListener('click', async () => {

@@ -1,31 +1,36 @@
 import "../styles/style.css";
 import { getSiteSettings } from '../utils/siteSettings.js';
-import { toastSuccess, toastError } from '../utils/toast.js';
+import { API_BASE } from '../utils/auth.js';
+import { enquiryContext } from '../utils/enquiry.js';
 
 const BASE = import.meta.env.BASE_URL;
 
 function renderContactInfo(s) {
-  const address = s.address || '81 Detroit St., Brgy Pinagkaisahan Cubao, Quezon City';
+  const address = s.address || '';
   const hours = s.business_hours || 'Monday - Friday (8:00 am - 5:00 pm)';
   const phone = !s.contact_phone || s.contact_phone === '639+ 000 000 000'
     ? '84635344'
     : s.contact_phone;
-  const email = !s.contact_email || s.contact_email === 'kdy@gmail.com'
-    ? 'kristoffer.tabong@kdtdatasolution.com'
-    : s.contact_email;
+  const email = s.contact_email || '';
   const el = document.getElementById('contact-address');
   const el2 = document.getElementById('contact-hours');
   const phoneLink = document.getElementById('contact-phone');
   const emailLink = document.getElementById('contact-email');
-  if (el) el.textContent = address;
+  if (el) el.textContent = address || 'Please contact us for office directions.';
   if (el2) el2.textContent = hours;
   if (phoneLink) {
     phoneLink.textContent = phone;
     phoneLink.href = `tel:${phone.replace(/[^\d+]/g, '')}`;
   }
   if (emailLink) {
-    emailLink.textContent = email;
-    emailLink.href = `mailto:${email}`;
+    emailLink.textContent = email || 'Email unavailable. Please use the form.';
+    if (email) emailLink.href = `mailto:${email}`;
+    else emailLink.removeAttribute('href');
+  }
+  const map = document.getElementById('contact-map');
+  if (map && address) {
+    map.src = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=m&z=18&ie=UTF8&iwloc=&output=embed`;
+    map.parentElement.hidden = false;
   }
 }
 
@@ -77,7 +82,7 @@ document.querySelector("#contact").innerHTML = `
             </svg>
             <div class="leading-tight min-w-0 flex-1">
               <p class="font-semibold text-gray-900 text-xs">Email</p>
-              <a id="contact-email" href="mailto:kristoffer.tabong@kdtdatasolution.com" class="text-gray-600 text-[11px] sm:text-xs break-all hover:text-black hover:underline">kristoffer.tabong@kdtdatasolution.com</a>
+              <a id="contact-email" class="text-gray-600 text-[11px] sm:text-xs break-all hover:text-black hover:underline">Loading...</a>
             </div>
           </div>
 
@@ -92,10 +97,10 @@ document.querySelector("#contact").innerHTML = `
           </div>
         </div>
 
-        <div class="mt-6 overflow-hidden w-full border border-black/15">
+        <div class="mt-6 overflow-hidden w-full border border-black/15" hidden>
           <iframe
+            id="contact-map"
             title="KDT Network and Data Solution location map"
-            src="https://maps.google.com/maps?q=71+Detroit+Street,+Pinagkaisahan,+Cubao,+Quezon+City,+Metro+Manila,+Philippines&t=m&z=18&ie=UTF8&iwloc=&output=embed"
             width="100%"
             class="block w-full h-64"
             style="border:0;"
@@ -107,22 +112,36 @@ document.querySelector("#contact").innerHTML = `
       </div>
 
       <div class="bg-white p-6 sm:p-8 lg:p-10 w-full flex flex-col h-full">
-        <p class="kdt-eyebrow text-gray-500 mb-3">Project inquiry</p>
         <h3 class="text-2xl sm:text-3xl font-semibold text-gray-950">Send us a message</h3>
-        <p class="text-gray-600 text-sm sm:text-base mt-2">Kindly provide the following information below.</p>
+        <p class="text-gray-600 text-sm sm:text-base mt-2">Choose what your enquiry is about so our team has the right context.</p>
 
         <form id="contact-form" class="mt-5 md:mt-6 space-y-4 md:space-y-5 flex flex-col flex-grow">
+          <input id="contact-source-page" name="source_page" type="hidden" />
+          <div>
+            <label for="contact-enquiry-type" class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Enquiry about</label>
+            <select id="contact-enquiry-type" name="enquiry_type" required class="w-full px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2">
+              <option value="general">General enquiry</option>
+              <option value="service">A service</option>
+              <option value="product">A product</option>
+              <option value="webinar">The KDT webinar</option>
+            </select>
+            <p id="contact-webinar-note" class="text-sm text-gray-600 mt-2" hidden>Schedule to be announced. This records your interest; it does not confirm a booking.</p>
+          </div>
+          <div>
+            <label for="contact-enquiry-topic" class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Service, product or topic (optional)</label>
+            <input id="contact-enquiry-topic" name="enquiry_topic" type="text" maxlength="200" class="w-full px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" />
+          </div>
           <div>
             <label for="contact-name" class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Name</label>
-            <input id="contact-name" name="name" type="text" required autocomplete="name" class="w-full px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" />
+            <input id="contact-name" name="name" type="text" required maxlength="200" autocomplete="name" class="w-full px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" />
           </div>
           <div>
             <label for="contact-form-email" class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Email</label>
-            <input id="contact-form-email" name="email" type="email" required autocomplete="email" class="w-full px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" />
+            <input id="contact-form-email" name="email" type="email" required maxlength="254" autocomplete="email" class="w-full px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" />
           </div>
           <div class="flex flex-col flex-grow">
             <label for="contact-message" class="block text-xs sm:text-sm md:text-base font-medium text-gray-700 mb-1">Message</label>
-            <textarea id="contact-message" name="message" rows="6" required class="w-full flex-grow px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 resize-y overflow-y-auto" style="min-height: 160px; max-height: 360px;"></textarea>
+            <textarea id="contact-message" name="message" rows="6" required maxlength="10000" class="w-full flex-grow px-4 py-3 text-sm md:text-base border border-gray-400 rounded-none bg-white focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 resize-y overflow-y-auto" style="min-height: 160px; max-height: 360px;"></textarea>
           </div>
           <p id="contact-status" class="text-xs sm:text-sm hidden" role="status" aria-live="polite"></p>
           <div class="flex justify-end mt-auto">
@@ -140,7 +159,33 @@ document.querySelector("#contact").innerHTML = `
 
 getSiteSettings().then(renderContactInfo);
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://www.kdtdatasolution.com';
+const enquiryType = document.getElementById('contact-enquiry-type');
+const enquiryTopic = document.getElementById('contact-enquiry-topic');
+const sourcePage = document.getElementById('contact-source-page');
+const webinarNote = document.getElementById('contact-webinar-note');
+
+function applyEnquiryContext(search = window.location.search) {
+  const serviceKey = window.SERVICE_KEY ? (new URLSearchParams(window.location.search).get('slug') || window.SERVICE_KEY) : undefined;
+  const context = enquiryContext(search, window.location.pathname, serviceKey);
+  enquiryType.value = context.type;
+  enquiryTopic.value = context.topic;
+  sourcePage.value = context.sourcePage;
+  webinarNote.hidden = context.type !== 'webinar';
+}
+
+applyEnquiryContext();
+enquiryType.addEventListener('change', () => { webinarNote.hidden = enquiryType.value !== 'webinar'; });
+window.addEventListener('popstate', () => applyEnquiryContext());
+document.addEventListener('click', event => {
+  const link = event.target.closest('a[href]');
+  if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+  const url = new URL(link.href);
+  if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || url.hash !== '#contact' || !url.searchParams.has('enquiry')) return;
+  event.preventDefault();
+  applyEnquiryContext(url.search);
+  window.history.pushState(null, '', url);
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+});
 
 document.getElementById('contact-form')?.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -150,7 +195,7 @@ document.getElementById('contact-form')?.addEventListener('submit', async (e) =>
   const data = Object.fromEntries(new FormData(form).entries());
 
   submit.disabled = true;
-  status.classList.remove('hidden', 'text-red-600', 'text-green-600');
+  status.classList.remove('hidden', 'text-red-600', 'text-green-700');
   status.textContent = 'Sending...';
 
   try {
@@ -160,13 +205,16 @@ document.getElementById('contact-form')?.addEventListener('submit', async (e) =>
       body: JSON.stringify(data),
     });
     const body = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(body.error || 'Failed to send message');
-    status.classList.add('hidden');
-    toastSuccess('Message sent. Thank you!');
+    if (!res.ok || body.ok !== true) throw new Error(body.error || 'We could not save your enquiry. Please try again.');
+    status.classList.add('text-green-700');
+    status.textContent = body.notification === 'failed' || body.notification === 'unconfigured'
+      ? 'Your enquiry was saved, but the email notification could not be sent. You can also contact us using the details alongside this form.'
+      : 'Your enquiry was saved. Thank you.';
     form.reset();
+    applyEnquiryContext();
   } catch (err) {
-    status.classList.add('hidden');
-    toastError(err.message);
+    status.classList.add('text-red-600');
+    status.textContent = err.message;
   } finally {
     submit.disabled = false;
   }

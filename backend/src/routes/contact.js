@@ -15,31 +15,64 @@ const listMessages = db.prepare(
 
 router.post('/', async (req, res, next) => {
   try {
-    const { name, email, message } = req.body;
-    if (!name || !email || !message) {
+    const body = req.body || {};
+    if (['name', 'email', 'message'].some((key) =>
+      typeof body[key] !== 'string' || !body[key].trim()
+    )) {
       return res.status(400).json({ error: 'name, email, and message are required' });
     }
-    const result = insertMessage.run(name, email, message);
-
-    // Fire-and-log: don't fail the request if email sending fails.
-    const to = process.env.MAIL_TO;
-    if (to) {
-      const tpl = contactNotificationEmail({ name, email, message });
-      sendMail({
-        to,
-        replyTo: email,
-        subject: tpl.subject,
-        text: tpl.text,
-        html: tpl.html,
-        attachments: getEmailAttachments(),
-      }).then((r) => {
-        if (!r.ok && !r.skipped) console.error('[contact] mail send failed:', r.error);
-      }).catch((err) => {
-        console.error('[contact] mail send error:', err.message);
-      });
+    const name = body.name.trim();
+    const email = body.email.trim();
+    const message = body.message.trim();
+    if (name.length > 200 || email.length > 254 || message.length > 10000 ||
+      /[\r\n]/.test(name) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Invalid name, email, or message' });
     }
 
-    res.status(201).json({ ok: true, id: result.lastInsertRowid });
+    const enquiry_type = body.enquiry_type === undefined ? 'general' : body.enquiry_type;
+    if (!['service', 'product', 'webinar', 'general'].includes(enquiry_type)) {
+      return res.status(400).json({ error: 'Invalid enquiry_type' });
+    }
+    for (const [key, maxLength] of [['enquiry_topic', 200], ['source_page', 500]]) {
+      if (body[key] !== undefined && (typeof body[key] !== 'string' ||
+        body[key].length > maxLength || /[\r\n]/.test(body[key]))) {
+        return res.status(400).json({ error: `Invalid ${key}` });
+      }
+    }
+    const enquiry_topic = body.enquiry_topic?.trim() || '';
+    const source_page = body.source_page?.trim() || '';
+    if (source_page && (!source_page.startsWith('/') || source_page.startsWith('//'))) {
+      return res.status(400).json({ error: 'Invalid source_page' });
+    }
+    const context = [
+      `Enquiry type: ${enquiry_type}`,
+      enquiry_topic && `Topic: ${enquiry_topic}`,
+      source_page && `Source page: ${source_page}`,
+    ].filter(Boolean).join('\n');
+    const result = insertMessage.run(name, email, `${context}\n\n${message}`);
+
+    let notification = 'unconfigured';
+    const to = process.env.MAIL_TO?.trim();
+    if (to) {
+      const tpl = contactNotificationEmail({ name, email, message, enquiry_type, enquiry_topic, source_page });
+      try {
+        const mail = await sendMail({
+          to,
+          replyTo: email,
+          subject: tpl.subject,
+          text: tpl.text,
+          html: tpl.html,
+          attachments: getEmailAttachments(),
+        });
+        notification = mail.skipped ? 'unconfigured' : mail.ok ? 'accepted' : 'failed';
+        if (notification === 'failed') console.error('[contact] mail send failed:', mail.error);
+      } catch (err) {
+        notification = 'failed';
+        console.error('[contact] mail send error:', err.message);
+      }
+    }
+
+    res.status(201).json({ ok: true, id: result.lastInsertRowid, notification });
   } catch (err) {
     next(err);
   }

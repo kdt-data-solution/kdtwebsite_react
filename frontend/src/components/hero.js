@@ -1,11 +1,12 @@
 import '../styles/style.css';
 import { contentUrl, escapeHtml, getContentSection } from '../utils/content.js';
+import { enquiryUrl } from '../utils/enquiry.js';
 
 const fallback = {
   eyebrow: 'Free KDT webinar',
   title: 'Build smarter with KDT.',
   body: 'Join our free webinar on practical AI, engineering, and digital systems for real organizational challenges.',
-  subtitle: 'Online · Free registration · Schedule to be announced',
+  subtitle: 'Online · Free webinar · Schedule to be announced',
   image_url: 'assets/images/kdt-webinar-command-center.png',
   cta_label: 'Register your interest',
   cta_url: '#contact',
@@ -13,6 +14,12 @@ const fallback = {
 
 (async function renderHero() {
   const content = await getContentSection('home.hero', fallback);
+  const ctaUrl = !content.cta_url || content.cta_url === '#contact'
+    ? enquiryUrl('webinar', 'KDT webinar', window.location.pathname, import.meta.env.BASE_URL)
+    : contentUrl(content.cta_url);
+  const subtitle = content.subtitle === 'Online · Free registration · Schedule to be announced'
+    ? fallback.subtitle
+    : content.subtitle;
   document.querySelector('#hero').innerHTML = `
   <section class="kdt-event-hero text-white" aria-labelledby="home-heading">
     <img
@@ -35,9 +42,9 @@ const fallback = {
         <p class="mt-4 max-w-lg text-sm sm:text-base leading-relaxed text-gray-200">
           ${escapeHtml(content.body)}
         </p>
-        <p class="mt-4 text-xs text-gray-300">${escapeHtml(content.subtitle)}</p>
+        <p class="mt-4 text-xs text-gray-300">${escapeHtml(subtitle)}</p>
         <div class="mt-5">
-          <a href="${contentUrl(content.cta_url)}" class="kdt-btn kdt-btn-light">
+          <a href="${escapeHtml(ctaUrl)}" class="kdt-btn kdt-btn-light">
             ${escapeHtml(content.cta_label)} <span class="kdt-arrow-icon" aria-hidden="true"></span>
           </a>
         </div>

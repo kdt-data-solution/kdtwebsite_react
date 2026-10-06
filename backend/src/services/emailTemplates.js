@@ -99,10 +99,18 @@ function layout({ title, preheader, contentHtml }) {
 </html>`;
 }
 
-export function contactNotificationEmail({ name, email, message }) {
+export function contactNotificationEmail({ name, email, message, enquiry_type = 'general', enquiry_topic = '', source_page = '' }) {
   const safeName = escapeHtml(name);
   const safeEmail = escapeHtml(email);
   const safeMessage = escapeHtml(message).replace(/\r?\n/g, '<br />');
+  const context = [
+    ['Enquiry type', enquiry_type],
+    ['Topic', enquiry_topic],
+    ['Source page', source_page],
+  ].filter(([, value]) => value);
+  const contextHtml = context.map(([label, value]) =>
+    `<div style="margin-bottom:6px;font-size:14px;color:#374151;"><strong>${label}:</strong> ${escapeHtml(value)}</div>`
+  ).join('');
   const submittedAt = new Date().toLocaleString('en-US', {
     dateStyle: 'long',
     timeStyle: 'short',
@@ -130,6 +138,8 @@ export function contactNotificationEmail({ name, email, message }) {
       </tr>
     </table>
 
+    <div style="margin-bottom:24px;">${contextHtml}</div>
+
     <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:8px;">Message</div>
     <div style="border-left:3px solid #000000;padding:14px 18px;background-color:#f9fafb;border-radius:4px;font-size:14px;color:#374151;line-height:1.7;margin-bottom:28px;">
       ${safeMessage}
@@ -151,6 +161,7 @@ export function contactNotificationEmail({ name, email, message }) {
     `Received on ${submittedAt}\n\n` +
     `Name:  ${name}\n` +
     `Email: ${email}\n\n` +
+    context.map(([label, value]) => `${label}: ${value}`).join('\n') + `\n\n` +
     `Message:\n${message}\n`;
 
   return {
