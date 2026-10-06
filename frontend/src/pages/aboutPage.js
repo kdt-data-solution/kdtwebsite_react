@@ -120,7 +120,7 @@ document.querySelector('#about-page').innerHTML = `
           .map(
             (v) => `
           <article class="bg-white p-7 sm:p-9 min-h-64 flex flex-col items-start">
-            <div class="text-gray-900 mb-8"><img src="${contentUrl(v.icon)}" alt="" class="w-10 h-10" /></div>
+            <div class="text-gray-900 mb-8"><img src="${contentUrl(v.icon)}" alt="" class="kdt-principle-icon w-10 h-10" /></div>
             <h3 class="font-semibold text-gray-950 text-lg md:text-xl mb-3">${escapeHtml(v.title)}</h3>
             <p class="text-gray-600 text-sm leading-relaxed max-w-sm">${escapeHtml(v.description || v.desc)}</p>
           </article>

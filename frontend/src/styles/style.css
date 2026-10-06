@@ -129,6 +129,7 @@ body:has(.kdt-navbar) .kdt-industry-link { background:#0c0c0b; color:#d4d4cf; }
 body:has(.kdt-navbar) .kdt-industry-link:hover { background:#151514; color:#fff; }
 body:has(.kdt-navbar) .kdt-industry-media { background:#141413; }
 body:has(.kdt-navbar) .kdt-industry-content > img,
+body:has(.kdt-navbar) #about-page .kdt-principle-icon,
 body:has(.kdt-navbar) #contact img[src$=".svg"],
 body:has(.kdt-navbar) #bootcamp-page article img[src$=".svg"] { filter:invert(1); }
 
