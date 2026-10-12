@@ -148,6 +148,31 @@ class ContentSection(SharedModel):
         return self.label or self.key
 
 
+class KnowledgeBaseEntry(SharedModel):
+    slug = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=160)
+    body = models.TextField()
+    product_slug = models.CharField(max_length=80, blank=True)
+    keywords = models.TextField(blank=True)
+    source_note = models.TextField(blank=True)
+    is_published = models.BooleanField(default=False)
+    created_at = models.CharField(max_length=40, blank=True)
+    updated_at = models.CharField(max_length=40, blank=True)
+
+    class Meta(SharedModel.Meta):
+        db_table = 'knowledge_base_entries'
+        verbose_name = 'chat knowledge entry'
+        verbose_name_plural = 'chat knowledge entries'
+        ordering = ('-updated_at', '-id')
+
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
 class ContactMessage(SharedModel):
     name = models.CharField(max_length=255)
     email = models.EmailField()

@@ -1,12 +1,22 @@
 from django.contrib import admin
 
 from .forms import ContentSectionForm, CourseForm, ProductForm, ProjectForm, ServiceForm
-from .models import Article, ContactMessage, ContentSection, Course, Product, Project, Service, SiteSetting
+from .models import Article, ContactMessage, ContentSection, Course, KnowledgeBaseEntry, Product, Project, Service, SiteSetting
 
 
 admin.site.site_header = 'KDT Website Administration'
 admin.site.site_title = 'KDT Admin'
 admin.site.index_title = 'Website content management'
+
+
+@admin.register(KnowledgeBaseEntry)
+class KnowledgeBaseEntryAdmin(admin.ModelAdmin):
+    list_display = ('title', 'product_slug', 'is_published', 'updated_at')
+    list_filter = ('product_slug', 'is_published')
+    list_editable = ('is_published',)
+    search_fields = ('title', 'body', 'keywords', 'source_note')
+    readonly_fields = ('created_at', 'updated_at')
+    fields = ('slug', 'title', 'product_slug', 'body', 'keywords', 'source_note', 'is_published', 'created_at', 'updated_at')
 
 
 @admin.register(Project)

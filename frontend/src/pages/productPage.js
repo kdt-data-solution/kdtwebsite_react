@@ -25,21 +25,32 @@ async function loadProduct() {
   const fallback = products[slug];
   try {
     const response = await fetch(`${API_BASE}/api/products/slug/${encodeURIComponent(slug)}`);
-    if (!response.ok) return null;
+    if (!response.ok) return fallback || null;
     const item = await response.json();
-    const data = {
-      ...fallback,
+    if (!fallback) return {
       ...item,
-      images: item.image_url ? [item.image_url] : (fallback?.images || []),
-      benefitsTitle: item.benefits_title || fallback?.benefitsTitle,
-      benefitsBlurb: item.benefits_blurb || fallback?.benefitsBlurb,
+      images: item.image_url ? [item.image_url] : [],
+      benefitsTitle: item.benefits_title || '',
+      benefitsBlurb: item.benefits_blurb || '',
       comingSoon: Boolean(item.coming_soon),
     };
-    if (slug === 'construct-pro') {
-      // The CMS and fallback disagree on Axis's scope; use enquiry copy until it is approved.
-      return { ...data, ...fallback, images: data.images };
-    }
-    return data;
+
+    // The five legacy slugs now have canonical product identities and scopes.
+    // API fields can still supply ancillary details, but cannot replace those.
+    return {
+      ...fallback,
+      ...item,
+      title: fallback.title,
+      pageTitle: fallback.pageTitle,
+      description: fallback.description,
+      images: fallback.images,
+      actions: fallback.actions,
+      steps: fallback.steps,
+      benefitsTitle: fallback.benefitsTitle,
+      benefitsBlurb: fallback.benefitsBlurb,
+      benefits: fallback.benefits,
+      comingSoon: fallback.comingSoon,
+    };
   } catch {
     return fallback;
   }
@@ -91,7 +102,7 @@ if (!data) {
         alt=""
         decoding="async"
         fetchpriority="high"
-        class="kdt-product-hero-image"
+        class="kdt-product-hero-image ${Object.hasOwn(products, slug) ? 'is-catalog-product' : ''}"
       />
       <div class="kdt-product-hero-gradient" aria-hidden="true"></div>
 

@@ -91,7 +91,7 @@ export const courses = [
   },
   {
     slug: 'data-visualization-and-dashboard',
-    title: 'Data Visulization and Dashboard',
+    title: 'Data Visualization and Dashboard',
     desc: 'Develop skills in data analysis, dashboard creation, and data storytelling as you turn raw data into actionable insights using tools like Python and Power BI to organize information and support better decision-making.',
     image:
       'https://res.cloudinary.com/dpf1qvyzt/image/upload/v1777263856/Course3_izdc1n.png',

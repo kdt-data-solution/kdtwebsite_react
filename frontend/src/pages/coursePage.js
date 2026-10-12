@@ -80,7 +80,7 @@ if (slug) {
         inclusions: item.inclusions?.length ? item.inclusions : (fallbackCourse?.inclusions || []),
       };
     } else {
-      course = null;
+      course = fallbackCourse;
     }
   } catch {}
 }

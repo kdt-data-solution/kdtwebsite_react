@@ -94,6 +94,27 @@ db.exec(`
 `);
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS knowledge_base_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug TEXT NOT NULL UNIQUE,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL,
+    product_slug TEXT NOT NULL DEFAULT '',
+    keywords TEXT NOT NULL DEFAULT '',
+    source_note TEXT NOT NULL DEFAULT '',
+    is_published INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_knowledge_base_published
+    ON knowledge_base_entries (is_published, updated_at DESC);
+  CREATE TABLE IF NOT EXISTS knowledge_base_seed_state (
+    key TEXT PRIMARY KEY,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
+db.exec(`
   CREATE TABLE IF NOT EXISTS courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     slug TEXT NOT NULL UNIQUE,
@@ -163,6 +184,11 @@ migrateLegacySetting.run(
   'kristoffer.tabong@kdtdatasolution.com',
   'contact_email',
   'kdy@gmail.com'
+);
+migrateLegacySetting.run(
+  '81 Detroit St., Brgy. Pinagkaisahan, Cubao, Quezon City.',
+  'address',
+  '81 Detroit St., Brgy Pinagkaisahan Cubao, Quezon City'
 );
 
 export default db;

@@ -1,128 +1,102 @@
-// Product page content. Keyed by slug. Edit content here.
-const COMMON_STEPS = [
-  { label: 'Step 1', desc: 'Login / SignUp' },
-  { label: 'Step 2', desc: 'Use the Portal' },
-  { label: 'Step 3', desc: 'Save and Update' },
-];
-
-const COMMON_BENEFITS = [
-  { title: 'Improves member experience and engagement', icon: 'smile' },
-  { title: 'Secure and centralized data management', icon: 'shield' },
-  { title: 'Better tracking and reporting', icon: 'calendar' },
-  { title: 'Saves time and reduces manual work', icon: 'clock' },
-];
-
-const COMMON_BENEFITS_BLURB =
-  "Get quick answers to the most common questions about using our system and services. We've organized everything here to make your experience simple, clear, and hassle-free.";
+// Public product details. Keep claims aligned with product source evidence in
+// backend/docs/knowledge-base-source-notes.md.
+const product = (title, description, image, steps, benefitsTitle, benefitsBlurb, benefits) => ({
+  title,
+  pageTitle: title,
+  description,
+  actions: [{ label: 'Request a demo', href: '#contact' }],
+  images: [image],
+  steps,
+  benefitsTitle,
+  benefitsBlurb,
+  benefits,
+  comingSoon: false,
+});
 
 export const products = {
-  membership: {
-    title: 'Nexus',
-    pageTitle: 'Nexus',
-    description:
-      'Professional engineering tools and solutions tailored to your project requirements. A membership portal is an online system or platform that allows registered users (members) to access exclusive content, services, or features based on their account. It typically includes functionalities such as user registration, login authentication, profile management, and access to member-specific resources like documents, events, or services. Organizations use membership portals to manage member information, track activities, and provide a centralized space where users can interact, submit requests, or receive updates efficiently.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Pay via QRPH', href: '#' },
-      { label: 'Hit Pay', href: '#' },
+  'construct-pro': product(
+    'AxisStruct',
+    'Bring structural modeling and analysis into one focused workflow. Create frame and planar-truss models, organize loads, and explore analysis results with AxisStruct, KDT’s structural software suite.',
+    'assets/images/product-axis.png',
+    [
+      { label: 'Build a structural model', desc: 'Create and inspect frame and planar-truss model geometry.' },
+      { label: 'Organize model loads', desc: 'Set up joint loads as part of your model workflow.' },
+      { label: 'Explore analysis results', desc: 'Run frame and planar-truss analyses and review the results.' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/mb-card_lnpi4c.png'],
-    steps: COMMON_STEPS,
-    benefitsTitle: 'Key Benefits of the Membership Portal',
-    benefitsBlurb: COMMON_BENEFITS_BLURB,
-    benefits: COMMON_BENEFITS,
-    comingSoon: false,
-  },
-  'construct-pro': {
-    title: 'Axis',
-    pageTitle: 'Axis',
-    description:
-      'Discuss Axis with KDT to confirm its product scope, current availability and pricing before planning a rollout.',
-    actions: [
-      { label: 'Ask about Axis', href: '#contact' },
+    'Model, analyze, and explore',
+    'Bring model geometry, load setup, and structural analysis results together in one desktop workflow.',
+    [
+      { title: 'Create 3D frame and planar-truss models', icon: 'calendar' },
+      { title: 'Organize joint loads within each model', icon: 'shield' },
+      { title: 'Explore structural analysis results', icon: 'clock' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324222/pf-card_rniidz.png'],
-    steps: [],
-    benefitsTitle: '',
-    benefitsBlurb: '',
-    benefits: [],
-    comingSoon: false,
-  },
-  'structural-chatbot': {
-    title: 'Vantage',
-    pageTitle: 'Vantage',
-    description:
-      'A smart conversational assistant designed to simplify and accelerate the way businesses handle selling and ordering. It enables customers and business owners to browse products, place orders, check availability, and get instant answers all through a natural, chat-based experience without the need for phone calls, manual order forms, or dedicated sales staff. By automating routine sales interactions and order processing, it reduces response time, minimizes human error, and keeps the business running efficiently even outside of operating hours — making it an ideal solution for small to medium enterprises looking to modernize their sales operations through accessible and intelligent technology.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Try It', href: '#' },
-      { label: 'Learn More', href: '#' },
+  ),
+  'structural-chatbot': product(
+    'Vantage',
+    'Bring data preparation and analysis steps together in a visual, node-based workflow. Run the workflow, then review outputs and visualizations in Vantage.',
+    'assets/images/product-vantage.png',
+    [
+      { label: 'Build a visual workflow', desc: 'Connect data access, preparation, and analysis steps on a node-based canvas.' },
+      { label: 'Run your workflow', desc: 'Execute connected workflow steps in sequence.' },
+      { label: 'Review results', desc: 'Inspect workflow outputs and visualizations.' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776837709/agentic-card_c3loqn.png'],
-    steps: [
-      { label: 'Step 1', desc: 'Ask a question' },
-      { label: 'Step 2', desc: 'Review answer & sources' },
-      { label: 'Step 3', desc: 'Apply to your business' },
+    'A visible path from data to results',
+    'Vantage keeps workflow steps connected on a canvas so teams can run and examine data-processing work in one desktop application.',
+    [
+      { title: 'Build workflows with connected nodes', icon: 'calendar' },
+      { title: 'Use data preparation and analysis operators', icon: 'shield' },
+      { title: 'Inspect workflow outputs and visualizations', icon: 'smile' },
     ],
-    benefitsTitle: 'Key Benefits of the AI Chatbot',
-    benefitsBlurb: COMMON_BENEFITS_BLURB,
-    benefits: [
-      { title: 'Instant customer responses', icon: 'smile' },
-      { title: 'Always-available AI assistant', icon: 'shield' },
-      { title: 'Automated order processing', icon: 'calendar' },
-      { title: 'Boosts sales productivity', icon: 'clock' },
+  ),
+  cardko: product(
+    'TakeOff',
+    'Turn PDF plans into organized material estimates with TakeOff. Calibrate sheets, record measurements, connect quantities to material assemblies, review a bill of quantities, and export an Excel estimate.',
+    'assets/images/product-takeoff.png',
+    [
+      { label: 'Prepare plan sheets', desc: 'Import PDF pages or add a blank sheet, then calibrate drawing scale.' },
+      { label: 'Measure and assign materials', desc: 'Record plan quantities and connect them to material assemblies.' },
+      { label: 'Review and export', desc: 'Consolidate quantities and material costs into a bill of quantities and Excel estimate.' },
     ],
-    comingSoon: false,
-  },
-  wms: {
-    title: 'Kuwalog',
-    pageTitle: 'Kuwalog',
-    description:
-      'A smart warehouse solution designed to improve visibility, accuracy, and control across daily operations. It supports faster tracking, efficient inventory handling, and more organized warehouse workflows through modern, reliable system processes.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Pricing', href: '#' },
-      { label: 'Get Started', href: '#' },
+    'A traceable quantity-to-estimate workflow',
+    'Connect plan measurements to material assemblies, include manual estimate lines when needed, and carry consolidated material quantities into an Excel workbook.',
+    [
+      { title: 'Calibrated measurements from plan sheets', icon: 'calendar' },
+      { title: 'Reusable assemblies for material quantities', icon: 'shield' },
+      { title: 'Consolidated BOQ and Excel export', icon: 'clock' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776772755/wms-card_teymis.png'],
-    steps: [
-      { label: 'Step 1', desc: 'Set up your warehouse' },
-      { label: 'Step 2', desc: 'Track inventory in real-time' },
-      { label: 'Step 3', desc: 'Fulfill orders efficiently' },
+  ),
+  wms: product(
+    'Kuwalog',
+    'Coordinate everyday stock tasks through a warehouse web application and mobile workflows. Look up inventory, receive purchase orders, complete assigned picks, transfer stock between bins, and count cycle inventory. Queue supported mobile changes offline and sync them when connectivity returns.',
+    'assets/images/product-kuwalog.png',
+    [
+      { label: 'Receive and locate stock', desc: 'Use warehouse records and scan-assisted stock lookup to work with items and bins.' },
+      { label: 'Complete floor tasks', desc: 'Handle receiving, assigned picks, transfers, and counts through the mobile workflow.' },
+      { label: 'Keep working offline', desc: 'Cached lists remain available and supported changes sync after the device reconnects.' },
     ],
-    benefitsTitle: 'Key Benefits of WMS',
-    benefitsBlurb: COMMON_BENEFITS_BLURB,
-    benefits: [
-      { title: 'Real-time inventory visibility', icon: 'smile' },
-      { title: 'Secure and centralized data management', icon: 'shield' },
-      { title: 'Better tracking and reporting', icon: 'calendar' },
-      { title: 'Saves time and reduces manual work', icon: 'clock' },
+    'Keep warehouse work moving',
+    'Kuwalog connects warehouse administration with scan-assisted mobile tasks, including an offline queue for supported changes.',
+    [
+      { title: 'Stock lookup and purchase-order receiving', icon: 'calendar' },
+      { title: 'Assigned picks, bin transfers, and cycle counts', icon: 'shield' },
+      { title: 'Offline queue with automatic sync', icon: 'clock' },
     ],
-    comingSoon: false,
-  },
-  cardko: {
-    title: 'TakeOff',
-    pageTitle: 'TakeOff',
-    description:
-      'A digital business card and networking platform for professionals and organizations. Easily share your contact details, portfolio, and social links with a simple scan — no more paper cards, no more lost connections.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Get Started', href: '#' },
+  ),
+  membership: product(
+    'Nexus',
+    'Give your professional organization a portal for member records and services, events, learning, CPD/CPDD, and certificates. Bring member and administrator workflows together in an organization-focused system.',
+    'assets/images/product-nexus.png',
+    [
+      { label: 'Manage member services', desc: 'Organize member records and member-facing services.' },
+      { label: 'Bring people together', desc: 'Manage organization events and registration workflows.' },
+      { label: 'Support professional learning', desc: 'Coordinate learning, CPD/CPDD, and certificate workflows.' },
     ],
-    images: ['https://res.cloudinary.com/dpf1qvyzt/image/upload/v1776324221/ck-card_ca85hx.png'],
-    steps: [
-      { label: 'Step 1', desc: 'Create your card' },
-      { label: 'Step 2', desc: 'Share via QR or link' },
-      { label: 'Step 3', desc: 'Grow your network' },
+    'One portal for member operations',
+    'Bring member records, events, and professional learning workflows into an organization-specific application.',
+    [
+      { title: 'Member records and member-facing services', icon: 'smile' },
+      { title: 'Event administration and registration workflows', icon: 'calendar' },
+      { title: 'Learning, CPD/CPDD, and certificate workflows', icon: 'shield' },
     ],
-    benefitsTitle: 'Key Benefits of CardKo',
-    benefitsBlurb: COMMON_BENEFITS_BLURB,
-    benefits: [
-      { title: 'Eco-friendly digital networking', icon: 'smile' },
-      { title: 'Secure and centralized data management', icon: 'shield' },
-      { title: 'Easy contact sharing via QR', icon: 'calendar' },
-      { title: 'Saves time and reduces paper waste', icon: 'clock' },
-    ],
-    comingSoon: false,
-  },
+  ),
 };

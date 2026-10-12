@@ -14,7 +14,7 @@ const allSettings = db.prepare('SELECT key, value FROM site_settings');
 // Default settings
 const DEFAULTS = {
   company_name: 'KDT Network and Data Solution',
-  address: '81 Detroit St., Brgy Pinagkaisahan Cubao, Quezon City',
+  address: '81 Detroit St., Brgy. Pinagkaisahan, Cubao, Quezon City.',
   business_hours: 'Monday - Friday (8:00 am - 5:00 pm)',
   contact_phone: '84635344',
   contact_email: 'kristoffer.tabong@kdtdatasolution.com',
@@ -23,11 +23,16 @@ const DEFAULTS = {
   youtube_url: '',
 };
 
+const LEGACY_DEFAULT_ADDRESS = '81 Detroit St., Brgy Pinagkaisahan Cubao, Quezon City';
+
 function getAll() {
   const rows = allSettings.all();
   const map = {};
   for (const r of rows) map[r.key] = r.value;
-  return { ...DEFAULTS, ...map };
+  const settings = { ...DEFAULTS, ...map };
+  // Correct the previous built-in address while preserving admin-entered addresses.
+  if (settings.address === LEGACY_DEFAULT_ADDRESS) settings.address = DEFAULTS.address;
+  return settings;
 }
 
 // Public: get site settings (for frontend footer, about, contact etc.)

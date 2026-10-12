@@ -6,20 +6,13 @@ const root = document.querySelector('#products');
 
 function renderCards(items) {
   return items.map((product) => `
-    <a href="${contentUrl(product.href || `product.html?slug=${encodeURIComponent(product.slug || '')}`)}" class="kdt-product-card group" aria-label="View ${escapeHtml(product.name)} product details">
-      <div class="flex items-center justify-between gap-4">
-        <span class="kdt-eyebrow">KDT Product</span>
-        <span class="kdt-eyebrow text-gray-500">${escapeHtml(product.number)}</span>
-      </div>
-      <div class="kdt-product-media" aria-hidden="true">
-        ${product.logo
-          ? `<img class="kdt-product-logo" src="${contentUrl(product.logo)}" alt="" loading="lazy" decoding="async" />`
-          : `<span class="kdt-product-mark">${escapeHtml(product.name.charAt(0))}</span>`}
-      </div>
-      <div>
-        <h3 class="text-gray-950 font-semibold text-2xl leading-tight">${escapeHtml(product.name)}</h3>
-        <span class="kdt-product-card-link">View product <span class="kdt-arrow-icon" aria-hidden="true"></span></span>
-      </div>
+    <a href="${contentUrl(product.href || `product.html?slug=${encodeURIComponent(product.slug || '')}`)}" class="kdt-suite-card" aria-label="Explore ${escapeHtml(product.name)}: ${escapeHtml(product.category)}">
+      <div class="kdt-suite-card-top"><span>${escapeHtml(product.number)}</span><span>${escapeHtml(product.category)}</span></div>
+      <div class="kdt-suite-card-logo">${product.logo
+        ? `<img src="${contentUrl(product.logo)}" alt="" loading="lazy" decoding="async" />`
+        : `<span>${escapeHtml(product.name.charAt(0))}</span>`}</div>
+      <div class="kdt-suite-card-copy"><h3>${escapeHtml(product.name)}</h3><p>${escapeHtml(product.description)}</p></div>
+      <span class="kdt-suite-card-link">Explore product <span aria-hidden="true">↗</span></span>
     </a>
   `).join('');
 }
@@ -28,47 +21,15 @@ export const ready = (async function renderProducts() {
   const content = await getWebsiteProducts();
   const products = content.items;
   root.innerHTML = `
-  <section class="kdt-products-browser bg-white" aria-labelledby="products-heading">
-    <div class="kdt-container pt-8 pb-10 sm:pb-12 lg:pb-14">
-      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-        <div>
-          <p class="kdt-eyebrow text-gray-500 mb-3">${escapeHtml(content.eyebrow)}</p>
-          <h2 id="products-heading" class="text-3xl sm:text-4xl font-semibold tracking-[-0.04em] text-gray-950">${escapeHtml(content.title)}</h2>
+    <section class="kdt-suite-section" aria-labelledby="products-heading">
+      <div class="kdt-container">
+        <div class="kdt-section-heading-row kdt-suite-heading">
+          <div><p class="kdt-eyebrow">The KDT product suite</p><h2 id="products-heading">Purpose-built tools.<br /><span>Connected to your work.</span></h2></div>
+          <p>Five focused products for structural engineering, estimating, business intelligence, warehouse operations, and professional organizations.</p>
         </div>
-        <a id="view-product-directory" href="#product-directory" class="kdt-text-link">View all products A–Z <span class="kdt-arrow-icon" aria-hidden="true"></span></a>
+        <div id="home-product-grid" class="kdt-suite-grid" aria-live="polite">${renderCards(products)}</div>
+        <div class="kdt-suite-note"><span>One partner for software, services, and learning.</span><a href="#contact">Talk through your needs <span aria-hidden="true">↗</span></a></div>
       </div>
-
-      <div class="mt-8">
-        <p class="text-xs text-gray-500 mb-2">Sort</p>
-        <div class="inline-flex border border-black/20" role="group" aria-label="Sort KDT products">
-          <button type="button" class="kdt-product-sort is-active" data-sort="popular" aria-pressed="true">Popular</button>
-          <button type="button" class="kdt-product-sort" data-sort="alphabetical" aria-pressed="false">Alphabetical</button>
-        </div>
-      </div>
-
-      <div id="home-product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mt-8" aria-live="polite">
-        ${renderCards(products)}
-      </div>
-    </div>
-  </section>
-`;
-
-const sortButtons = [...root.querySelectorAll('.kdt-product-sort')];
-const grid = root.querySelector('#home-product-grid');
-
-sortButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    const alphabetical = button.dataset.sort === 'alphabetical';
-    const items = alphabetical
-      ? [...products].sort((a, b) => a.name.localeCompare(b.name))
-      : products;
-
-    if (grid) grid.innerHTML = renderCards(items);
-    sortButtons.forEach((item) => {
-      const active = item === button;
-      item.classList.toggle('is-active', active);
-      item.setAttribute('aria-pressed', String(active));
-    });
-  });
-});
+    </section>
+  `;
 })();

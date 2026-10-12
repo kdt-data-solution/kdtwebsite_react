@@ -1,104 +1,107 @@
 // Seed initial products on first boot (only if table is empty).
 import db from './index.js';
 import bcrypt from 'bcrypt';
-
-const COMMON_BENEFITS_BLURB =
-  "Get quick answers to the most common questions about using our system and services. We've organized everything here to make your experience simple, clear, and hassle-free.";
-const COMMON_STEPS = [
-  { label: 'Step 1', desc: 'Login / SignUp' },
-  { label: 'Step 2', desc: 'Use the Portal' },
-  { label: 'Step 3', desc: 'Save and Update' },
-];
-const COMMON_BENEFITS = [
-  { title: 'Improves member experience and engagement', icon: 'smile' },
-  { title: 'Secure and centralized data management', icon: 'shield' },
-  { title: 'Better tracking and reporting', icon: 'calendar' },
-  { title: 'Saves time and reduces manual work', icon: 'clock' },
-];
+import { seedKnowledgeEntries } from './knowledgeMigrations.js';
 
 const PRODUCTS = [
   {
     slug: 'membership',
     title: 'Nexus',
     description:
-      'A membership portal is an online system or platform that allows registered users (members) to access exclusive content, services, or features based on their account.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Pay via QRPH', href: '#' },
-      { label: 'Hit Pay', href: '#' },
+      'Give your professional organization a portal for member records and services, events, learning, CPD/CPDD, and certificates. Bring member and administrator workflows together in an organization-focused system.',
+    actions: [{ label: 'Request a demo', href: '#contact' }],
+    steps: [
+      { label: 'Manage member services', desc: 'Organize member records and member-facing services.' },
+      { label: 'Bring people together', desc: 'Manage organization events and registration workflows.' },
+      { label: 'Support professional learning', desc: 'Coordinate learning, CPD/CPDD, and certificate workflows.' },
     ],
-    steps: COMMON_STEPS,
-    benefits_title: 'Key Benefits of the Membership Portal',
-    benefits_blurb: COMMON_BENEFITS_BLURB,
-    benefits: COMMON_BENEFITS,
+    benefits_title: 'One portal for member operations',
+    benefits_blurb: 'Bring member records, events, and professional learning workflows into an organization-focused portal.',
+    benefits: [
+      { title: 'Member records and member-facing services', icon: 'smile' },
+      { title: 'Event administration and registration workflows', icon: 'calendar' },
+      { title: 'Learning, CPD/CPDD, and certificate workflows', icon: 'shield' },
+    ],
     coming_soon: 0,
   },
   {
     slug: 'construct-pro',
-    title: 'Axis',
+    title: 'AxisStruct',
     description:
-      'Discuss Axis with KDT to confirm its product scope, current availability and pricing before planning a rollout.',
-    actions: [
-      { label: 'Ask about Axis', href: '#contact' },
+      'Bring structural modeling and analysis into one focused workflow. Create frame and planar-truss models, organize loads, and explore analysis results with AxisStruct, KDT’s structural software suite.',
+    actions: [{ label: 'Request a demo', href: '#contact' }],
+    steps: [
+      { label: 'Build a structural model', desc: 'Create and inspect frame and planar-truss model geometry.' },
+      { label: 'Organize model loads', desc: 'Set up joint loads as part of your model workflow.' },
+      { label: 'Explore analysis results', desc: 'Run frame and planar-truss analyses and review the results.' },
     ],
-    steps: [],
-    benefits_title: '',
-    benefits_blurb: '',
-    benefits: [],
+    benefits_title: 'Model, analyze, and explore',
+    benefits_blurb: 'Bring model geometry, load setup, and structural analysis results together in one desktop workflow.',
+    benefits: [
+      { title: 'Create 3D frame and planar-truss models', icon: 'calendar' },
+      { title: 'Organize joint loads within each model', icon: 'shield' },
+      { title: 'Explore structural analysis results', icon: 'clock' },
+    ],
     coming_soon: 0,
   },
   {
     slug: 'structural-chatbot',
     title: 'Vantage',
     description:
-      'Structural Chatbot is an AI-powered assistant for structural engineering questions.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Try It', href: '#' },
+      'Bring data preparation and analysis steps together in a visual, node-based workflow. Run the workflow, then review outputs and visualizations in Vantage.',
+    actions: [{ label: 'Request a demo', href: '#contact' }],
+    steps: [
+      { label: 'Build a visual workflow', desc: 'Connect data access, preparation, and analysis steps on a node-based canvas.' },
+      { label: 'Run your workflow', desc: 'Execute connected workflow steps in sequence.' },
+      { label: 'Review results', desc: 'Inspect workflow outputs and visualizations.' },
     ],
-    steps: COMMON_STEPS,
-    benefits_title: 'Key Benefits of Structural Chatbot',
-    benefits_blurb: COMMON_BENEFITS_BLURB,
-    benefits: COMMON_BENEFITS,
+    benefits_title: 'A visible path from data to results',
+    benefits_blurb: 'Keep workflow steps connected on a canvas so teams can run and examine data-processing work in one desktop application.',
+    benefits: [
+      { title: 'Build workflows with connected nodes', icon: 'calendar' },
+      { title: 'Use data preparation and analysis operators', icon: 'shield' },
+      { title: 'Inspect workflow outputs and visualizations', icon: 'smile' },
+    ],
     coming_soon: 0,
   },
   {
     slug: 'wms',
     title: 'Kuwalog',
     description:
-      'A smart warehouse solution designed to improve visibility, accuracy, and control across daily operations. It supports faster tracking, efficient inventory handling, and more organized warehouse workflows through modern, reliable system processes.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Pricing', href: '#' },
-      { label: 'Get Started', href: '#' },
-    ],
+      'Coordinate everyday stock tasks through a warehouse web application and mobile workflows. Look up inventory, receive purchase orders, complete assigned picks, transfer stock between bins, and count cycle inventory. Queue supported mobile changes offline and sync them when connectivity returns.',
+    actions: [{ label: 'Request a demo', href: '#contact' }],
     steps: [
       { label: 'Step 1', desc: 'Set up your warehouse' },
       { label: 'Step 2', desc: 'Track inventory in real-time' },
       { label: 'Step 3', desc: 'Fulfill orders efficiently' },
     ],
-    benefits_title: 'Key Benefits of WMS',
-    benefits_blurb: COMMON_BENEFITS_BLURB,
-    benefits: COMMON_BENEFITS,
+    benefits_title: 'Keep warehouse work moving',
+    benefits_blurb: 'Connect warehouse administration with scan-assisted mobile tasks and offline syncing for supported changes.',
+    benefits: [
+      { title: 'Stock lookup and purchase-order receiving', icon: 'calendar' },
+      { title: 'Assigned picks, bin transfers, and cycle counts', icon: 'shield' },
+      { title: 'Offline queue with sync when connected', icon: 'clock' },
+    ],
     coming_soon: 0,
   },
   {
     slug: 'cardko',
     title: 'TakeOff',
     description:
-      'A digital business card and networking platform for professionals and organizations. Easily share your contact details, portfolio, and social links with a simple scan — no more paper cards, no more lost connections.',
-    actions: [
-      { label: 'Request a Demo', href: '#contact' },
-      { label: 'Get Started', href: '#' },
-    ],
+      'Turn PDF plans into organized material estimates with TakeOff. Calibrate sheets, record measurements, connect quantities to material assemblies, review a bill of quantities, and export an Excel estimate.',
+    actions: [{ label: 'Request a demo', href: '#contact' }],
     steps: [
       { label: 'Step 1', desc: 'Create your card' },
       { label: 'Step 2', desc: 'Share via QR or link' },
       { label: 'Step 3', desc: 'Grow your network' },
     ],
-    benefits_title: 'Key Benefits of CardKo',
-    benefits_blurb: COMMON_BENEFITS_BLURB,
-    benefits: COMMON_BENEFITS,
+    benefits_title: 'A traceable quantity-to-estimate workflow',
+    benefits_blurb: 'Connect plan measurements to material assemblies, include manual estimate lines when needed, and carry consolidated material quantities into an Excel workbook.',
+    benefits: [
+      { title: 'Calibrated measurements from plan sheets', icon: 'calendar' },
+      { title: 'Reusable assemblies for material quantities', icon: 'shield' },
+      { title: 'Consolidated BOQ and Excel export', icon: 'clock' },
+    ],
     coming_soon: 0,
   },
 ];
@@ -255,7 +258,7 @@ const CONTENT_SECTIONS = [
     eyebrow: 'Built by KDT', title: 'Popular products', subtitle: 'KDT products A–Z',
     items: [
       { name: 'Nexus', number: '01', slug: 'membership', href: 'product-membership.html', logo: 'assets/images/product-nexus.png' },
-      { name: 'Axis', number: '02', slug: 'construct-pro', href: 'product-construct.html', logo: 'assets/images/product-axis.png' },
+      { name: 'AxisStruct', number: '02', slug: 'construct-pro', href: 'product-construct.html', logo: 'assets/images/product-axis.png' },
       { name: 'Vantage', number: '03', slug: 'structural-chatbot', href: 'product-chatbot.html', logo: 'assets/images/product-vantage.png' },
       { name: 'Kuwalog', number: '04', slug: 'wms', href: 'product-wms.html', logo: 'assets/images/product-kuwalog.png' },
       { name: 'TakeOff', number: '05', slug: 'cardko', href: 'product-cardko.html', logo: 'assets/images/product-takeoff.png' },
@@ -448,6 +451,8 @@ export function seedAdminUser() {
 export function seedInitial() {
   seedAdminUser();
 
+  seedKnowledgeEntries(db);
+
   const insertContent = db.prepare(`
     INSERT OR IGNORE INTO content_sections
       (key, page, label, eyebrow, title, subtitle, body, image_url, image_alt, cta_label, cta_url, items_json, display_order, is_active)
@@ -579,7 +584,8 @@ export function seedInitial() {
   );
   for (const [slug, publicTitle, legacyTitle] of [
     ['membership', 'Nexus', 'Membership Portal'],
-    ['construct-pro', 'Axis', 'Construct Pro'],
+    ['construct-pro', 'AxisStruct', 'Axis'],
+    ['construct-pro', 'AxisStruct', 'Construct Pro'],
     ['structural-chatbot', 'Vantage', 'Structural Chatbot'],
     ['wms', 'Kuwalog', 'Sophisticated Tracking for Modern Warehousing'],
     ['cardko', 'TakeOff', 'CardKo'],

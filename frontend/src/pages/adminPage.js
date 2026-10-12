@@ -53,7 +53,7 @@ sidebarToggle.addEventListener('click', () => {
 sidebarBackdrop.addEventListener('click', closeSidebar);
 
 // View switching
-const VIEW_TITLES = { dashboard: 'Dashboard', messages: 'Messages', portfolio: 'Portfolio', media: 'Media', prototypes: 'Prototypes', settings: 'Settings' };
+const VIEW_TITLES = { dashboard: 'Dashboard', messages: 'Messages', portfolio: 'Portfolio', media: 'Media', prototypes: 'Prototypes', 'knowledge-base': 'Chat knowledge base', settings: 'Settings' };
 
 function showView(view) {
   document.querySelectorAll('.view').forEach((el) => el.classList.add('hidden'));
@@ -318,7 +318,7 @@ async function loadMessages() {
 }
 
 async function loadAll() {
-  await Promise.all([loadHealth(), loadMessages(), loadPortfolio(), loadArticles(), loadPrototypes()]);
+  await Promise.all([loadHealth(), loadMessages(), loadPortfolio(), loadArticles(), loadPrototypes(), loadKnowledgeBase()]);
 }
 
 // ---------- Portfolio CRUD ----------
@@ -1496,6 +1496,159 @@ async function deletePrototype(id) {
     toastError(err.message);
   }
 }
+
+// ---------- Public chatbot knowledge base ----------
+let allKnowledgeEntries = [];
+const KNOWLEDGE_PRODUCTS = [
+  ['', 'General'],
+  ['construct-pro', 'AxisStruct'],
+  ['cardko', 'TakeOff'],
+  ['membership', 'Nexus'],
+  ['wms', 'Kuwalog'],
+  ['structural-chatbot', 'Vantage'],
+];
+
+async function loadKnowledgeBase() {
+  const status = document.getElementById('knowledge-status');
+  const list = document.getElementById('knowledge-list');
+  if (!status || !list) return;
+  status.textContent = 'Loading...';
+  status.classList.remove('hidden');
+  list.innerHTML = '';
+  try {
+    allKnowledgeEntries = await apiFetch('/api/knowledge-base', { auth: true });
+    if (!allKnowledgeEntries.length) {
+      status.textContent = 'No entries yet. Add approved product information for the assistant.';
+      return;
+    }
+    renderKnowledgeBase();
+  } catch (err) {
+    status.textContent = `Failed to load: ${err.message}`;
+  }
+}
+
+function renderKnowledgeBase() {
+  const status = document.getElementById('knowledge-status');
+  const list = document.getElementById('knowledge-list');
+  status.classList.add('hidden');
+  list.innerHTML = allKnowledgeEntries.map((entry) => {
+    const product = KNOWLEDGE_PRODUCTS.find(([slug]) => slug === entry.product_slug)?.[1] || 'General';
+    return `
+      <article class="px-5 py-4 hover:bg-gray-50">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <h3 class="font-medium text-sm text-gray-900">${escapeHtml(entry.title)}</h3>
+              <span class="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full ${entry.is_published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}">${entry.is_published ? 'Published' : 'Draft'}</span>
+              <span class="text-[10px] text-gray-500">${escapeHtml(product)}</span>
+            </div>
+            <p class="mt-2 text-xs text-gray-700 whitespace-pre-wrap leading-relaxed">${escapeHtml(entry.body)}</p>
+            ${entry.keywords ? `<p class="mt-2 text-[11px] text-gray-500"><strong>Search terms:</strong> ${escapeHtml(entry.keywords)}</p>` : ''}
+            ${entry.source_note ? `<p class="mt-2 text-[11px] text-gray-400"><strong>Private source note:</strong> ${escapeHtml(entry.source_note)}</p>` : ''}
+          </div>
+          <div class="flex shrink-0 flex-wrap gap-2">
+            <button data-knowledge-edit="${entry.id}" class="text-xs px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-100">Edit</button>
+            <button data-knowledge-publish="${entry.id}" class="text-xs px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-100">${entry.is_published ? 'Unpublish' : 'Publish'}</button>
+            <button data-knowledge-delete="${entry.id}" class="text-xs px-3 py-1.5 rounded-md border border-red-200 text-red-700 hover:bg-red-50">Delete</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  list.querySelectorAll('[data-knowledge-edit]').forEach((button) => button.addEventListener('click', () => {
+    openKnowledgeForm(allKnowledgeEntries.find((entry) => entry.id === Number(button.dataset.knowledgeEdit)));
+  }));
+  list.querySelectorAll('[data-knowledge-publish]').forEach((button) => button.addEventListener('click', () => {
+    toggleKnowledgePublish(Number(button.dataset.knowledgePublish));
+  }));
+  list.querySelectorAll('[data-knowledge-delete]').forEach((button) => button.addEventListener('click', () => {
+    deleteKnowledgeEntry(Number(button.dataset.knowledgeDelete));
+  }));
+}
+
+function openKnowledgeForm(entry = null) {
+  const isEdit = Boolean(entry);
+  const overlay = document.createElement('div');
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-8 overflow-y-auto';
+  const productOptions = KNOWLEDGE_PRODUCTS.map(([value, label]) => `
+    <option value="${escapeHtml(value)}" ${entry?.product_slug === value ? 'selected' : ''}>${escapeHtml(label)}</option>
+  `).join('');
+  overlay.innerHTML = `
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-2xl">
+      <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-base font-semibold text-gray-900">${isEdit ? 'Edit knowledge entry' : 'Add knowledge entry'}</h3>
+        <button type="button" data-close class="text-gray-500 hover:text-black text-xl leading-none" aria-label="Close">&times;</button>
+      </div>
+      <form id="knowledge-form" class="p-6 space-y-4">
+        <div><label class="block text-xs font-medium text-gray-700 mb-1" for="knowledge-title">Title *</label><input id="knowledge-title" name="title" required maxlength="160" value="${escapeHtml(entry?.title || '')}" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md" /></div>
+        <div><label class="block text-xs font-medium text-gray-700 mb-1" for="knowledge-product">Product</label><select id="knowledge-product" name="product_slug" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md">${productOptions}</select></div>
+        <div><label class="block text-xs font-medium text-gray-700 mb-1" for="knowledge-keywords">Search terms <span class="text-gray-400">(comma-separated)</span></label><input id="knowledge-keywords" name="keywords" maxlength="600" value="${escapeHtml(entry?.keywords || '')}" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md" /></div>
+        <div><label class="block text-xs font-medium text-gray-700 mb-1" for="knowledge-body">Approved answer content *</label><textarea id="knowledge-body" name="body" required maxlength="6000" rows="7" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md">${escapeHtml(entry?.body || '')}</textarea></div>
+        <div><label class="block text-xs font-medium text-gray-700 mb-1" for="knowledge-source">Private source notes</label><textarea id="knowledge-source" name="source_note" maxlength="1200" rows="2" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-md">${escapeHtml(entry?.source_note || '')}</textarea><p class="mt-1 text-[11px] text-gray-500">Admin-only review notes. These are never sent to the public assistant.</p></div>
+        <label class="flex items-start gap-2 text-xs text-gray-700"><input name="is_published" type="checkbox" ${entry?.is_published ? 'checked' : ''} class="mt-0.5" /><span><strong>Publish this entry</strong><br />Published content may be included in answers from the public chatbot.</span></label>
+        <p class="hidden text-xs text-red-600" data-error></p>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" data-close class="px-4 py-2 text-sm text-gray-700">Cancel</button><button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium">${isEdit ? 'Save changes' : 'Create entry'}</button></div>
+      </form>
+    </div>
+  `;
+  document.body.append(overlay);
+  overlay.querySelectorAll('[data-close]').forEach((button) => button.addEventListener('click', () => overlay.remove()));
+  overlay.addEventListener('click', (event) => { if (event.target === overlay) overlay.remove(); });
+  overlay.querySelector('#knowledge-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const error = form.querySelector('[data-error]');
+    const formData = new FormData(form);
+    const payload = {
+      title: formData.get('title'),
+      body: formData.get('body'),
+      product_slug: formData.get('product_slug'),
+      keywords: formData.get('keywords'),
+      source_note: formData.get('source_note'),
+      is_published: formData.has('is_published'),
+    };
+    try {
+      await apiFetch(isEdit ? `/api/knowledge-base/${entry.id}` : '/api/knowledge-base', {
+        method: isEdit ? 'PUT' : 'POST', auth: true, body: payload,
+      });
+      overlay.remove();
+      toastSuccess(isEdit ? 'Knowledge entry updated.' : 'Knowledge entry added.');
+      await loadKnowledgeBase();
+    } catch (err) {
+      error.textContent = err.message;
+      error.classList.remove('hidden');
+    }
+  });
+  overlay.querySelector('#knowledge-title').focus();
+}
+
+async function toggleKnowledgePublish(id) {
+  const entry = allKnowledgeEntries.find((item) => item.id === id);
+  if (!entry) return;
+  try {
+    await apiFetch(`/api/knowledge-base/${id}`, {
+      method: 'PUT', auth: true,
+      body: { ...entry, is_published: !entry.is_published },
+    });
+    toastSuccess(entry.is_published ? 'Knowledge entry unpublished.' : 'Knowledge entry published.');
+    await loadKnowledgeBase();
+  } catch (err) { toastError(err.message); }
+}
+
+async function deleteKnowledgeEntry(id) {
+  const entry = allKnowledgeEntries.find((item) => item.id === id);
+  if (!entry) return;
+  const ok = await showConfirm(`Delete “${entry.title}”? This cannot be undone.`, { title: 'Delete knowledge entry', confirmText: 'Delete', variant: 'error' });
+  if (!ok) return;
+  try {
+    await apiFetch(`/api/knowledge-base/${id}`, { method: 'DELETE', auth: true });
+    toastSuccess('Knowledge entry deleted.');
+    await loadKnowledgeBase();
+  } catch (err) { toastError(err.message); }
+}
+
+document.getElementById('knowledge-add-btn')?.addEventListener('click', () => openKnowledgeForm());
 
 function openPrototypeForm() {
   const overlay = document.createElement('div');

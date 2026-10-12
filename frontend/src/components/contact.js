@@ -1,5 +1,5 @@
 import "../styles/style.css";
-import { getSiteSettings } from '../utils/siteSettings.js';
+import { CONTACT_DEFAULTS, getSiteSettings } from '../utils/siteSettings.js';
 import { API_BASE } from '../utils/auth.js';
 import { enquiryContext } from '../utils/enquiry.js';
 import { pageReady } from '../utils/pageReady.js';
@@ -8,31 +8,34 @@ import { setupContactNavigation } from '../utils/contactNavigation.js';
 const BASE = import.meta.env.BASE_URL;
 
 function renderContactInfo(s) {
-  const address = s.address || '';
+  const address = s.address || CONTACT_DEFAULTS.address;
   const hours = s.business_hours || 'Monday - Friday (8:00 am - 5:00 pm)';
   const phone = !s.contact_phone || s.contact_phone === '639+ 000 000 000'
     ? '84635344'
     : s.contact_phone;
-  const email = s.contact_email || '';
+  const email = s.contact_email || CONTACT_DEFAULTS.contact_email;
   const el = document.getElementById('contact-address');
   const el2 = document.getElementById('contact-hours');
   const phoneLink = document.getElementById('contact-phone');
   const emailLink = document.getElementById('contact-email');
-  if (el) el.textContent = address || 'Please contact us for office directions.';
+  if (el) el.textContent = address;
   if (el2) el2.textContent = hours;
   if (phoneLink) {
     phoneLink.textContent = phone;
     phoneLink.href = `tel:${phone.replace(/[^\d+]/g, '')}`;
   }
   if (emailLink) {
-    emailLink.textContent = email || 'Email unavailable. Please use the form.';
-    if (email) emailLink.href = `mailto:${email}`;
-    else emailLink.removeAttribute('href');
+    emailLink.textContent = email;
+    emailLink.href = `mailto:${email}`;
   }
   const map = document.getElementById('contact-map');
-  if (map && address) {
+  const directions = document.getElementById('contact-map-directions');
+  if (map) {
     map.src = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=m&z=18&ie=UTF8&iwloc=&output=embed`;
     map.parentElement.hidden = false;
+  }
+  if (directions) {
+    directions.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
   }
 }
 
@@ -99,10 +102,10 @@ document.querySelector("#contact").innerHTML = `
           </div>
         </div>
 
-        <div class="mt-6 overflow-hidden w-full border border-black/15" hidden>
+        <div class="mt-6 w-full border border-black/15" hidden>
           <iframe
             id="contact-map"
-            title="KDT Network and Data Solution location map"
+            title="Map showing KDT Network and Data Solution at ${CONTACT_DEFAULTS.address}"
             width="100%"
             class="block w-full h-64"
             style="border:0;"
@@ -110,6 +113,7 @@ document.querySelector("#contact").innerHTML = `
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade">
           </iframe>
+          <a id="contact-map-directions" class="block bg-white px-4 py-3 text-xs font-medium text-gray-700 hover:text-black hover:underline" target="_blank" rel="noopener noreferrer">Get directions in Google Maps</a>
         </div>
       </div>
 
@@ -159,6 +163,7 @@ document.querySelector("#contact").innerHTML = `
 </section>
 `;
 
+renderContactInfo(CONTACT_DEFAULTS);
 getSiteSettings().then(renderContactInfo);
 
 const enquiryType = document.getElementById('contact-enquiry-type');

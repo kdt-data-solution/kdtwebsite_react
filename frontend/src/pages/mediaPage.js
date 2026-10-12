@@ -55,10 +55,10 @@ function renderShell(gridHtml, statusText) {
     <section class="bg-[#0b0b0b] text-white py-14 md:py-20">
       <div class="kdt-container">
         <div class="max-w-4xl">
-          <p class="kdt-eyebrow text-gray-400 mb-4">Ideas from KDT</p>
-          <h1 class="kdt-display text-white">Editorial</h1>
+          <p class="kdt-eyebrow text-gray-400 mb-4">KDT Community</p>
+          <h1 class="kdt-display text-white">Perspectives</h1>
           <p class="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mt-6">
-            Practical perspectives from KDT on engineering, data, software, and responsible digital delivery.
+            Ideas and practical perspectives from KDT on engineering, data, software, and digital delivery.
           </p>
         </div>
       </div>

@@ -16,11 +16,20 @@ import settingsRouter from './routes/settings.js';
 import contentRouter from './routes/content.js';
 import prototypesRouter from './routes/prototypes.js';
 import prototypeServeRouter from './routes/prototypeServe.js';
+import chatRouter from './routes/chat.js';
+import knowledgeBaseRouter from './routes/knowledgeBase.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+
+// Trust only an explicitly configured number of reverse-proxy hops. Leaving
+// this unset keeps Express's default untrusted proxy behavior.
+const trustedProxyHops = Number(process.env.TRUST_PROXY_HOPS || 0);
+if (Number.isSafeInteger(trustedProxyHops) && trustedProxyHops > 0 && trustedProxyHops <= 5) {
+  app.set('trust proxy', trustedProxyHops);
+}
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
@@ -39,6 +48,8 @@ app.use('/api/courses', coursesRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/prototypes', prototypesRouter);
+app.use('/api/chat', chatRouter);
+app.use('/api/knowledge-base', knowledgeBaseRouter);
 
 // Public, password-gated hosting of uploaded prototype sites.
 app.use('/p', prototypeServeRouter);

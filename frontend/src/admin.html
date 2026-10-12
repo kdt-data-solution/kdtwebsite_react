@@ -43,6 +43,10 @@
             <img src="/assets/images/prototype.svg" alt="" class="w-5 h-5" />
             Prototypes
           </a>
+          <a href="#knowledge-base" data-view="knowledge-base" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
+            <img src="/assets/images/news.svg" alt="" class="w-5 h-5" />
+            Chat knowledge base
+          </a>
           <a href="#settings" data-view="settings" class="nav-link flex items-center gap-3 px-3 py-2 rounded-md hover:bg-background/10 transition">
             <img src="/assets/images/settings.svg" alt="" class="w-5 h-5" />
             Settings
@@ -221,6 +225,21 @@
               </div>
               <div id="prototype-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
               <div id="prototype-list" class="divide-y divide-gray-100 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
+            </div>
+          </section>
+
+          <!-- Chat knowledge base view -->
+          <section id="view-knowledge-base" class="view hidden">
+            <div class="bg-background border border-gray-200 rounded-lg">
+              <div class="flex flex-col gap-3 px-5 py-4 border-b border-gray-200 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h2 class="text-base font-semibold text-gray-900">Chat knowledge base</h2>
+                  <p class="text-xs text-gray-500 mt-1">Only published entries are shared with the public AI assistant. Keep drafts for review; private source notes stay in the admin area.</p>
+                </div>
+                <button id="knowledge-add-btn" class="bg-foreground text-white text-xs px-4 py-2 rounded-md font-medium hover:shadow-2xl">+ Add entry</button>
+              </div>
+              <div id="knowledge-status" class="px-5 py-4 text-sm text-gray-500">Loading...</div>
+              <div id="knowledge-list" class="divide-y divide-gray-100 max-h-[calc(100vh-220px)] overflow-y-auto"></div>
             </div>
           </section>
 

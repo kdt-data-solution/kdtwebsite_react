@@ -1,25 +1,22 @@
 import './styles/style.css'
 import { markPageReady } from './utils/pageReady.js';
 
+document.body.classList.add('kdt-home-page');
 document.querySelector("#app").innerHTML = `
-<div>
+<main>
   <div id="hero"></div>
   <div id="industries"></div>
-  <div id="products"></div>
   <div id="services"></div>
   <div id="solution-divider"></div>
-  <div id="product-directory"></div>
   <div id="faq"></div>
-</div>
+</main>
 `;
 
 const sections = [
   import('./components/hero.js'),
   import('./components/industries.js'),
-  import('./components/products.js'),
   import('./components/services.js'),
   import('./components/solutionDivider.js'),
-  import('./components/productDirectory.js'),
   import('./components/faq.js'),
 ];
 Promise.allSettled(sections.map(async section => (await section).ready)).then(markPageReady);
