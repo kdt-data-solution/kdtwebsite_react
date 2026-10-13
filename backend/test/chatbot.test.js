@@ -87,16 +87,24 @@ test('chatbot keeps knowledge private, bounds requests, and calls OpenAI only on
   assert.equal(firstCall.payload.model, 'test-model');
   assert.equal(firstCall.payload.store, false);
   assert.equal(firstCall.payload.max_output_tokens, 450);
+  assert.equal(firstCall.payload.reasoning, undefined);
+  assert.equal(firstCall.payload.service_tier, undefined);
   const serializedContext = JSON.stringify(firstCall.payload.input);
   assert.match(serializedContext, /APPROVED_KUWALOG_FACTS/);
   assert.match(serializedContext, /Kuwalog/);
   assert.doesNotMatch(serializedContext, /DRAFT_SECRET_PHRASE|PRIVATE_REVIEW_NOTE|PRIVATE_DRAFT_SOURCE/);
 
+  delete process.env.OPENAI_MODEL;
   const longAssistantFollowUp = await request('/api/chat', {
     method: 'POST',
     body: { messages: [{ role: 'assistant', content: 'A'.repeat(2500) }, { role: 'user', content: 'Does it export?' }] },
   });
   assert.equal(longAssistantFollowUp.status, 200);
+  const lunaCall = providerCalls.at(-1);
+  assert.equal(lunaCall.payload.model, 'gpt-6-luna');
+  assert.deepEqual(lunaCall.payload.reasoning, { effort: 'none' });
+  assert.equal(lunaCall.payload.service_tier, undefined);
+  process.env.OPENAI_MODEL = 'test-model';
 
   providerStatus = 500;
   const upstreamFailure = await request('/api/chat', { method: 'POST', body: { messages: [{ role: 'user', content: 'Tell me about Kuwalog.' }] } });

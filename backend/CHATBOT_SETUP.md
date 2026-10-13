@@ -5,8 +5,13 @@ API from the server, using `OPENAI_API_KEY`; the browser never receives the key.
 The endpoint sends `store: false`, limits responses to 450 tokens, times out
 after 20 seconds, and returns a generic error when the provider is unavailable.
 
+The default model is GPT-6 Luna (`gpt-6-luna`). Luna requests use
+`reasoning: { effort: 'none' }` for short product answers, keeping the 450-token
+budget available for the visible reply. Requests use standard processing;
+Fast and Ultrafast modes are not enabled.
+
 To enable it, set `OPENAI_API_KEY` in the backend process environment or in the
-backend's untracked `.env` file, optionally set `OPENAI_MODEL`, then restart
+backend's untracked `.env` file, set `OPENAI_MODEL=gpt-6-luna`, then restart
 Express. `backend/.env.example` lists the chatbot settings. Do not add the key
 to frontend variables, `site_settings`, or the admin settings screen. Without a
 key, the widget remains visible and gives visitors a contact fallback.

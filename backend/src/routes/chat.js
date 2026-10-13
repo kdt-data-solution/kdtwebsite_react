@@ -133,6 +133,7 @@ router.post('/', async (req, res) => {
       .join(' ')
       .slice(0, 3000);
     const knowledge = relevantKnowledge(retrievalQuery);
+    const model = process.env.OPENAI_MODEL || 'gpt-6-luna';
     const response = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
@@ -141,7 +142,8 @@ router.post('/', async (req, res) => {
       },
       signal: AbortSignal.timeout(20_000),
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
+        model,
+        ...(model.startsWith('gpt-6-luna') ? { reasoning: { effort: 'none' } } : {}),
         store: false,
         max_output_tokens: 450,
         instructions,

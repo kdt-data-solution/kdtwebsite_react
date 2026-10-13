@@ -69,6 +69,12 @@ export function initPublicChat() {
 
   launcher.addEventListener('click', () => setOpen(panel.hidden));
   closeButton.addEventListener('click', () => setOpen(false));
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+      event.preventDefault();
+      form.requestSubmit();
+    }
+  });
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !panel.hidden) setOpen(false);
   });
@@ -104,7 +110,7 @@ export function initPublicChat() {
       status.textContent = error.message || 'The assistant is unavailable. Please contact the KDT team.';
     } finally {
       sendButton.disabled = false;
-      input.focus();
+      if (!panel.hidden) input.focus();
     }
   });
 }
