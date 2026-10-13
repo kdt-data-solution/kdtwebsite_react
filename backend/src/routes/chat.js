@@ -76,7 +76,8 @@ const instructions = `You are KDT's public website assistant. Answer product que
 function inputMessages(messages, catalog, knowledge) {
   const input = messages.map((message) => ({
     role: message.role,
-    content: [{ type: 'input_text', text: message.content }],
+    // Plain text lets Responses apply the correct type for each message role.
+    content: message.content,
   }));
   const last = input.at(-1);
   const context = [
@@ -85,7 +86,7 @@ function inputMessages(messages, catalog, knowledge) {
     `Relevant published knowledge entries: ${JSON.stringify(knowledge)}`,
     '</approved_reference_data>',
   ].join('\n');
-  last.content[0].text = `${last.content[0].text}\n\n${context}`;
+  last.content = `${last.content}\n\n${context}`;
   return input;
 }
 

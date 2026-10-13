@@ -34,6 +34,13 @@ test('chatbot keeps knowledge private, bounds requests, and calls OpenAI only on
   t.mock.method(globalThis, 'fetch', async (url, options = {}) => {
     if (String(url) !== 'https://api.openai.com/v1/responses') return realFetch(url, options);
     providerCalls.push({ url: String(url), options, payload: JSON.parse(options.body) });
+    // Responses rejects input_text parts when replaying an assistant reply.
+    // Enforce that provider contract so multi-turn regressions cannot pass.
+    const invalidAssistant = providerCalls.at(-1).payload.input.some((message) =>
+      message.role === 'assistant' && Array.isArray(message.content)
+      && message.content.some((part) => part.type === 'input_text'),
+    );
+    if (invalidAssistant) return new Response(JSON.stringify({ error: { code: 'invalid_value' } }), { status: 400 });
     if (providerStatus !== 200) return new Response(JSON.stringify({ error: { message: 'private provider diagnostic' } }), { status: providerStatus });
     return new Response(JSON.stringify({
       output: [{ type: 'message', content: [{ type: 'output_text', text: providerReply }] }],
@@ -97,13 +104,19 @@ test('chatbot keeps knowledge private, bounds requests, and calls OpenAI only on
   delete process.env.OPENAI_MODEL;
   const longAssistantFollowUp = await request('/api/chat', {
     method: 'POST',
-    body: { messages: [{ role: 'assistant', content: 'A'.repeat(2500) }, { role: 'user', content: 'Does it export?' }] },
+    body: { messages: [{ role: 'user', content: 'What can Kuwalog mobile do?' }, { role: 'assistant', content: 'A'.repeat(2500) }, { role: 'user', content: 'Does it export?' }] },
   });
   assert.equal(longAssistantFollowUp.status, 200);
   const lunaCall = providerCalls.at(-1);
   assert.equal(lunaCall.payload.model, 'gpt-6-luna');
   assert.deepEqual(lunaCall.payload.reasoning, { effort: 'none' });
   assert.equal(lunaCall.payload.service_tier, undefined);
+  assert.deepEqual(lunaCall.payload.input.slice(0, 2), [
+    { role: 'user', content: 'What can Kuwalog mobile do?' },
+    { role: 'assistant', content: 'A'.repeat(2500) },
+  ]);
+  assert.match(lunaCall.payload.input[2].content, /^Does it export\?/);
+  assert.match(lunaCall.payload.input[2].content, /Canonical public product catalog/);
   process.env.OPENAI_MODEL = 'test-model';
 
   providerStatus = 500;
