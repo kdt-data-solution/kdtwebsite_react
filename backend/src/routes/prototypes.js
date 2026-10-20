@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import db from '../db/index.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { uploadZip } from '../middleware/upload.js';
-import { extractPrototype, removePrototypeDir } from '../services/prototypeStore.js';
+import { extractPrototype, removePrototypeDir, getPrototypeArchive } from '../services/prototypeStore.js';
 
 const router = Router();
 
@@ -44,6 +44,23 @@ function makeSlug() {
 router.get('/', requireAuth, requireRole('admin'), (req, res, next) => {
   try {
     res.json(listAll.all().map(publicShape));
+  } catch (err) { next(err); }
+});
+
+router.get('/:id/download', requireAuth, requireRole('admin'), (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isSafeInteger(id) || id < 1) return res.status(400).json({ error: 'Invalid prototype ID' });
+    const prototype = findById.get(id);
+    if (!prototype) return res.status(404).json({ error: 'Prototype not found' });
+    const archivePath = getPrototypeArchive(prototype.slug);
+    if (!archivePath) return res.status(404).json({ error: 'The files for this prototype are no longer available.' });
+    let filename = (prototype.original_filename || `${prototype.slug}.zip`)
+      .replace(/\\/g, '/').split('/').pop().replace(/[\x00-\x1f\x7f]/g, '').trim();
+    if (!filename) filename = `${prototype.slug}.zip`;
+    if (!/\.zip$/i.test(filename)) filename += '.zip';
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.download(archivePath, filename, (err) => { if (err) next(err); });
   } catch (err) { next(err); }
 });
 

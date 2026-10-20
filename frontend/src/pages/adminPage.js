@@ -1,5 +1,5 @@
 import '../styles/style.css';
-import { apiFetch, apiUpload, fetchMe, logout, isAuthenticated, API_BASE } from '../utils/auth.js';
+import { apiFetch, apiUpload, fetchMe, logout, isAuthenticated, getToken, API_BASE } from '../utils/auth.js';
 import { showAlert, showConfirm } from '../utils/modal.js';
 import { toastSuccess, toastError } from '../utils/toast.js';
 
@@ -1452,14 +1452,17 @@ function renderPrototypeList() {
   status.classList.add('hidden');
   list.innerHTML = allPrototypes.map(p => `
     <div class="px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-4">
-        <div class="flex-1 min-w-0">
+      <div class="flex flex-wrap items-center gap-4">
+        <div class="flex-1 min-w-[12rem]">
           <p class="font-medium text-sm text-gray-900 truncate">${escapeHtml(p.title)}</p>
           <p class="text-xs text-gray-500 truncate">${escapeHtml(p.entry)} · ${p.file_count} file${p.file_count === 1 ? '' : 's'} · ${formatBytes(p.size_bytes)} · ${formatDate(p.created_at)}</p>
         </div>
-        <a href="${escapeHtml(prototypeLink(p))}" target="_blank" rel="noopener" class="text-xs text-gray-800 bg-gray-200 border border-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-md font-medium transition">Open</a>
-        <button data-copy="${p.id}" class="text-xs text-white bg-foreground border border-foreground hover:opacity-90 px-3 py-1.5 rounded-md font-medium transition">Copy link</button>
-        <button data-delete="${p.id}" class="text-xs text-white bg-red-600 border border-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md font-medium transition">Delete</button>
+        <div class="flex flex-wrap items-center gap-2">
+          <a href="${escapeHtml(prototypeLink(p))}" target="_blank" rel="noopener" class="text-xs text-gray-800 bg-gray-200 border border-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-md font-medium transition">Open</a>
+          <button data-download="${p.id}" class="text-xs text-white bg-blue-600 border border-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md font-medium transition">Download ZIP</button>
+          <button data-copy="${p.id}" class="text-xs text-white bg-foreground border border-foreground hover:opacity-90 px-3 py-1.5 rounded-md font-medium transition">Copy link</button>
+          <button data-delete="${p.id}" class="text-xs text-white bg-red-600 border border-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md font-medium transition">Delete</button>
+        </div>
       </div>
       <div class="mt-2 flex items-center gap-2">
         <span class="text-[11px] text-gray-400">🔒 password-protected</span>
@@ -1469,7 +1472,49 @@ function renderPrototypeList() {
   `).join('');
 
   list.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copyPrototypeLink(allPrototypes.find(p => p.id == b.dataset.copy))));
+  list.querySelectorAll('[data-download]').forEach(b => b.addEventListener('click', () => downloadPrototype(allPrototypes.find(p => p.id == b.dataset.download), b)));
   list.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => deletePrototype(b.dataset.delete)));
+}
+
+async function downloadPrototype(p, button) {
+  if (!p || button.disabled) return;
+  const token = getToken();
+  if (!token) {
+    toastError('Your session has expired. Please sign in again.');
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Downloading…';
+  try {
+    const response = await fetch(`${API_BASE}/api/prototypes/${encodeURIComponent(p.id)}/download`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || 'Could not download this prototype.');
+    }
+
+    const blob = await response.blob();
+    const fallbackName = `${p.slug || 'prototype'}.zip`;
+    const rawName = p.original_filename || fallbackName;
+    let filename = String(rawName).replace(/[\\/]+/g, '_').replace(/[\u0000-\u001f\u007f]/g, '').trim() || fallbackName;
+    if (!/\.zip$/i.test(filename)) filename += '.zip';
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    anchor.hidden = true;
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+  } catch (err) {
+    toastError(err.message || 'Could not download this prototype.');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Download ZIP';
+  }
 }
 
 async function copyPrototypeLink(p) {

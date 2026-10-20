@@ -2,18 +2,29 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import AdmZip from 'adm-zip';
+import { randomUUID } from 'node:crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Prototypes live under backend/data/prototypes/<slug>/ (data/ is gitignored).
-export const prototypesDir = path.resolve(__dirname, '../../data/prototypes');
+export const prototypesDir = path.resolve(process.env.PROTOTYPES_DIR || path.resolve(__dirname, '../../data/prototypes'));
+// Keep archives outside the directory served by the public prototype router.
+export const prototypeArchivesDir = path.join(path.dirname(prototypesDir), 'prototype-archives');
 
 // Guard rails for extracted archives.
 const MAX_FILES = 2000;
 const MAX_TOTAL_BYTES = 200 * 1024 * 1024; // 200 MB uncompressed
 
 export function dirForSlug(slug) {
+  if (typeof slug !== 'string' || !/^[a-z0-9_-]{1,64}$/i.test(slug)) {
+    throw new Error('Invalid prototype slug');
+  }
   return path.join(prototypesDir, slug);
+}
+
+export function archiveForSlug(slug) {
+  dirForSlug(slug); // Validate before building a filesystem path.
+  return path.join(prototypeArchivesDir, `${slug}.zip`);
 }
 
 export function removePrototypeDir(slug) {
@@ -23,6 +34,45 @@ export function removePrototypeDir(slug) {
   } catch {
     /* ignore */
   }
+  fs.rmSync(archiveForSlug(slug), { force: true });
+}
+
+// Older uploads only retained extracted files. Rebuild and cache their ZIP once.
+export function getPrototypeArchive(slug) {
+  const archivePath = archiveForSlug(slug);
+  if (fs.existsSync(archivePath)) {
+    return fs.lstatSync(archivePath).isFile() ? archivePath : null;
+  }
+  const dir = dirForSlug(slug);
+  if (!fs.existsSync(dir) || !fs.lstatSync(dir).isDirectory()) return null;
+  const zip = new AdmZip();
+  let fileCount = 0;
+  let sizeBytes = 0;
+  function addFiles(folder, prefix = '') {
+    for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+      const filename = path.join(folder, entry.name);
+      const relative = prefix + entry.name;
+      if (entry.isDirectory()) addFiles(filename, relative + '/');
+      else if (entry.isFile()) {
+        if (++fileCount > MAX_FILES) throw new Error('Prototype has too many files to archive');
+        sizeBytes += fs.statSync(filename).size;
+        if (sizeBytes > MAX_TOTAL_BYTES) throw new Error('Prototype is too large to archive');
+        zip.addFile(relative, fs.readFileSync(filename));
+      }
+      // Never follow symbolic links to files outside the prototype.
+    }
+  }
+  addFiles(dir);
+  if (!fileCount) return null;
+  fs.mkdirSync(prototypeArchivesDir, { recursive: true, mode: 0o700 });
+  const temporary = `${archivePath}.${randomUUID()}.tmp`;
+  try {
+    zip.writeZip(temporary);
+    fs.renameSync(temporary, archivePath);
+  } finally {
+    fs.rmSync(temporary, { force: true });
+  }
+  return archivePath;
 }
 
 // Pick the entry file: prefer index.html at the root, else the shallowest .html file.
@@ -86,10 +136,17 @@ export function extractPrototype(buffer, slug) {
 
   // Clean any previous extraction for this slug, then write.
   removePrototypeDir(slug);
-  fs.mkdirSync(destDir, { recursive: true });
-  for (const { target, data } of planned) {
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    fs.writeFileSync(target, data);
+  try {
+    fs.mkdirSync(destDir, { recursive: true });
+    for (const { target, data } of planned) {
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.writeFileSync(target, data);
+    }
+    fs.mkdirSync(prototypeArchivesDir, { recursive: true, mode: 0o700 });
+    fs.writeFileSync(archiveForSlug(slug), buffer, { mode: 0o600 });
+  } catch (err) {
+    removePrototypeDir(slug);
+    throw err;
   }
 
   return { entry: entryFile, fileCount: planned.length, sizeBytes: total };
