@@ -1460,6 +1460,7 @@ function renderPrototypeList() {
         <div class="flex flex-wrap items-center gap-2">
           <a href="${escapeHtml(prototypeLink(p))}" target="_blank" rel="noopener" class="text-xs text-gray-800 bg-gray-200 border border-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded-md font-medium transition">Open</a>
           <button data-download="${p.id}" class="text-xs text-white bg-blue-600 border border-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md font-medium transition">Download ZIP</button>
+          <button data-replace="${p.id}" class="text-xs text-gray-800 bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded-md font-medium transition">Replace ZIP</button>
           <button data-copy="${p.id}" class="text-xs text-white bg-foreground border border-foreground hover:opacity-90 px-3 py-1.5 rounded-md font-medium transition">Copy link</button>
           <button data-delete="${p.id}" class="text-xs text-white bg-red-600 border border-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md font-medium transition">Delete</button>
         </div>
@@ -1473,6 +1474,7 @@ function renderPrototypeList() {
 
   list.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', () => copyPrototypeLink(allPrototypes.find(p => p.id == b.dataset.copy))));
   list.querySelectorAll('[data-download]').forEach(b => b.addEventListener('click', () => downloadPrototype(allPrototypes.find(p => p.id == b.dataset.download), b)));
+  list.querySelectorAll('[data-replace]').forEach(b => b.addEventListener('click', () => openPrototypeReplaceForm(allPrototypes.find(p => p.id == b.dataset.replace))));
   list.querySelectorAll('[data-delete]').forEach(b => b.addEventListener('click', () => deletePrototype(b.dataset.delete)));
 }
 
@@ -1540,6 +1542,97 @@ async function deletePrototype(id) {
   } catch (err) {
     toastError(err.message);
   }
+}
+
+function openPrototypeReplaceForm(p) {
+  if (!p) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'fixed inset-0 z-[100] flex items-start justify-center bg-foreground/50 px-4 py-10 overflow-y-auto';
+  overlay.innerHTML = `
+    <div class="bg-background rounded-lg shadow-xl w-full max-w-lg">
+      <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <h3 class="text-base font-semibold text-gray-900">Replace prototype ZIP</h3>
+        <button type="button" data-close class="text-gray-500 hover:text-black text-xl leading-none" aria-label="Close">&times;</button>
+      </div>
+      <form class="p-6 space-y-4">
+        <p class="text-sm text-gray-700">Replace files for <strong>${escapeHtml(p.title)}</strong>?</p>
+        <p class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-md p-3">The current site files and downloadable ZIP will be replaced. The prototype link and viewing password will stay the same.</p>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">New site archive (.zip) *</label>
+          <input name="archive" type="file" accept=".zip,application/zip" class="hidden file-input" />
+          <div class="flex flex-wrap items-center gap-2">
+            <button type="button" class="choose-file-btn bg-gray-200 text-gray-800 text-xs px-4 py-2 rounded-md font-medium hover:bg-gray-300 transition">Choose .zip file</button>
+            <span class="text-xs text-gray-500 file-label">No file chosen</span>
+          </div>
+        </div>
+        <p class="text-xs text-red-600 hidden" data-error role="alert"></p>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" data-close class="px-4 py-2 text-sm text-gray-700 hover:text-black">Cancel</button>
+          <button type="submit" class="bg-foreground text-white px-5 py-2 rounded-md text-sm font-medium hover:shadow-2xl">Replace files</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const form = overlay.querySelector('form');
+  const fileInput = overlay.querySelector('.file-input');
+  const fileLabel = overlay.querySelector('.file-label');
+  const chooseButton = overlay.querySelector('.choose-file-btn');
+  const closeButtons = [...overlay.querySelectorAll('[data-close]')];
+  const submitButton = form.querySelector('button[type="submit"]');
+  const errorEl = overlay.querySelector('[data-error]');
+  let submitting = false;
+
+  chooseButton.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    fileLabel.textContent = fileInput.files[0]?.name || 'No file chosen';
+    errorEl.classList.add('hidden');
+  });
+  const close = () => { if (!submitting) overlay.remove(); };
+  closeButtons.forEach(button => button.addEventListener('click', close));
+  overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (submitting) return;
+    const archive = fileInput.files[0];
+    if (!archive) {
+      errorEl.textContent = 'Please choose a .zip file.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+    if (!archive.name.toLowerCase().endsWith('.zip')) {
+      errorEl.textContent = 'Choose a file with the .zip extension.';
+      errorEl.classList.remove('hidden');
+      return;
+    }
+
+    submitting = true;
+    closeButtons.forEach(button => { button.disabled = true; });
+    chooseButton.disabled = true;
+    fileInput.disabled = true;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Replacing…';
+    errorEl.classList.add('hidden');
+    try {
+      const formData = new FormData();
+      formData.append('archive', archive);
+      await apiUpload(`/api/prototypes/${encodeURIComponent(p.id)}`, formData, 'PUT');
+      overlay.remove();
+      toastSuccess('Prototype files replaced.');
+      await loadPrototypes();
+    } catch (err) {
+      errorEl.textContent = err.message || 'Could not replace prototype files.';
+      errorEl.classList.remove('hidden');
+      submitting = false;
+      closeButtons.forEach(button => { button.disabled = false; });
+      chooseButton.disabled = false;
+      fileInput.disabled = false;
+      submitButton.disabled = false;
+      submitButton.textContent = 'Replace files';
+    }
+  });
 }
 
 // ---------- Public chatbot knowledge base ----------

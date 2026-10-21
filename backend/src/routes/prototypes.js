@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import db from '../db/index.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { uploadZip } from '../middleware/upload.js';
-import { extractPrototype, removePrototypeDir, getPrototypeArchive } from '../services/prototypeStore.js';
+import { extractPrototype, removePrototypeDir, getPrototypeArchive, replacePrototype } from '../services/prototypeStore.js';
 
 const router = Router();
 
@@ -16,6 +16,10 @@ const findById = db.prepare('SELECT * FROM prototypes WHERE id = ?');
 const findBySlug = db.prepare('SELECT * FROM prototypes WHERE slug = ?');
 const listAll = db.prepare('SELECT * FROM prototypes ORDER BY id DESC');
 const removeStmt = db.prepare('DELETE FROM prototypes WHERE id = ?');
+const replaceStmt = db.prepare(`
+  UPDATE prototypes SET entry = ?, original_filename = ?, file_count = ?, size_bytes = ?
+  WHERE id = ?
+`);
 
 // Public-safe shape (never expose password_hash).
 function publicShape(p) {
@@ -92,6 +96,24 @@ router.post('/', requireAuth, requireRole('admin'), uploadZip.single('archive'),
       throw err;
     }
   } catch (err) { next(err); }
+});
+
+router.put('/:id', requireAuth, requireRole('admin'), uploadZip.single('archive'), (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isSafeInteger(id) || id < 1) return res.status(400).json({ error: 'Invalid prototype ID' });
+    const existing = findById.get(id);
+    if (!existing) return res.status(404).json({ error: 'Prototype not found' });
+    if (!req.file) return res.status(400).json({ error: 'A .zip file is required' });
+
+    replacePrototype(req.file.buffer, existing.slug, (extracted) => {
+      replaceStmt.run(extracted.entry, req.file.originalname, extracted.fileCount, extracted.sizeBytes, id);
+    });
+    res.json(publicShape(findById.get(id)));
+  } catch (err) {
+    if (err.status === 400) return res.status(400).json({ error: err.message });
+    next(err);
+  }
 });
 
 router.delete('/:id', requireAuth, requireRole('admin'), (req, res, next) => {

@@ -151,3 +151,53 @@ export function extractPrototype(buffer, slug) {
 
   return { entry: entryFile, fileCount: planned.length, sizeBytes: total };
 }
+
+// Stage the new site first, and restore both old paths if promotion or the
+// synchronous metadata commit fails. Staging slugs never get public DB records.
+export function replacePrototype(buffer, slug, commit) {
+  const stagingSlug = `staged-${randomUUID()}`;
+  const backupSlug = `backup-${randomUUID()}`;
+  const currentDir = dirForSlug(slug);
+  const currentArchive = archiveForSlug(slug);
+  const stagingDir = dirForSlug(stagingSlug);
+  const stagingArchive = archiveForSlug(stagingSlug);
+  const backupDir = dirForSlug(backupSlug);
+  const backupArchive = archiveForSlug(backupSlug);
+  let savedDir = false;
+  let savedArchive = false;
+  let installedDir = false;
+  let installedArchive = false;
+  let extracted;
+  try {
+    try {
+      extracted = extractPrototype(buffer, stagingSlug);
+    } catch (err) {
+      if (!err.code) err.status = 400;
+      throw err;
+    }
+    if (fs.existsSync(currentDir)) {
+      fs.renameSync(currentDir, backupDir);
+      savedDir = true;
+    }
+    if (fs.existsSync(currentArchive)) {
+      fs.renameSync(currentArchive, backupArchive);
+      savedArchive = true;
+    }
+    fs.renameSync(stagingDir, currentDir);
+    installedDir = true;
+    fs.renameSync(stagingArchive, currentArchive);
+    installedArchive = true;
+    commit(extracted);
+  } catch (err) {
+    if (installedArchive) fs.rmSync(currentArchive, { force: true });
+    if (installedDir) fs.rmSync(currentDir, { recursive: true, force: true });
+    if (savedDir) fs.renameSync(backupDir, currentDir);
+    if (savedArchive) fs.renameSync(backupArchive, currentArchive);
+    throw err;
+  } finally {
+    try { removePrototypeDir(stagingSlug); } catch { /* retain inaccessible staging files */ }
+  }
+  // A cleanup failure must not report that an already committed update failed.
+  try { removePrototypeDir(backupSlug); } catch { /* retain inaccessible backup */ }
+  return extracted;
+}
