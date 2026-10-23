@@ -86,6 +86,8 @@ export default defineConfig({
         error405: resolve(__dirname, 'src/405.html'),
         error409: resolve(__dirname, 'src/409.html'),
         privacy: resolve(__dirname, 'src/privacy.html'),
+        axiscalcPrivacy: resolve(__dirname, 'src/axiscalc-privacy.html'),
+        axiscalcSupport: resolve(__dirname, 'src/axiscalc-support.html'),
         cookie: resolve(__dirname, 'src/cookie.html'),
       },
     },

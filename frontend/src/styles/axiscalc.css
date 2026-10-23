@@ -1,0 +1,84 @@
+.axiscalc-page {
+  --axiscalc-ink: #14222f;
+  --axiscalc-muted: #52616c;
+  --axiscalc-line: #dce1df;
+  --axiscalc-blue: #1557c0;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  margin: 0;
+  background: #f7f7f5;
+  color: var(--axiscalc-ink);
+  font-family: var(--font-sans);
+  line-height: 1.55;
+}
+
+.axiscalc-page *, .axiscalc-page *::before, .axiscalc-page *::after { box-sizing: border-box; }
+.axiscalc-page :focus-visible { outline: 3px solid var(--axiscalc-blue); outline-offset: 4px; }
+.axiscalc-container { width: min(90%, 1120px); margin-inline: auto; }
+.axiscalc-skip-link { position: absolute; z-index: 2; top: -100px; left: 5%; padding: .75rem 1rem; background: #fff; color: var(--axiscalc-ink); }
+.axiscalc-skip-link:focus { top: .75rem; }
+.axiscalc-header { border-bottom: 1px solid var(--axiscalc-line); background: #fff; }
+.axiscalc-header-inner { display: flex; min-height: 88px; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.axiscalc-logo { display: block; width: 205px; max-width: 100%; height: auto; }
+.axiscalc-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; }
+.axiscalc-nav a { display: inline-flex; min-height: 44px; align-items: center; border-bottom: 2px solid transparent; color: var(--axiscalc-muted); font-size: .85rem; font-weight: 600; text-decoration: none; }
+.axiscalc-nav a:hover, .axiscalc-nav a[aria-current] { border-color: var(--axiscalc-blue); color: var(--axiscalc-blue); }
+.axiscalc-hero { padding-block: clamp(3rem, 6vw, 5rem); border-bottom: 1px solid var(--axiscalc-line); background: #f0f2ee; }
+.axiscalc-eyebrow { margin: 0 0 1.2rem; color: var(--axiscalc-muted); font-size: .73rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.axiscalc-hero h1 { max-width: 800px; margin: 0; font: 600 clamp(2.4rem, 5.3vw, 4.5rem)/1.05 var(--font-display); letter-spacing: -.05em; }
+.axiscalc-metadata { display: flex; flex-wrap: wrap; gap: 1.4rem 3rem; margin: 2rem 0 0; }
+.axiscalc-metadata dt { margin-bottom: .3rem; color: var(--axiscalc-muted); font-size: .72rem; font-weight: 600; }
+.axiscalc-metadata dd { margin: 0; font-size: .88rem; }
+.axiscalc-metadata a, .axiscalc-intro a { color: inherit; text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.axiscalc-intro { max-width: 720px; margin: 1.5rem 0 0; color: var(--axiscalc-ink); font-size: 1.05rem; line-height: 1.75; }
+.axiscalc-intro-secondary { margin-top: 1rem; color: var(--axiscalc-muted); font-size: .95rem; }
+.axiscalc-email-button { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 1.5rem; margin-top: 1.75rem; padding: .75rem 1.25rem; border-radius: 4px; background: var(--axiscalc-blue); color: #fff; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.axiscalc-email-button:hover { background: #0d408f; }
+.axiscalc-document { display: grid; grid-template-columns: 230px minmax(0, 1fr); align-items: start; gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(2.5rem, 5vw, 4rem); }
+.axiscalc-toc { position: sticky; top: 2rem; }
+.axiscalc-toc h2 { margin: 0 0 1rem; font-size: .78rem; font-weight: 700; letter-spacing: .04em; }
+.axiscalc-toc ol { display: grid; gap: .2rem; margin: 0; padding: 0; list-style: none; }
+.axiscalc-toc a { display: block; padding: .5rem 0; color: var(--axiscalc-muted); font-size: .82rem; text-decoration: none; }
+.axiscalc-toc a:hover { color: var(--axiscalc-blue); text-decoration: underline; text-underline-offset: 3px; }
+.axiscalc-copy-section { scroll-margin-top: 2rem; padding-block: 2rem; border-bottom: 1px solid var(--axiscalc-line); }
+.axiscalc-copy-section:first-child { padding-top: 0; }
+.axiscalc-copy-section:last-child { padding-bottom: 0; border-bottom: 0; }
+.axiscalc-copy h2 { margin: 0 0 1rem; color: var(--axiscalc-ink); font: 600 clamp(1.35rem, 2.2vw, 1.75rem)/1.25 var(--font-display); letter-spacing: -.025em; }
+.axiscalc-copy p { margin: 0 0 1rem; color: var(--axiscalc-muted); font-size: .97rem; line-height: 1.85; overflow-wrap: anywhere; }
+.axiscalc-copy p:last-child { margin-bottom: 0; }
+.axiscalc-copy strong { color: var(--axiscalc-ink); font-weight: 600; }
+.axiscalc-copy a { color: var(--axiscalc-blue); text-decoration: underline; text-underline-offset: 3px; }
+.axiscalc-copy a:hover { color: #0d408f; }
+.axiscalc-footer { padding-block: 2rem; border-top: 1px solid var(--axiscalc-line); background: #fff; }
+.axiscalc-footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem 2rem; }
+.axiscalc-footer p { margin: 0; color: var(--axiscalc-muted); font-size: .74rem; }
+.axiscalc-footer nav { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+.axiscalc-footer a { color: var(--axiscalc-muted); font-size: .74rem; text-decoration: underline; text-underline-offset: 3px; }
+.axiscalc-footer a:hover { color: var(--axiscalc-blue); }
+
+@media (max-width: 767px) {
+  .axiscalc-header-inner { min-height: 78px; gap: 1rem; }
+  .axiscalc-logo { width: 165px; }
+  .axiscalc-nav { gap: .75rem; }
+  .axiscalc-nav a { font-size: .78rem; }
+  .axiscalc-document { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .axiscalc-toc { position: static; padding-bottom: 1.5rem; border-bottom: 1px solid var(--axiscalc-line); }
+  .axiscalc-toc ol { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .2rem 1rem; }
+  .axiscalc-copy-section { scroll-margin-top: 1rem; }
+  .axiscalc-metadata { display: grid; gap: 1rem; }
+}
+
+@media (max-width: 359px) {
+  .axiscalc-header-inner { flex-wrap: wrap; justify-content: center; padding-block: .75rem; gap: .5rem 1.5rem; }
+  .axiscalc-toc ol { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media print {
+  .axiscalc-header, .axiscalc-toc, .axiscalc-footer, .axiscalc-email-button { display: none; }
+  .axiscalc-container { width: 100%; }
+  .axiscalc-hero { padding-block: 1rem; background: #fff; }
+  .axiscalc-document { display: block; padding-block: 1rem; }
+  .axiscalc-page { background: #fff; }
+  .axiscalc-copy h2 { break-after: avoid; }
+  .axiscalc-copy-section { padding-block: 1rem; }
+}
